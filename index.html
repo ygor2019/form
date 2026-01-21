@@ -447,11 +447,48 @@
       background: linear-gradient(135deg, #d69e2e, #b7791f);
     }
 
-    /* Label opcional */
-    .optional {
-      color: var(--text-muted);
-      font-weight: 400;
+    /* Legenda campos obrigatórios */
+    .form-legend {
       font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .form-legend .required {
+      color: var(--error);
+    }
+
+    /* Autocomplete/Datalist */
+    input::-webkit-calendar-picker-indicator {
+      opacity: 0.6;
+    }
+
+    /* Campo condicional (aparece/esconde) */
+    .campo-condicional {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .campo-condicional.show {
+      display: block;
+    }
+
+    /* Grupo inline (label + input lado a lado) */
+    .inline-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .inline-group label {
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    .inline-group input {
+      flex: 1;
     }
   </style>
 </head>
@@ -533,6 +570,8 @@
                 <p class="error-message" id="errorCep">CEP inválido</p>
               </div>
             </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
 
             <div class="button-group">
               <button type="button" class="btn btn-save" onclick="salvarPagina(1)">
@@ -623,7 +662,7 @@
             <!-- Processo e Alvará -->
             <div class="form-row-3">
               <div class="form-group">
-                <label for="processoNum">Processo nº <span class="optional">(opcional)</span></label>
+                <label for="processoNum">Processo nº</label>
                 <input 
                   type="text" 
                   id="processoNum" 
@@ -633,7 +672,7 @@
               </div>
 
               <div class="form-group">
-                <label for="alvaraNum">Alvará nº <span class="optional">(opcional)</span></label>
+                <label for="alvaraNum">Alvará nº</label>
                 <input 
                   type="text" 
                   id="alvaraNum" 
@@ -643,7 +682,7 @@
               </div>
 
               <div class="form-group">
-                <label for="alvaraDe">de: <span class="optional">(opcional)</span></label>
+                <label for="alvaraDe">de:</label>
                 <input 
                   type="text" 
                   id="alvaraDe" 
@@ -695,6 +734,8 @@
               <p class="error-message" id="errorEnderecoProprietario">Informe o endereço</p>
             </div>
 
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
             <div class="button-group">
               <button type="button" class="btn btn-secondary" onclick="retornar(2)">
                 ← Retornar
@@ -703,6 +744,213 @@
                 💾 Salvar
               </button>
               <button type="button" class="btn btn-primary" onclick="avancar(2)">
+                Avançar →
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 3: Autor do Projeto -->
+    <div class="page" id="page3">
+      <div class="card">
+        <div class="card-header">
+          <h1>👷 Autor do Projeto</h1>
+          <p>Informe os dados do responsável técnico</p>
+        </div>
+        <div class="card-body">
+          <form id="form3" novalidate>
+            <!-- Placa afixada -->
+            <div class="form-group">
+              <label>Placa afixada? <span class="required">*</span></label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="placaSim" name="placaAfixada" value="Sim">
+                  <label for="placaSim">
+                    <span class="radio-dot"></span>
+                    SIM
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="placaNao" name="placaAfixada" value="Não">
+                  <label for="placaNao">
+                    <span class="radio-dot"></span>
+                    NÃO
+                  </label>
+                </div>
+              </div>
+              <p class="error-message" id="errorPlacaAfixada">Selecione uma opção</p>
+            </div>
+
+            <!-- Profissional -->
+            <div class="form-group">
+              <label for="profissional">Profissional <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="profissional" 
+                name="profissional" 
+                placeholder="Nome completo do profissional"
+              >
+              <p class="error-message" id="errorProfissional">Informe o nome do profissional</p>
+            </div>
+
+            <!-- Tipo de Registro -->
+            <div class="form-group">
+              <label>Registro <span class="required">*</span></label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="regCrea" name="tipoRegistro" value="CREA" onchange="mostrarCampoRegistro('crea')">
+                  <label for="regCrea">
+                    <span class="radio-dot"></span>
+                    CREA
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regCpf" name="tipoRegistro" value="CPF" onchange="mostrarCampoRegistro('cpf')">
+                  <label for="regCpf">
+                    <span class="radio-dot"></span>
+                    CPF
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regOutros" name="tipoRegistro" value="Outros" onchange="mostrarCampoRegistro('outros')">
+                  <label for="regOutros">
+                    <span class="radio-dot"></span>
+                    Outros
+                  </label>
+                </div>
+              </div>
+              
+              <!-- Campo CREA -->
+              <div class="campo-condicional" id="campoCrea">
+                <input 
+                  type="text" 
+                  id="numeroCrea" 
+                  name="numeroCrea" 
+                  placeholder="Número do CREA"
+                >
+              </div>
+              
+              <!-- Campo CPF -->
+              <div class="campo-condicional" id="campoCpfProf">
+                <input 
+                  type="text" 
+                  id="cpfProfissional" 
+                  name="cpfProfissional" 
+                  placeholder="000.000.000-00"
+                  maxlength="14"
+                >
+                <p class="hint">Formato: 000.000.000-00</p>
+              </div>
+              
+              <!-- Campo Outros -->
+              <div class="campo-condicional" id="campoOutros">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <input 
+                      type="text" 
+                      id="siglaConselho" 
+                      name="siglaConselho" 
+                      placeholder="Sigla (ex: CAU)"
+                    >
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <input 
+                      type="text" 
+                      id="numeroConselho" 
+                      name="numeroConselho" 
+                      placeholder="Número"
+                    >
+                  </div>
+                </div>
+              </div>
+              
+              <p class="error-message" id="errorRegistro">Informe o número do registro</p>
+            </div>
+
+            <!-- Título -->
+            <div class="form-group">
+              <label for="titulo">Título</label>
+              <input 
+                type="text" 
+                id="titulo" 
+                name="titulo" 
+                list="listaTitulos"
+                placeholder="Ex: Engenheiro Civil"
+              >
+              <datalist id="listaTitulos">
+                <option value="Engenheiro Civil">
+                <option value="Arquiteto">
+                <option value="Engenheiro Eletricista">
+                <option value="Engenheiro Mecânico">
+                <option value="Técnico em Edificações">
+              </datalist>
+            </div>
+
+            <!-- ART/RRT -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="artNumero">ART nº</label>
+                <input 
+                  type="text" 
+                  id="artNumero" 
+                  name="artNumero" 
+                  placeholder="Número da ART"
+                  inputmode="numeric"
+                >
+              </div>
+              <div class="form-group">
+                <label for="rrtNumero">RRT nº</label>
+                <input 
+                  type="text" 
+                  id="rrtNumero" 
+                  name="rrtNumero" 
+                  placeholder="Número do RRT"
+                  inputmode="numeric"
+                >
+              </div>
+            </div>
+
+            <!-- Empresa -->
+            <div class="form-group">
+              <label for="empresa">Empresa</label>
+              <input 
+                type="text" 
+                id="empresa" 
+                name="empresa" 
+                placeholder="Nome da empresa"
+              >
+            </div>
+
+            <!-- CREA/CAU/CNPJ da Empresa -->
+            <div class="form-group">
+              <label>Registro da Empresa</label>
+              <div class="toggle-group" style="margin-bottom: 12px;">
+                <button type="button" class="toggle-btn" id="btnEmpCrea" onclick="toggleEmpresaRegistro('crea')">CREA</button>
+                <button type="button" class="toggle-btn" id="btnEmpCau" onclick="toggleEmpresaRegistro('cau')">CAU</button>
+                <button type="button" class="toggle-btn" id="btnEmpCnpj" onclick="toggleEmpresaRegistro('cnpj')">CNPJ</button>
+              </div>
+              <input 
+                type="text" 
+                id="empresaRegistro" 
+                name="empresaRegistro" 
+                placeholder="Selecione o tipo acima"
+                disabled
+              >
+              <p class="error-message" id="errorEmpresaRegistro">CNPJ inválido</p>
+            </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" onclick="retornar(3)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(3)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(3)">
                 Avançar →
               </button>
             </div>
@@ -742,15 +990,34 @@
         cpfCnpj: '',
         enderecoProprietario: '',
         saved: false
+      },
+      page3: {
+        placaAfixada: '',
+        profissional: '',
+        tipoRegistro: '',
+        numeroCrea: '',
+        cpfProfissional: '',
+        siglaConselho: '',
+        numeroConselho: '',
+        titulo: '',
+        artNumero: '',
+        rrtNumero: '',
+        empresa: '',
+        tipoEmpresaRegistro: '',
+        empresaRegistro: '',
+        saved: false
       }
     };
 
     // Total de páginas
-    const totalPages = 2;
+    const totalPages = 3;
     let currentPage = 1;
     
     // Controle do tipo de documento (CPF ou CNPJ)
     let tipoDocumento = 'cpf';
+    
+    // Controle do tipo de registro da empresa
+    let tipoEmpresaRegistro = '';
 
     // Carregar dados do localStorage ao iniciar
     function loadFromCache() {
@@ -807,6 +1074,40 @@
         if (formData.page2.tipoCpfCnpj) {
           tipoDocumento = formData.page2.tipoCpfCnpj;
           toggleCpfCnpj(tipoDocumento);
+        }
+      }
+      
+      // Página 3
+      if (formData.page3) {
+        // Placa afixada
+        if (formData.page3.placaAfixada) {
+          const radioBtn = document.querySelector(`input[name="placaAfixada"][value="${formData.page3.placaAfixada}"]`);
+          if (radioBtn) radioBtn.checked = true;
+        }
+        document.getElementById('profissional').value = formData.page3.profissional || '';
+        
+        // Tipo de registro
+        if (formData.page3.tipoRegistro) {
+          const radioBtn = document.querySelector(`input[name="tipoRegistro"][value="${formData.page3.tipoRegistro}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoRegistro(formData.page3.tipoRegistro.toLowerCase());
+          }
+        }
+        document.getElementById('numeroCrea').value = formData.page3.numeroCrea || '';
+        document.getElementById('cpfProfissional').value = formData.page3.cpfProfissional || '';
+        document.getElementById('siglaConselho').value = formData.page3.siglaConselho || '';
+        document.getElementById('numeroConselho').value = formData.page3.numeroConselho || '';
+        document.getElementById('titulo').value = formData.page3.titulo || '';
+        document.getElementById('artNumero').value = formData.page3.artNumero || '';
+        document.getElementById('rrtNumero').value = formData.page3.rrtNumero || '';
+        document.getElementById('empresa').value = formData.page3.empresa || '';
+        
+        // Restaurar tipo de registro da empresa
+        if (formData.page3.tipoEmpresaRegistro) {
+          tipoEmpresaRegistro = formData.page3.tipoEmpresaRegistro;
+          toggleEmpresaRegistro(tipoEmpresaRegistro);
+          document.getElementById('empresaRegistro').value = formData.page3.empresaRegistro || '';
         }
       }
     }
@@ -1065,6 +1366,93 @@
       document.getElementById('errorPavimentos').classList.remove('show');
     });
 
+    // Mostrar campo de registro conforme seleção (Página 3)
+    function mostrarCampoRegistro(tipo) {
+      // Esconder todos
+      document.getElementById('campoCrea').classList.remove('show');
+      document.getElementById('campoCpfProf').classList.remove('show');
+      document.getElementById('campoOutros').classList.remove('show');
+      
+      // Limpar erros
+      document.getElementById('errorRegistro').classList.remove('show');
+      
+      // Mostrar o selecionado
+      if (tipo === 'crea') {
+        document.getElementById('campoCrea').classList.add('show');
+      } else if (tipo === 'cpf') {
+        document.getElementById('campoCpfProf').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutros').classList.add('show');
+      }
+    }
+
+    // Formatar CPF do profissional enquanto digita
+    document.getElementById('cpfProfissional').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+      if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+      if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      e.target.value = value;
+    });
+
+    // Formatar ART/RRT (só números)
+    document.getElementById('artNumero').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+    
+    document.getElementById('rrtNumero').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Toggle tipo de registro da empresa (CREA/CAU/CNPJ)
+    function toggleEmpresaRegistro(tipo) {
+      tipoEmpresaRegistro = tipo;
+      const btnCrea = document.getElementById('btnEmpCrea');
+      const btnCau = document.getElementById('btnEmpCau');
+      const btnCnpj = document.getElementById('btnEmpCnpj');
+      const input = document.getElementById('empresaRegistro');
+      const errorMsg = document.getElementById('errorEmpresaRegistro');
+      
+      // Remover active de todos
+      btnCrea.classList.remove('active');
+      btnCau.classList.remove('active');
+      btnCnpj.classList.remove('active');
+      
+      // Limpar valor e erros
+      input.value = '';
+      input.disabled = false;
+      input.classList.remove('error', 'success');
+      errorMsg.classList.remove('show');
+      
+      if (tipo === 'crea') {
+        btnCrea.classList.add('active');
+        input.placeholder = 'Número do CREA';
+        input.maxLength = 50;
+      } else if (tipo === 'cau') {
+        btnCau.classList.add('active');
+        input.placeholder = 'Número do CAU';
+        input.maxLength = 50;
+      } else if (tipo === 'cnpj') {
+        btnCnpj.classList.add('active');
+        input.placeholder = '00.000.000/0000-00';
+        input.maxLength = 18;
+      }
+    }
+
+    // Formatar CNPJ da empresa enquanto digita
+    document.getElementById('empresaRegistro').addEventListener('input', function(e) {
+      if (tipoEmpresaRegistro === 'cnpj') {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 2) value = value.substring(0,2) + '.' + value.substring(2);
+        if (value.length > 6) value = value.substring(0,6) + '.' + value.substring(6);
+        if (value.length > 10) value = value.substring(0,10) + '/' + value.substring(10);
+        if (value.length > 15) value = value.substring(0,15) + '-' + value.substring(15,17);
+        e.target.value = value;
+      }
+      e.target.classList.remove('error');
+      document.getElementById('errorEmpresaRegistro').classList.remove('show');
+    });
+
     // Validar Página 2
     function validarPagina2() {
       let isValid = true;
@@ -1171,6 +1559,119 @@
       return { isValid, avisos };
     }
 
+    // Validar Página 3
+    function validarPagina3() {
+      let isValid = true;
+
+      // Placa afixada (obrigatório)
+      const placaSelecionada = document.querySelector('input[name="placaAfixada"]:checked');
+      const errorPlaca = document.getElementById('errorPlacaAfixada');
+      if (!placaSelecionada) {
+        errorPlaca.classList.add('show');
+        isValid = false;
+      } else {
+        errorPlaca.classList.remove('show');
+      }
+
+      // Profissional (obrigatório)
+      const profissional = document.getElementById('profissional');
+      const errorProfissional = document.getElementById('errorProfissional');
+      if (!profissional.value.trim()) {
+        profissional.classList.add('error');
+        errorProfissional.classList.add('show');
+        isValid = false;
+      } else {
+        profissional.classList.remove('error');
+        profissional.classList.add('success');
+        errorProfissional.classList.remove('show');
+      }
+
+      // Tipo de Registro (obrigatório)
+      const tipoRegistroSelecionado = document.querySelector('input[name="tipoRegistro"]:checked');
+      const errorRegistro = document.getElementById('errorRegistro');
+      
+      if (!tipoRegistroSelecionado) {
+        errorRegistro.textContent = 'Selecione um tipo de registro';
+        errorRegistro.classList.add('show');
+        isValid = false;
+      } else {
+        const tipo = tipoRegistroSelecionado.value;
+        
+        if (tipo === 'CREA') {
+          const numeroCrea = document.getElementById('numeroCrea');
+          if (!numeroCrea.value.trim()) {
+            numeroCrea.classList.add('error');
+            errorRegistro.textContent = 'Informe o número do CREA';
+            errorRegistro.classList.add('show');
+            isValid = false;
+          } else {
+            numeroCrea.classList.remove('error');
+            numeroCrea.classList.add('success');
+            errorRegistro.classList.remove('show');
+          }
+        } else if (tipo === 'CPF') {
+          const cpfProf = document.getElementById('cpfProfissional');
+          const cpfNumeros = cpfProf.value.replace(/\D/g, '');
+          
+          if (!cpfProf.value.trim()) {
+            cpfProf.classList.add('error');
+            errorRegistro.textContent = 'Informe o CPF';
+            errorRegistro.classList.add('show');
+            isValid = false;
+          } else if (!validarCPF(cpfNumeros)) {
+            cpfProf.classList.add('error');
+            errorRegistro.textContent = 'CPF inválido';
+            errorRegistro.classList.add('show');
+            isValid = false;
+          } else {
+            cpfProf.classList.remove('error');
+            cpfProf.classList.add('success');
+            errorRegistro.classList.remove('show');
+          }
+        } else if (tipo === 'Outros') {
+          const sigla = document.getElementById('siglaConselho');
+          const numero = document.getElementById('numeroConselho');
+          
+          if (!sigla.value.trim() || !numero.value.trim()) {
+            if (!sigla.value.trim()) sigla.classList.add('error');
+            if (!numero.value.trim()) numero.classList.add('error');
+            errorRegistro.textContent = 'Informe a sigla e o número do conselho';
+            errorRegistro.classList.add('show');
+            isValid = false;
+          } else {
+            sigla.classList.remove('error');
+            sigla.classList.add('success');
+            numero.classList.remove('error');
+            numero.classList.add('success');
+            errorRegistro.classList.remove('show');
+          }
+        }
+      }
+
+      // Registro da empresa (validar CNPJ apenas se tipo for CNPJ)
+      const empresaRegistro = document.getElementById('empresaRegistro');
+      const errorEmpresaRegistro = document.getElementById('errorEmpresaRegistro');
+      
+      if (tipoEmpresaRegistro === 'cnpj' && empresaRegistro.value.trim()) {
+        const cnpjNumeros = empresaRegistro.value.replace(/\D/g, '');
+        if (!validarCNPJ(cnpjNumeros)) {
+          empresaRegistro.classList.add('error');
+          errorEmpresaRegistro.classList.add('show');
+          isValid = false;
+        } else {
+          empresaRegistro.classList.remove('error');
+          empresaRegistro.classList.add('success');
+          errorEmpresaRegistro.classList.remove('show');
+        }
+      } else {
+        // Não é CNPJ ou está vazio, aceitar
+        empresaRegistro.classList.remove('error');
+        errorEmpresaRegistro.classList.remove('show');
+      }
+
+      return isValid;
+    }
+
     // =============================================
     // AÇÕES DOS BOTÕES
     // =============================================
@@ -1212,6 +1713,32 @@
               tipoCpfCnpj: tipoDocumento,
               cpfCnpj: document.getElementById('cpfCnpj').value.trim(),
               enderecoProprietario: document.getElementById('enderecoProprietario').value.trim(),
+              saved: true
+            };
+          }
+          break;
+          
+        case 3:
+          isValid = validarPagina3();
+          
+          if (isValid) {
+            const placaSelecionada = document.querySelector('input[name="placaAfixada"]:checked');
+            const tipoRegistroSelecionado = document.querySelector('input[name="tipoRegistro"]:checked');
+            
+            formData.page3 = {
+              placaAfixada: placaSelecionada ? placaSelecionada.value : '',
+              profissional: document.getElementById('profissional').value.trim(),
+              tipoRegistro: tipoRegistroSelecionado ? tipoRegistroSelecionado.value : '',
+              numeroCrea: document.getElementById('numeroCrea').value.trim(),
+              cpfProfissional: document.getElementById('cpfProfissional').value.trim(),
+              siglaConselho: document.getElementById('siglaConselho').value.trim(),
+              numeroConselho: document.getElementById('numeroConselho').value.trim(),
+              titulo: document.getElementById('titulo').value.trim(),
+              artNumero: document.getElementById('artNumero').value.trim(),
+              rrtNumero: document.getElementById('rrtNumero').value.trim(),
+              empresa: document.getElementById('empresa').value.trim(),
+              tipoEmpresaRegistro: tipoEmpresaRegistro,
+              empresaRegistro: document.getElementById('empresaRegistro').value.trim(),
               saved: true
             };
           }
