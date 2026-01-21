@@ -1892,14 +1892,24 @@
     // UTILITÁRIOS
     // =============================================
 
+    // Variável para controlar o timeout do toast
+    let toastTimeout = null;
+
     // Mostrar toast
     function showToast(message, type = 'success', duration = 4000) {
       const toast = document.getElementById('toast');
+      
+      // Cancelar timeout anterior se existir
+      if (toastTimeout) {
+        clearTimeout(toastTimeout);
+      }
+      
       toast.textContent = message;
       toast.className = `toast ${type} show`;
       
-      setTimeout(() => {
+      toastTimeout = setTimeout(() => {
         toast.classList.remove('show');
+        toastTimeout = null;
       }, duration);
     }
 
