@@ -1779,7 +1779,7 @@
             
             // Preencher CPF e CREA automaticamente
             preencherDadosAuto(inputId, prof, cpfCampoId, creaCampoId);
-            showToast('✨ Dados preenchidos automaticamente!', 'success', 2500);
+            showToast('✨ Dados preenchidos automaticamente!', 'success');
           });
           
           autocompleteDiv.appendChild(div);
@@ -3388,7 +3388,7 @@
         // Mostrar avisos sobre campos opcionais não preenchidos
         if (avisos.length > 0) {
           setTimeout(() => {
-            showToast(`⚠️ Campos não preenchidos: ${avisos.join(', ')}`, 'warning', 4500);
+            showToast(`⚠️ Campos não preenchidos: ${avisos.join(', ')}`, 'warning');
           }, 1800);
         }
       } else {
@@ -3420,6 +3420,9 @@
 
     // Mostrar página específica
     function showPage(pageNum) {
+      // Limpar toasts ao mudar de página
+      limparToast();
+      
       // Esconder todas as páginas
       document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
@@ -3452,7 +3455,7 @@
     let toastTimeout = null;
 
     // Mostrar toast
-    function showToast(message, type = 'success', duration = 4000) {
+    function showToast(message, type = 'success', duration = 3000) {
       const toast = document.getElementById('toast');
       
       // Cancelar timeout anterior se existir
@@ -3467,6 +3470,16 @@
         toast.classList.remove('show');
         toastTimeout = null;
       }, duration);
+    }
+    
+    // Limpar toast imediatamente
+    function limparToast() {
+      const toast = document.getElementById('toast');
+      if (toastTimeout) {
+        clearTimeout(toastTimeout);
+        toastTimeout = null;
+      }
+      toast.classList.remove('show');
     }
 
     // =============================================
