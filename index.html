@@ -1585,6 +1585,224 @@
       </div>
     </div>
 
+    <!-- Page 6: Equipe Técnica -->
+    <div class="page" id="page6">
+      <div class="card">
+        <div class="card-header">
+          <h1>👥 Equipe Técnica</h1>
+          <p>Outros engenheiros responsáveis e/ou integrantes da equipe</p>
+        </div>
+        <div class="card-body">
+          <form id="form6" novalidate>
+            
+            <!-- Bloco 1: Coordenação -->
+            <div class="section-title" style="margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: 700;">
+              📌 Coordenação
+            </div>
+            
+            <div class="form-group" style="position: relative;">
+              <label for="profCoordenacao">Profissional <span class="required">*</span></label>
+              <input type="text" id="profCoordenacao" name="profCoordenacao" placeholder="Nome do Coordenador" autocomplete="new-password">
+              <div class="autocomplete-list" id="autocompleteCoordenacao"></div>
+              <p class="error-message" id="errorProfCoordenacao">Informe o profissional</p>
+            </div>
+
+            <div class="form-group">
+              <label for="cpfCoordenacao">CPF <span class="required">*</span></label>
+              <input type="text" id="cpfCoordenacao" name="cpfCoordenacao" placeholder="000.000.000-00" maxlength="14">
+              <p class="error-message" id="errorCpfCoordenacao">CPF inválido</p>
+            </div>
+
+            <div class="form-group">
+              <label>CREA / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="regCreaCoord" name="regCoord" value="CREA" onchange="mostrarRegistroEquipe('Coord', 'crea')">
+                  <label for="regCreaCoord"><span class="radio-dot"></span> CREA</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regOutrosCoord" name="regCoord" value="Outros" onchange="mostrarRegistroEquipe('Coord', 'outros')">
+                  <label for="regOutrosCoord"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoCreaCoord">
+                <input type="text" id="numCreaCoord" placeholder="Número do CREA">
+              </div>
+              <div class="campo-condicional" id="campoOutrosCoord">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="siglaCoord" placeholder="Sigla"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="numOutrosCoord" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ART / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="artCoord" name="tipoArtCoord" value="ART" onchange="mostrarArtEquipe('Coord', 'art')">
+                  <label for="artCoord"><span class="radio-dot"></span> ART</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="outrosArtCoord" name="tipoArtCoord" value="Outros" onchange="mostrarArtEquipe('Coord', 'outros')">
+                  <label for="outrosArtCoord"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoArtCoord"><input type="text" id="numArtCoord" placeholder="Número ART"></div>
+              <div class="campo-condicional" id="campoOutrosArtCoord">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="nomeArtCoord" placeholder="Nome (ex: RRT)"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="valArtCoord" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <hr style="margin: 40px 0; border: none; border-top: 2px dashed var(--border);">
+
+            <!-- Bloco 2: Orçamento -->
+            <div class="section-title" style="margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: 700;">
+              📌 Orçamento
+            </div>
+            
+            <div class="form-group" style="position: relative;">
+              <label for="profOrcamento">Profissional <span class="required">*</span></label>
+              <input type="text" id="profOrcamento" name="profOrcamento" placeholder="Nome do Responsável pelo Orçamento" autocomplete="new-password">
+              <div class="autocomplete-list" id="autocompleteOrcamento"></div>
+              <p class="error-message" id="errorProfOrcamento">Informe o profissional</p>
+            </div>
+
+            <div class="form-group">
+              <label for="cpfOrcamento">CPF <span class="required">*</span></label>
+              <input type="text" id="cpfOrcamento" name="cpfOrcamento" placeholder="000.000.000-00" maxlength="14">
+              <p class="error-message" id="errorCpfOrcamento">CPF inválido</p>
+            </div>
+
+            <div class="form-group">
+              <label>CREA / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="regCreaOrc" name="regOrc" value="CREA" onchange="mostrarRegistroEquipe('Orc', 'crea')">
+                  <label for="regCreaOrc"><span class="radio-dot"></span> CREA</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regOutrosOrc" name="regOrc" value="Outros" onchange="mostrarRegistroEquipe('Orc', 'outros')">
+                  <label for="regOutrosOrc"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoCreaOrc">
+                <input type="text" id="numCreaOrc" placeholder="Número do CREA">
+              </div>
+              <div class="campo-condicional" id="campoOutrosOrc">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="siglaOrc" placeholder="Sigla"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="numOutrosOrc" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ART / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="artOrc" name="tipoArtOrc" value="ART" onchange="mostrarArtEquipe('Orc', 'art')">
+                  <label for="artOrc"><span class="radio-dot"></span> ART</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="outrosArtOrc" name="tipoArtOrc" value="Outros" onchange="mostrarArtEquipe('Orc', 'outros')">
+                  <label for="outrosArtOrc"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoArtOrc"><input type="text" id="numArtOrc" placeholder="Número ART"></div>
+              <div class="campo-condicional" id="campoOutrosArtOrc">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="nomeArtOrc" placeholder="Nome (ex: RRT)"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="valArtOrc" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <hr style="margin: 40px 0; border: none; border-top: 2px dashed var(--border);">
+
+            <!-- Bloco 3: Residente -->
+            <div class="section-title" style="margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: 700;">
+              📌 Residente
+            </div>
+            
+            <div class="form-group" style="position: relative;">
+              <label for="profResidente">Profissional <span class="required">*</span></label>
+              <input type="text" id="profResidente" name="profResidente" placeholder="Nome do Engenheiro Residente" autocomplete="new-password">
+              <div class="autocomplete-list" id="autocompleteResidente"></div>
+              <p class="error-message" id="errorProfResidente">Informe o profissional</p>
+            </div>
+
+            <div class="form-group">
+              <label for="cpfResidente">CPF <span class="required">*</span></label>
+              <input type="text" id="cpfResidente" name="cpfResidente" placeholder="000.000.000-00" maxlength="14">
+              <p class="error-message" id="errorCpfResidente">CPF inválido</p>
+            </div>
+
+            <div class="form-group">
+              <label>CREA / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="regCreaRes" name="regRes" value="CREA" onchange="mostrarRegistroEquipe('Res', 'crea')">
+                  <label for="regCreaRes"><span class="radio-dot"></span> CREA</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regOutrosRes" name="regRes" value="Outros" onchange="mostrarRegistroEquipe('Res', 'outros')">
+                  <label for="regOutrosRes"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoCreaRes">
+                <input type="text" id="numCreaRes" placeholder="Número do CREA">
+              </div>
+              <div class="campo-condicional" id="campoOutrosRes">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="siglaRes" placeholder="Sigla"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="numOutrosRes" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ART / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="artRes" name="tipoArtRes" value="ART" onchange="mostrarArtEquipe('Res', 'art')">
+                  <label for="artRes"><span class="radio-dot"></span> ART</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="outrosArtRes" name="tipoArtRes" value="Outros" onchange="mostrarArtEquipe('Res', 'outros')">
+                  <label for="outrosArtRes"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoArtRes"><input type="text" id="numArtRes" placeholder="Número ART"></div>
+              <div class="campo-condicional" id="campoOutrosArtRes">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="nomeArtRes" placeholder="Nome (ex: RRT)"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="valArtRes" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" onclick="retornar(6)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(6)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(6)">
+                Avançar →
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Toast notification -->
@@ -1678,11 +1896,17 @@
         empresaDemol: '',
         cnpjDemol: '',
         saved: false
+      },
+      page6: {
+        coordenacao: { nome: '', cpf: '', reg: '', numCrea: '', sigla: '', numOutros: '', tipoArt: '', numArt: '', nomeArtOutros: '', numArtOutros: '' },
+        orcamento: { nome: '', cpf: '', reg: '', numCrea: '', sigla: '', numOutros: '', tipoArt: '', numArt: '', nomeArtOutros: '', numArtOutros: '' },
+        residente: { nome: '', cpf: '', reg: '', numCrea: '', sigla: '', numOutros: '', tipoArt: '', numArt: '', nomeArtOutros: '', numArtOutros: '' },
+        saved: false
       }
     };
 
     // Total de páginas
-    const totalPages = 5;
+    const totalPages = 6;
     let currentPage = 1;
     
     // Controle do tipo de documento (CPF ou CNPJ)
@@ -1809,35 +2033,56 @@
         // Identificar qual página é baseado no inputId
         if (inputId === 'profissional') {
           const radioCrea = document.getElementById('regCrea');
-          if (radioCrea) {
-            radioCrea.checked = true;
-            mostrarCampoRegistro('crea');
-            document.getElementById('numeroCrea').value = prof.crea;
-          }
+          if (radioCrea) { radioCrea.checked = true; mostrarCampoRegistro('crea'); document.getElementById('numeroCrea').value = prof.crea; }
         } else if (inputId === 'profissionalRT') {
           const radioCrea = document.getElementById('regCreaRT');
-          if (radioCrea) {
-            radioCrea.checked = true;
-            mostrarCampoRegistroRT('crea');
-            document.getElementById('numeroCreaRT').value = prof.crea;
-          }
+          if (radioCrea) { radioCrea.checked = true; mostrarCampoRegistroRT('crea'); document.getElementById('numeroCreaRT').value = prof.crea; }
         } else if (inputId === 'profissionalProjetoDemol') {
           const radioCrea = document.getElementById('regCreaProjetoDemol');
-          if (radioCrea) {
-            radioCrea.checked = true;
-            mostrarCampoRegistroPD('crea');
-            document.getElementById('numeroCreaProjetoDemol').value = prof.crea;
-          }
+          if (radioCrea) { radioCrea.checked = true; mostrarCampoRegistroPD('crea'); document.getElementById('numeroCreaProjetoDemol').value = prof.crea; }
         } else if (inputId === 'profissionalExecDemol') {
           const radioCrea = document.getElementById('regCreaExecDemol');
-          if (radioCrea) {
-            radioCrea.checked = true;
-            mostrarCampoRegistroED('crea');
-            document.getElementById('numeroCreaExecDemol').value = prof.crea;
-          }
+          if (radioCrea) { radioCrea.checked = true; mostrarCampoRegistroED('crea'); document.getElementById('numeroCreaExecDemol').value = prof.crea; }
+        }
+        // Página 6
+        else if (inputId === 'profCoordenacao') {
+          const radioCrea = document.getElementById('regCreaCoord');
+          if (radioCrea) { radioCrea.checked = true; mostrarRegistroEquipe('Coord', 'crea'); document.getElementById('numCreaCoord').value = prof.crea; }
+        } else if (inputId === 'profOrcamento') {
+          const radioCrea = document.getElementById('regCreaOrc');
+          if (radioCrea) { radioCrea.checked = true; mostrarRegistroEquipe('Orc', 'crea'); document.getElementById('numCreaOrc').value = prof.crea; }
+        } else if (inputId === 'profResidente') {
+          const radioCrea = document.getElementById('regCreaRes');
+          if (radioCrea) { radioCrea.checked = true; mostrarRegistroEquipe('Res', 'crea'); document.getElementById('numCreaRes').value = prof.crea; }
         }
       }
     }
+
+    // Funções Auxiliares Página 6
+    function mostrarRegistroEquipe(prefix, tipo) {
+      document.getElementById('campoCrea' + prefix).classList.remove('show');
+      document.getElementById('campoOutros' + prefix).classList.remove('show');
+      if (tipo === 'crea') document.getElementById('campoCrea' + prefix).classList.add('show');
+      else if (tipo === 'outros') document.getElementById('campoOutros' + prefix).classList.add('show');
+    }
+
+    function mostrarArtEquipe(prefix, tipo) {
+      document.getElementById('campoArt' + prefix).classList.remove('show');
+      document.getElementById('campoOutrosArt' + prefix).classList.remove('show');
+      if (tipo === 'art') document.getElementById('campoArt' + prefix).classList.add('show');
+      else if (tipo === 'outros') document.getElementById('campoOutrosArt' + prefix).classList.add('show');
+    }
+
+    // Máscaras CPF Página 6
+    ['cpfCoordenacao', 'cpfOrcamento', 'cpfResidente'].forEach(id => {
+      document.getElementById(id).addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length > 3) v = v.substring(0,3) + '.' + v.substring(3);
+        if (v.length > 7) v = v.substring(0,7) + '.' + v.substring(7);
+        if (v.length > 11) v = v.substring(0,11) + '-' + v.substring(11,13);
+        e.target.value = v;
+      });
+    });
     
     // Salvar lista de profissionais no cache
     function salvarProfissionaisNoCache() {
@@ -2124,6 +2369,44 @@
         document.getElementById('numeroOutrosArtExecDemol').value = formData.page5.numeroOutrosArtExecDemol || '';
         document.getElementById('empresaDemol').value = formData.page5.empresaDemol || '';
         document.getElementById('cnpjDemol').value = formData.page5.cnpjDemol || '';
+      }
+
+      // Página 6
+      if (formData.page6 && formData.page6.saved) {
+        const p6 = formData.page6;
+        const subpaginas = [
+          { key: 'coordenacao', prefix: 'Coord', idSuffix: 'Coordenacao' },
+          { key: 'orcamento', prefix: 'Orc', idSuffix: 'Orcamento' },
+          { key: 'residente', prefix: 'Res', idSuffix: 'Residente' }
+        ];
+
+        subpaginas.forEach(s => {
+          const data = p6[s.key];
+          document.getElementById('prof' + s.idSuffix).value = data.nome || '';
+          document.getElementById('cpf' + s.idSuffix).value = data.cpf || '';
+          
+          if (data.reg) {
+            const radio = document.querySelector(`input[name="reg${s.idSuffix === 'Coordenacao' ? 'Coord' : (s.idSuffix === 'Orcamento' ? 'Orc' : 'Res')}"][value="${data.reg}"]`);
+            if (radio) {
+              radio.checked = true;
+              mostrarRegistroEquipe(s.prefix, data.reg.toLowerCase());
+            }
+          }
+          document.getElementById('numCrea' + s.prefix).value = data.numCrea || '';
+          document.getElementById('sigla' + s.prefix).value = data.sigla || '';
+          document.getElementById('numOutros' + s.prefix).value = data.numOutros || '';
+
+          if (data.tipoArt) {
+            const radioArt = document.querySelector(`input[name="tipoArt${s.idSuffix === 'Coordenacao' ? 'Coord' : (s.idSuffix === 'Orcamento' ? 'Orc' : 'Res')}"][value="${data.tipoArt}"]`);
+            if (radioArt) {
+              radioArt.checked = true;
+              mostrarArtEquipe(s.prefix, data.tipoArt.toLowerCase());
+            }
+          }
+          document.getElementById('numArt' + s.prefix).value = data.numArt || '';
+          document.getElementById('nomeArt' + s.prefix).value = data.nomeArtOutros || '';
+          document.getElementById('valArt' + s.prefix).value = data.numArtOutros || '';
+        });
       }
     }
 
@@ -3199,6 +3482,53 @@
       return { isValid, avisos };
     }
 
+    // Validar Página 6 - Equipe Técnica
+    function validarPagina6() {
+      let isValid = true;
+      let avisos = [];
+
+      const blocos = [
+        { id: 'Coordenacao', label: 'Coordenação' },
+        { id: 'Orcamento', label: 'Orçamento' },
+        { id: 'Residente', label: 'Residente' }
+      ];
+
+      blocos.forEach(b => {
+        const prof = document.getElementById('prof' + b.id);
+        const cpf = document.getElementById('cpf' + b.id);
+        const errorProf = document.getElementById('errorProf' + b.id);
+        const errorCpf = document.getElementById('errorCpf' + b.id);
+
+        if (!prof.value.trim()) {
+          prof.classList.add('error');
+          errorProf.classList.add('show');
+          isValid = false;
+        } else {
+          prof.classList.remove('error');
+          errorProf.classList.remove('show');
+        }
+
+        const cpfNums = cpf.value.replace(/\D/g, '');
+        if (!cpf.value.trim() || !validarCPF(cpfNums)) {
+          cpf.classList.add('error');
+          errorCpf.classList.add('show');
+          isValid = false;
+        } else {
+          cpf.classList.remove('error');
+          errorCpf.classList.remove('show');
+        }
+
+        // Avisos opcionais
+        const reg = document.querySelector(`input[name="reg${b.id}"]:checked`);
+        if (!reg) avisos.push('Registro ' + b.label);
+        
+        const art = document.querySelector(`input[name="tipoArt${b.id}"]:checked`);
+        if (!art) avisos.push('ART ' + b.label);
+      });
+
+      return { isValid, avisos };
+    }
+
     // =============================================
     // AÇÕES DOS BOTÕES
     // =============================================
@@ -3376,6 +3706,66 @@
             }
           }
           break;
+
+        case 6:
+          const resultado6 = validarPagina6();
+          isValid = resultado6.isValid;
+          avisos = resultado6.avisos;
+          
+          if (isValid) {
+            const getRadioVal = (name) => {
+              const el = document.querySelector(`input[name="${name}"]:checked`);
+              return el ? el.value : '';
+            };
+
+            formData.page6 = {
+              coordenacao: {
+                nome: document.getElementById('profCoordenacao').value.trim(),
+                cpf: document.getElementById('cpfCoordenacao').value.trim(),
+                reg: getRadioVal('regCoord'),
+                numCrea: document.getElementById('numCreaCoord').value.trim(),
+                sigla: document.getElementById('siglaCoord').value.trim(),
+                numOutros: document.getElementById('numOutrosCoord').value.trim(),
+                tipoArt: getRadioVal('tipoArtCoord'),
+                numArt: document.getElementById('numArtCoord').value.trim(),
+                nomeArtOutros: document.getElementById('nomeArtCoord').value.trim(),
+                numArtOutros: document.getElementById('valArtCoord').value.trim()
+              },
+              orcamento: {
+                nome: document.getElementById('profOrcamento').value.trim(),
+                cpf: document.getElementById('cpfOrcamento').value.trim(),
+                reg: getRadioVal('regOrc'),
+                numCrea: document.getElementById('numCreaOrc').value.trim(),
+                sigla: document.getElementById('siglaOrc').value.trim(),
+                numOutros: document.getElementById('numOutrosOrc').value.trim(),
+                tipoArt: getRadioVal('tipoArtOrc'),
+                numArt: document.getElementById('numArtOrc').value.trim(),
+                nomeArtOutros: document.getElementById('nomeArtOrc').value.trim(),
+                numArtOutros: document.getElementById('valArtOrc').value.trim()
+              },
+              residente: {
+                nome: document.getElementById('profResidente').value.trim(),
+                cpf: document.getElementById('cpfResidente').value.trim(),
+                reg: getRadioVal('regRes'),
+                numCrea: document.getElementById('numCreaRes').value.trim(),
+                sigla: document.getElementById('siglaRes').value.trim(),
+                numOutros: document.getElementById('numOutrosRes').value.trim(),
+                tipoArt: getRadioVal('tipoArtRes'),
+                numArt: document.getElementById('numArtRes').value.trim(),
+                nomeArtOutros: document.getElementById('nomeArtRes').value.trim(),
+                numArtOutros: document.getElementById('valArtRes').value.trim()
+              },
+              saved: true
+            };
+
+            // Alimentar autocomplete
+            ['coordenacao', 'orcamento', 'residente'].forEach(key => {
+              const p = formData.page6[key];
+              const creaNum = p.reg === 'CREA' ? p.numCrea : '';
+              adicionarProfissional(p.nome, p.cpf, creaNum);
+            });
+          }
+          break;
       }
 
       if (isValid) {
@@ -3496,6 +3886,11 @@
       criarAutocomplete('profissionalRT', 'autocompleteProfissionalRT', 'cpfRT', 'numeroCreaRT');
       criarAutocomplete('profissionalProjetoDemol', 'autocompleteProfissionalProjetoDemol', 'cpfProjetoDemol', 'numeroCreaProjetoDemol');
       criarAutocomplete('profissionalExecDemol', 'autocompleteProfissionalExecDemol', 'cpfExecDemol', 'numeroCreaExecDemol');
+      
+      // Autocomplete Página 6
+      criarAutocomplete('profCoordenacao', 'autocompleteCoordenacao', 'cpfCoordenacao', 'numCreaCoord');
+      criarAutocomplete('profOrcamento', 'autocompleteOrcamento', 'cpfOrcamento', 'numCreaOrc');
+      criarAutocomplete('profResidente', 'autocompleteResidente', 'cpfResidente', 'numCreaRes');
     });
   </script>
 </body>
