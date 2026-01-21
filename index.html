@@ -1087,13 +1087,13 @@
         document.getElementById('alvaraNum').value = formData.page2.alvaraNum || '';
         document.getElementById('alvaraDe').value = formData.page2.alvaraDe || '';
         document.getElementById('proprietario').value = formData.page2.proprietario || '';
-        document.getElementById('cpfCnpj').value = formData.page2.cpfCnpj || '';
         document.getElementById('enderecoProprietario').value = formData.page2.enderecoProprietario || '';
         
-        // Restaurar tipo de documento
+        // Restaurar tipo de documento e valor do CPF/CNPJ
         if (formData.page2.tipoCpfCnpj) {
           tipoDocumento = formData.page2.tipoCpfCnpj;
-          toggleCpfCnpj(tipoDocumento);
+          toggleCpfCnpj(tipoDocumento, true); // preservar valor
+          document.getElementById('cpfCnpj').value = formData.page2.cpfCnpj || '';
         }
       }
       
@@ -1135,7 +1135,7 @@
         // Restaurar tipo de registro da empresa
         if (formData.page3.tipoEmpresaRegistro) {
           tipoEmpresaRegistro = formData.page3.tipoEmpresaRegistro;
-          toggleEmpresaRegistro(tipoEmpresaRegistro);
+          toggleEmpresaRegistro(tipoEmpresaRegistro, true); // preservar valor
           document.getElementById('empresaRegistro').value = formData.page3.empresaRegistro || '';
         }
       }
@@ -1326,7 +1326,7 @@
     }
 
     // Toggle CPF/CNPJ
-    function toggleCpfCnpj(tipo) {
+    function toggleCpfCnpj(tipo, preserveValue = false) {
       tipoDocumento = tipo;
       const btnCpf = document.getElementById('btnCpf');
       const btnCnpj = document.getElementById('btnCnpj');
@@ -1334,8 +1334,10 @@
       const hint = document.getElementById('hintCpfCnpj');
       const errorMsg = document.getElementById('errorCpfCnpj');
       
-      // Limpar valor atual
-      input.value = '';
+      // Limpar valor atual (só se não estiver preservando)
+      if (!preserveValue) {
+        input.value = '';
+      }
       input.classList.remove('error', 'success');
       errorMsg.classList.remove('show');
       
@@ -1446,7 +1448,7 @@
     });
 
     // Toggle tipo de registro da empresa (CREA/CAU/CNPJ)
-    function toggleEmpresaRegistro(tipo) {
+    function toggleEmpresaRegistro(tipo, preserveValue = false) {
       tipoEmpresaRegistro = tipo;
       const btnCrea = document.getElementById('btnEmpCrea');
       const btnCau = document.getElementById('btnEmpCau');
@@ -1459,8 +1461,10 @@
       btnCau.classList.remove('active');
       btnCnpj.classList.remove('active');
       
-      // Limpar valor e erros
-      input.value = '';
+      // Limpar valor e erros (só se não estiver preservando)
+      if (!preserveValue) {
+        input.value = '';
+      }
       input.disabled = false;
       input.classList.remove('error', 'success');
       errorMsg.classList.remove('show');
@@ -1828,8 +1832,8 @@
         // Mostrar avisos sobre campos opcionais não preenchidos
         if (avisos.length > 0) {
           setTimeout(() => {
-            showToast(`⚠️ Campos não preenchidos: ${avisos.join(', ')}`, 'warning');
-          }, 1500);
+            showToast(`⚠️ Campos não preenchidos: ${avisos.join(', ')}`, 'warning', 6000);
+          }, 2000);
         }
       } else {
         showToast('Por favor, corrija os erros antes de salvar', 'error');
@@ -1889,14 +1893,14 @@
     // =============================================
 
     // Mostrar toast
-    function showToast(message, type = 'success') {
+    function showToast(message, type = 'success', duration = 4000) {
       const toast = document.getElementById('toast');
       toast.textContent = message;
       toast.className = `toast ${type} show`;
       
       setTimeout(() => {
         toast.classList.remove('show');
-      }, 3000);
+      }, duration);
     }
 
     // =============================================
