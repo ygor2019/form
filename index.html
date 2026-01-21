@@ -2,141 +2,3925 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Formulário de Obra - CREA-SP</title>
+  <title>Formulário de Obra</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --primary: #1a365d;
+      --primary-light: #2c5282;
+      --accent: #ed8936;
+      --accent-hover: #dd6b20;
+      --card-bg: #ffffff;
+      --text-dark: #1a202c;
+      --text-muted: #718096;
+      --border: #e2e8f0;
+      --success: #38a169;
+      --error: #e53e3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Imagem do topo */
+    .header-image {
+      width: 100%;
+      background: #ffffff;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-image img {
+      max-width: 320px;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+      padding-top: 24px;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      margin-bottom: 24px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-title {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .progress-step {
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    /* Card */
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: #f7fafc;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header h1 {
+      color: var(--primary);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-header p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    /* Form elements */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group:last-of-type {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    label .required {
+      color: var(--error);
+      margin-left: 2px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      font-family: inherit;
+      font-size: 15px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--text-dark);
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(26, 54, 93, 0.1);
+    }
+
+    input.error, select.error, textarea.error {
+      border-color: var(--error);
+      background: #fff5f5;
+    }
+
+    input.success, select.success, textarea.success {
+      border-color: var(--success);
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    /* Form row (for side by side fields) */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      flex: 1;
+      padding: 16px 24px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text-dark);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(237, 137, 54, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(237, 137, 54, 0.5);
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, var(--success) 0%, #2f855a 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(56, 161, 105, 0.4);
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 161, 105, 0.5);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--text-dark);
+      color: white;
+      padding: 16px 28px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background: linear-gradient(135deg, var(--success), #2f855a);
+    }
+
+    .toast.error {
+      background: linear-gradient(135deg, var(--error), #c53030);
+    }
+
+    /* Page visibility */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* CEP formatting hint */
+    .hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Saved indicator */
+    .saved-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--success);
+      margin-left: 12px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .saved-indicator.show {
+      opacity: 1;
+    }
+
+    /* Radio buttons customizados */
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .radio-option {
+      position: relative;
+    }
+
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .radio-option label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+
+    .radio-option input[type="radio"]:checked + label {
+      border-color: var(--primary);
+      background: rgba(26, 54, 93, 0.05);
+      color: var(--primary);
+    }
+
+    .radio-option label:hover {
+      border-color: var(--primary-light);
+    }
+
+    .radio-option .radio-dot {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .radio-option input[type="radio"]:checked + label .radio-dot {
+      border-color: var(--primary);
+    }
+
+    .radio-option input[type="radio"]:checked + label .radio-dot::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    /* CPF/CNPJ toggle */
+    .toggle-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: 2px solid var(--border);
+      background: white;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--text-muted);
+    }
+
+    .toggle-btn.active {
+      border-color: var(--primary);
+      background: rgba(26, 54, 93, 0.05);
+      color: var(--primary);
+    }
+
+    .toggle-btn:hover:not(.active) {
+      border-color: var(--primary-light);
+    }
+
+    /* Form row com 3 colunas */
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .form-row-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Aviso (warning) */
+    .toast.warning {
+      background: linear-gradient(135deg, #d69e2e, #b7791f);
+    }
+
+    /* Legenda campos obrigatórios */
+    .form-legend {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .form-legend .required {
+      color: var(--error);
+    }
+
+    /* Autocomplete/Datalist */
+    input::-webkit-calendar-picker-indicator {
+      opacity: 0.6;
+    }
+
+    /* Campo condicional (aparece/esconde) */
+    .campo-condicional {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .campo-condicional.show {
+      display: block;
+    }
+
+    /* Grupo inline (label + input lado a lado) */
+    .inline-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .inline-group label {
+      margin-bottom: 0;
+      white-space: nowrap;
+    }
+
+    .inline-group input {
+      flex: 1;
+    }
+
+    /* Fieldset desabilitado */
+    fieldset:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    fieldset:disabled input,
+    fieldset:disabled label {
+      cursor: not-allowed;
+    }
+
+    /* Autocomplete customizado */
+    .autocomplete-list {
+      position: absolute;
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      margin-top: 4px;
+    }
+
+    .autocomplete-list.show {
+      display: block;
+    }
+
+    .autocomplete-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-item:hover {
+      background: rgba(26, 54, 93, 0.05);
+    }
+
+    .autocomplete-item strong {
+      color: var(--primary);
+    }
+
+    .autocomplete-item small {
+      display: block;
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+  </style>
 </head>
 <body>
+  <!-- Imagem do topo -->
   <div class="header-image">
-    <img src="topo.png" alt="CREA-SP">
+    <img src="topo.png" alt="Cabeçalho">
   </div>
 
   <div class="container">
+    <!-- Progress Bar -->
     <div class="progress-container">
       <div class="progress-header">
         <span class="progress-title">Progresso do formulário</span>
-        <span class="progress-step" id="progressStep">Página 1 de 6</span>
+        <span class="progress-step" id="progressStep">Página 1 de 1</span>
       </div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 16%"></div></div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 100%"></div>
+      </div>
     </div>
 
-    <!-- PÁGINA 1: LOCAL DA OBRA -->
+    <!-- Page 1: Local da Obra -->
     <div class="page active" id="page1">
       <div class="card">
-        <div class="card-header"><h1>📍 Local da Obra</h1><p>Localização da obra</p></div>
+        <div class="card-header">
+          <h1>📍 Local da Obra</h1>
+          <p>Informe os dados de localização da obra</p>
+        </div>
         <div class="card-body">
           <form id="form1" novalidate>
-            <div class="form-group"><label>Local da Obra *</label><input type="text" id="localObra" name="localObra" required><p class="error-message" id="errorLocalObra">Informe o local</p></div>
-            <div class="form-group"><label>Bairro *</label><input type="text" id="bairro" name="bairro" required><p class="error-message" id="errorBairro">Informe o bairro</p></div>
-            <div class="form-row">
-              <div class="form-group"><label>Cidade *</label><input type="text" id="cidade" name="cidade" value="São Paulo" required></div>
-              <div class="form-group"><label>CEP *</label><input type="text" id="cep" name="cep" placeholder="00000-000" maxlength="9" required><p class="error-message" id="errorCep">CEP inválido</p></div>
+            <div class="form-group">
+              <label for="localObra">Local da Obra <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="localObra" 
+                name="localObra" 
+                placeholder="Ex: Rua das Flores, 123"
+                required
+              >
+              <p class="error-message" id="errorLocalObra">Por favor, informe o local da obra</p>
             </div>
-            <p class="form-legend">* Campos obrigatórios</p>
+
+            <div class="form-group">
+              <label for="bairro">Bairro <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="bairro" 
+                name="bairro" 
+                placeholder="Ex: Vila Mariana"
+                required
+              >
+              <p class="error-message" id="errorBairro">Por favor, informe o bairro</p>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cidade">Cidade <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="cidade" 
+                  name="cidade" 
+                  value="São Paulo"
+                  required
+                >
+                <p class="error-message" id="errorCidade">Por favor, informe a cidade</p>
+              </div>
+
+              <div class="form-group">
+                <label for="cep">CEP <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="cep" 
+                  name="cep" 
+                  placeholder="00000-000"
+                  maxlength="9"
+                  required
+                >
+                <p class="hint">Formato: 00000-000</p>
+                <p class="error-message" id="errorCep">CEP inválido</p>
+              </div>
+            </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
             <div class="button-group">
-              <button type="button" class="btn btn-save" onclick="salvarPagina(1)">💾 Salvar</button>
-              <button type="button" class="btn btn-primary" onclick="avancar(1)">Avançar →</button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(1)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(1)">
+                Avançar →
+              </button>
             </div>
           </form>
         </div>
       </div>
     </div>
 
-    <!-- PÁGINA 2: EMPREENDIMENTO -->
+    <!-- Page 2: Empreendimento -->
     <div class="page" id="page2">
       <div class="card">
-        <div class="card-header"><h1>🏢 Empreendimento</h1><p>Dados do empreendimento</p></div>
+        <div class="card-header">
+          <h1>🏢 Empreendimento</h1>
+          <p>Informe os dados do empreendimento</p>
+        </div>
         <div class="card-body">
           <form id="form2" novalidate>
+            <!-- Tipo/Natureza -->
             <div class="form-group">
-              <label>Tipo/Natureza *</label>
-              <div class="radio-group">
-                <div class="radio-option"><input type="radio" id="tR" name="tipoNatureza" value="Residencial"><label for="tR"><span class="radio-dot"></span> Residencial</label></div>
-                <div class="radio-option"><input type="radio" id="tC" name="tipoNatureza" value="Comercial"><label for="tC"><span class="radio-dot"></span> Comercial</label></div>
-                <div class="radio-option"><input type="radio" id="tI" name="tipoNatureza" value="Industrial"><label for="tI"><span class="radio-dot"></span> Industrial</label></div>
-                <div class="radio-option"><input type="radio" id="tM" name="tipoNatureza" value="Mista"><label for="tM"><span class="radio-dot"></span> Mista</label></div>
+              <label>Tipo/Natureza <span class="required">*</span></label>
+              <div class="radio-group" id="tipoNatureza">
+                <div class="radio-option">
+                  <input type="radio" id="tipoResid" name="tipoNatureza" value="Residencial">
+                  <label for="tipoResid">
+                    <span class="radio-dot"></span>
+                    Residencial
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="tipoComl" name="tipoNatureza" value="Comercial">
+                  <label for="tipoComl">
+                    <span class="radio-dot"></span>
+                    Comercial
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="tipoInd" name="tipoNatureza" value="Industrial">
+                  <label for="tipoInd">
+                    <span class="radio-dot"></span>
+                    Industrial
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="tipoMista" name="tipoNatureza" value="Mista">
+                  <label for="tipoMista">
+                    <span class="radio-dot"></span>
+                    Mista
+                  </label>
+                </div>
               </div>
+              <p class="error-message" id="errorTipoNatureza">Selecione o tipo do empreendimento</p>
             </div>
+
+            <!-- Área e Pavimentos -->
             <div class="form-row">
-              <div class="form-group"><label>Área (m²) *</label><input type="text" id="area" name="area" required></div>
-              <div class="form-group"><label>Pavimentos *</label><input type="number" id="pavimentos" name="pavimentos" min="1" required></div>
-            </div>
-            <div class="form-row-3">
-              <div class="form-group"><label>Processo nº</label><input type="text" id="processoNum"></div>
-              <div class="form-group"><label>Alvará nº</label><input type="text" id="alvaraNum"></div>
-              <div class="form-group"><label>de: (ano)</label><input type="text" id="alvaraDe" maxlength="4" placeholder="2024"></div>
-            </div>
-            <div class="form-group"><label>Proprietário *</label><input type="text" id="proprietario" name="proprietario" required></div>
-            <div class="form-group">
-              <label>CPF ou CNPJ *</label>
-              <div class="toggle-group" style="margin-bottom:10px">
-                <button type="button" class="toggle-btn active" id="btnCpf" onclick="toggleDoc('cpf')">CPF</button>
-                <button type="button" class="toggle-btn" id="btnCnpj" onclick="toggleDoc('cnpj')">CNPJ</button>
+              <div class="form-group">
+                <label for="area">Área (m²) <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="area" 
+                  name="area" 
+                  placeholder="Ex: 1.500"
+                  inputmode="numeric"
+                >
+                <p class="error-message" id="errorArea">Informe a área</p>
               </div>
-              <input type="text" id="cpfCnpj" name="cpfCnpj" required>
+
+              <div class="form-group">
+                <label for="pavimentos">Nº Pavimentos <span class="required">*</span></label>
+                <input 
+                  type="number" 
+                  id="pavimentos" 
+                  name="pavimentos" 
+                  placeholder="Ex: 2"
+                  min="1"
+                  step="1"
+                >
+                <p class="error-message" id="errorPavimentos">Mínimo 1 pavimento</p>
+              </div>
             </div>
-            <div class="form-group"><label>Endereço *</label><input type="text" id="enderecoProprietario" name="enderecoProprietario" required></div>
-            <p class="form-legend">* Campos obrigatórios</p>
+
+            <!-- Processo e Alvará -->
+            <div class="form-row-3">
+              <div class="form-group">
+                <label for="processoNum">Processo nº</label>
+                <input 
+                  type="text" 
+                  id="processoNum" 
+                  name="processoNum" 
+                  placeholder="Nº do processo"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="alvaraNum">Alvará nº</label>
+                <input 
+                  type="text" 
+                  id="alvaraNum" 
+                  name="alvaraNum" 
+                  placeholder="Nº do alvará"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="alvaraDe">de: (ano)</label>
+                <input 
+                  type="text" 
+                  id="alvaraDe" 
+                  name="alvaraDe" 
+                  placeholder="Ex: 2024"
+                  maxlength="4"
+                  inputmode="numeric"
+                >
+                <p class="error-message" id="errorAlvaraDe">Ano inválido (4 dígitos)</p>
+              </div>
+            </div>
+
+            <!-- Proprietário -->
+            <div class="form-group">
+              <label for="proprietario">Proprietário <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="proprietario" 
+                name="proprietario" 
+                placeholder="Nome completo do proprietário"
+              >
+              <p class="error-message" id="errorProprietario">Informe o proprietário</p>
+            </div>
+
+            <!-- CPF ou CNPJ -->
+            <div class="form-group">
+              <label>CPF ou CNPJ <span class="required">*</span></label>
+              <div class="toggle-group">
+                <button type="button" class="toggle-btn active" id="btnCpf" onclick="toggleCpfCnpj('cpf')">CPF</button>
+                <button type="button" class="toggle-btn" id="btnCnpj" onclick="toggleCpfCnpj('cnpj')">CNPJ</button>
+              </div>
+              <input 
+                type="text" 
+                id="cpfCnpj" 
+                name="cpfCnpj" 
+                placeholder="000.000.000-00"
+                maxlength="14"
+              >
+              <p class="hint" id="hintCpfCnpj">Formato: 000.000.000-00</p>
+              <p class="error-message" id="errorCpfCnpj">CPF inválido</p>
+            </div>
+
+            <!-- Endereço -->
+            <div class="form-group">
+              <label for="enderecoProprietario">Endereço <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="enderecoProprietario" 
+                name="enderecoProprietario" 
+                placeholder="Endereço completo do proprietário"
+              >
+              <p class="error-message" id="errorEnderecoProprietario">Informe o endereço</p>
+            </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
             <div class="button-group">
-              <button type="button" class="btn btn-secondary" onclick="retornar(2)">← Retornar</button>
-              <button type="button" class="btn btn-save" onclick="salvarPagina(2)">💾 Salvar</button>
-              <button type="button" class="btn btn-primary" onclick="avancar(2)">Avançar →</button>
+              <button type="button" class="btn btn-secondary" onclick="retornar(2)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(2)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(2)">
+                Avançar →
+              </button>
             </div>
           </form>
         </div>
       </div>
     </div>
 
-    <!-- PÁGINA 3: AUTOR DO PROJETO -->
+    <!-- Page 3: Autor do Projeto -->
     <div class="page" id="page3">
       <div class="card">
-        <div class="card-header"><h1>👷 Autor do Projeto</h1><p>Responsável técnico</p></div>
+        <div class="card-header">
+          <h1>👷 Autor do Projeto</h1>
+          <p>Informe os dados do responsável técnico</p>
+        </div>
         <div class="card-body">
           <form id="form3" novalidate>
-            <div class="form-group"><label>Placa afixada? *</label>
-              <div class="radio-group">
-                <div class="radio-option"><input type="radio" id="pS" name="placaAfixada" value="Sim"><label for="pS"><span class="radio-dot"></span> SIM</label></div>
-                <div class="radio-option"><input type="radio" id="pN" name="placaAfixada" value="Não"><label for="pN"><span class="radio-dot"></span> NÃO</label></div>
-              </div>
-            </div>
-            <div class="form-group" style="position:relative">
-              <label>Profissional *</label><input type="text" id="profissional" name="profissional" autocomplete="new-password" required>
-              <div class="autocomplete-list" id="autocompleteProfissional"></div>
-            </div>
+            <!-- Placa afixada -->
             <div class="form-group">
-              <label>Registro *</label>
+              <label>Placa afixada? <span class="required">*</span></label>
               <div class="radio-group">
-                <div class="radio-option"><input type="radio" id="rC" name="tipoRegistro" value="CREA" onchange="showHide('PD','crea')"><label for="rC"><span class="radio-dot"></span> CREA</label></div>
-                <div class="radio-option"><input type="radio" id="rP" name="tipoRegistro" value="CPF" onchange="showHide('PD','cpf')"><label for="rP"><span class="radio-dot"></span> CPF</label></div>
+                <div class="radio-option">
+                  <input type="radio" id="placaSim" name="placaAfixada" value="Sim">
+                  <label for="placaSim">
+                    <span class="radio-dot"></span>
+                    SIM
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="placaNao" name="placaAfixada" value="Não">
+                  <label for="placaNao">
+                    <span class="radio-dot"></span>
+                    NÃO
+                  </label>
+                </div>
               </div>
-              <div id="PD_crea" class="campo-condicional"><input type="text" id="numeroCrea" placeholder="Nº CREA"></div>
-              <div id="PD_cpf" class="campo-condicional"><input type="text" id="cpfProfissional" placeholder="000.000.000-00"></div>
+              <p class="error-message" id="errorPlacaAfixada">Selecione uma opção</p>
             </div>
-            <!-- ... Outras páginas seguirão o mesmo padrão limpo ... -->
-            <p class="form-legend">* Campos obrigatórios</p>
+
+            <!-- Profissional -->
+            <div class="form-group" style="position: relative;">
+              <label for="profissional">Profissional <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="profissional" 
+                name="profissional" 
+                placeholder="Nome completo do profissional"
+                autocomplete="new-password"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+              >
+              <div class="autocomplete-list" id="autocompleteProfissional"></div>
+              <p class="error-message" id="errorProfissional">Informe o nome do profissional</p>
+            </div>
+
+            <!-- Tipo de Registro -->
+            <div class="form-group">
+              <label>Registro <span class="required">*</span></label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="regCrea" name="tipoRegistro" value="CREA" onchange="mostrarCampoRegistro('crea')">
+                  <label for="regCrea">
+                    <span class="radio-dot"></span>
+                    CREA
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regCpf" name="tipoRegistro" value="CPF" onchange="mostrarCampoRegistro('cpf')">
+                  <label for="regCpf">
+                    <span class="radio-dot"></span>
+                    CPF
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regOutros" name="tipoRegistro" value="Outros" onchange="mostrarCampoRegistro('outros')">
+                  <label for="regOutros">
+                    <span class="radio-dot"></span>
+                    Outros
+                  </label>
+                </div>
+              </div>
+              
+              <!-- Campo CREA -->
+              <div class="campo-condicional" id="campoCrea">
+                <input 
+                  type="text" 
+                  id="numeroCrea" 
+                  name="numeroCrea" 
+                  placeholder="Número do CREA"
+                >
+              </div>
+              
+              <!-- Campo CPF -->
+              <div class="campo-condicional" id="campoCpfProf">
+                <input 
+                  type="text" 
+                  id="cpfProfissional" 
+                  name="cpfProfissional" 
+                  placeholder="000.000.000-00"
+                  maxlength="14"
+                >
+                <p class="hint">Formato: 000.000.000-00</p>
+              </div>
+              
+              <!-- Campo Outros -->
+              <div class="campo-condicional" id="campoOutros">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <input 
+                      type="text" 
+                      id="siglaConselho" 
+                      name="siglaConselho" 
+                      placeholder="Sigla (ex: CAU)"
+                    >
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <input 
+                      type="text" 
+                      id="numeroConselho" 
+                      name="numeroConselho" 
+                      placeholder="Número"
+                    >
+                  </div>
+                </div>
+              </div>
+              
+              <p class="error-message" id="errorRegistro">Informe o número do registro</p>
+            </div>
+
+            <!-- Título -->
+            <div class="form-group">
+              <label for="titulo">Título</label>
+              <input 
+                type="text" 
+                id="titulo" 
+                name="titulo" 
+                list="listaTitulos"
+                placeholder="Ex: Engenheiro Civil"
+              >
+              <datalist id="listaTitulos">
+                <option value="Engenheiro Civil">
+                <option value="Arquiteto">
+                <option value="Engenheiro Eletricista">
+                <option value="Engenheiro Mecânico">
+                <option value="Técnico em Edificações">
+              </datalist>
+            </div>
+
+            <!-- ART/RRT -->
+            <div class="form-group">
+              <label>ART / RRT</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="tipoArt" name="tipoArtRrt" value="ART" onchange="mostrarCampoArtRrt('art')">
+                  <label for="tipoArt">
+                    <span class="radio-dot"></span>
+                    ART
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="tipoRrt" name="tipoArtRrt" value="RRT" onchange="mostrarCampoArtRrt('rrt')">
+                  <label for="tipoRrt">
+                    <span class="radio-dot"></span>
+                    RRT
+                  </label>
+                </div>
+              </div>
+              
+              <!-- Campo ART -->
+              <div class="campo-condicional" id="campoArt">
+                <input 
+                  type="text" 
+                  id="artNumero" 
+                  name="artNumero" 
+                  placeholder="Número da ART"
+                  inputmode="numeric"
+                >
+              </div>
+              
+              <!-- Campo RRT -->
+              <div class="campo-condicional" id="campoRrt">
+                <input 
+                  type="text" 
+                  id="rrtNumero" 
+                  name="rrtNumero" 
+                  placeholder="Número do RRT"
+                  inputmode="numeric"
+                >
+              </div>
+            </div>
+
+            <!-- Empresa -->
+            <div class="form-group">
+              <label for="empresa">Empresa</label>
+              <input 
+                type="text" 
+                id="empresa" 
+                name="empresa" 
+                placeholder="Nome da empresa"
+              >
+            </div>
+
+            <!-- CREA/CAU/CNPJ da Empresa -->
+            <div class="form-group">
+              <label>Registro da Empresa</label>
+              <div class="toggle-group" style="margin-bottom: 12px;">
+                <button type="button" class="toggle-btn" id="btnEmpCrea" onclick="toggleEmpresaRegistro('crea')">CREA</button>
+                <button type="button" class="toggle-btn" id="btnEmpCau" onclick="toggleEmpresaRegistro('cau')">CAU</button>
+                <button type="button" class="toggle-btn" id="btnEmpCnpj" onclick="toggleEmpresaRegistro('cnpj')">CNPJ</button>
+              </div>
+              <input 
+                type="text" 
+                id="empresaRegistro" 
+                name="empresaRegistro" 
+                placeholder="Selecione o tipo acima"
+                disabled
+              >
+              <p class="error-message" id="errorEmpresaRegistro">CNPJ inválido</p>
+            </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
             <div class="button-group">
-              <button type="button" class="btn btn-secondary" onclick="retornar(3)">← Retornar</button>
-              <button type="button" class="btn btn-save" onclick="salvarPagina(3)">💾 Salvar</button>
-              <button type="button" class="btn btn-primary" onclick="avancar(3)">Avançar →</button>
+              <button type="button" class="btn btn-secondary" onclick="retornar(3)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(3)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(3)">
+                Avançar →
+              </button>
             </div>
           </form>
         </div>
       </div>
     </div>
 
-    <!-- NOTA: Simplifiquei o HTML para mostrar a nova estrutura. 
-         Vou preencher o restante no arquivo JS para ser gerado dinamicamente ou mantido de forma modular. -->
+    <!-- Page 4: Responsável Técnico -->
+    <div class="page" id="page4">
+      <div class="card">
+        <div class="card-header">
+          <h1>🔧 Responsável Técnico</h1>
+          <p>Informe os dados do responsável técnico pela execução</p>
+        </div>
+        <div class="card-body">
+          <form id="form4" novalidate>
+            <!-- Placa afixada -->
+            <div class="form-group">
+              <label>Placa afixada? <span class="required">*</span></label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="placaSimRT" name="placaAfixadaRT" value="Sim">
+                  <label for="placaSimRT">
+                    <span class="radio-dot"></span>
+                    SIM
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="placaNaoRT" name="placaAfixadaRT" value="Não">
+                  <label for="placaNaoRT">
+                    <span class="radio-dot"></span>
+                    NÃO
+                  </label>
+                </div>
+              </div>
+              <p class="error-message" id="errorPlacaAfixadaRT">Selecione uma opção</p>
+            </div>
+
+            <!-- Profissional -->
+            <div class="form-group" style="position: relative;">
+              <label for="profissionalRT">Profissional <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="profissionalRT" 
+                name="profissionalRT" 
+                placeholder="Nome completo do profissional"
+                autocomplete="new-password"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+              >
+              <div class="autocomplete-list" id="autocompleteProfissionalRT"></div>
+              <p class="error-message" id="errorProfissionalRT">Informe o nome do profissional</p>
+            </div>
+
+            <!-- CPF -->
+            <div class="form-group">
+              <label for="cpfRT">CPF <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="cpfRT" 
+                name="cpfRT" 
+                placeholder="000.000.000-00"
+                maxlength="14"
+              >
+              <p class="hint">Formato: 000.000.000-00</p>
+              <p class="error-message" id="errorCpfRT">CPF inválido</p>
+            </div>
+
+            <!-- CREA/Outros -->
+            <div class="form-group">
+              <label>CREA / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="regCreaRT" name="tipoRegistroRT" value="CREA" onchange="mostrarCampoRegistroRT('crea')">
+                  <label for="regCreaRT">
+                    <span class="radio-dot"></span>
+                    CREA
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regOutrosRT" name="tipoRegistroRT" value="Outros" onchange="mostrarCampoRegistroRT('outros')">
+                  <label for="regOutrosRT">
+                    <span class="radio-dot"></span>
+                    Outros
+                  </label>
+                </div>
+              </div>
+              
+              <!-- Campo CREA -->
+              <div class="campo-condicional" id="campoCreaRT">
+                <input 
+                  type="text" 
+                  id="numeroCreaRT" 
+                  name="numeroCreaRT" 
+                  placeholder="Número do CREA"
+                >
+              </div>
+              
+              <!-- Campo Outros -->
+              <div class="campo-condicional" id="campoOutrosRT">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <input 
+                      type="text" 
+                      id="siglaConselhoRT" 
+                      name="siglaConselhoRT" 
+                      placeholder="Nome/Sigla (ex: CAU)"
+                    >
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <input 
+                      type="text" 
+                      id="numeroConselhoRT" 
+                      name="numeroConselhoRT" 
+                      placeholder="Número"
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ART/Outros -->
+            <div class="form-group">
+              <label>ART / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="tipoArtRT" name="tipoArtOutrosRT" value="ART" onchange="mostrarCampoArtOutrosRT('art')">
+                  <label for="tipoArtRT">
+                    <span class="radio-dot"></span>
+                    ART
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="tipoOutrosArtRT" name="tipoArtOutrosRT" value="Outros" onchange="mostrarCampoArtOutrosRT('outros')">
+                  <label for="tipoOutrosArtRT">
+                    <span class="radio-dot"></span>
+                    Outros
+                  </label>
+                </div>
+              </div>
+              
+              <!-- Campo ART -->
+              <div class="campo-condicional" id="campoArtRT">
+                <input 
+                  type="text" 
+                  id="artNumeroRT" 
+                  name="artNumeroRT" 
+                  placeholder="Número da ART"
+                  inputmode="numeric"
+                >
+              </div>
+              
+              <!-- Campo Outros -->
+              <div class="campo-condicional" id="campoOutrosArtRT">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <input 
+                      type="text" 
+                      id="nomeOutrosArtRT" 
+                      name="nomeOutrosArtRT" 
+                      placeholder="Nome (ex: RRT)"
+                    >
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <input 
+                      type="text" 
+                      id="numeroOutrosArtRT" 
+                      name="numeroOutrosArtRT" 
+                      placeholder="Número"
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empresa -->
+            <div class="form-group">
+              <label for="empresaRT">Empresa</label>
+              <input 
+                type="text" 
+                id="empresaRT" 
+                name="empresaRT" 
+                placeholder="Nome da empresa"
+              >
+            </div>
+
+            <!-- CREA/CAU/CNPJ da Empresa -->
+            <div class="form-group">
+              <label>Registro da Empresa</label>
+              <div class="toggle-group" style="margin-bottom: 12px;">
+                <button type="button" class="toggle-btn" id="btnEmpCreaRT" onclick="toggleEmpresaRegistroRT('crea')">CREA</button>
+                <button type="button" class="toggle-btn" id="btnEmpCauRT" onclick="toggleEmpresaRegistroRT('cau')">CAU</button>
+                <button type="button" class="toggle-btn" id="btnEmpCnpjRT" onclick="toggleEmpresaRegistroRT('cnpj')">CNPJ</button>
+              </div>
+              <input 
+                type="text" 
+                id="empresaRegistroRT" 
+                name="empresaRegistroRT" 
+                placeholder="Selecione o tipo acima"
+                disabled
+              >
+              <p class="error-message" id="errorEmpresaRegistroRT">CNPJ inválido</p>
+            </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" onclick="retornar(4)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(4)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(4)">
+                Avançar →
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 5: Demolição -->
+    <div class="page" id="page5">
+      <div class="card">
+        <div class="card-header">
+          <h1>🏗️ Demolição</h1>
+          <p>Informe os dados sobre demolição</p>
+        </div>
+        <div class="card-body">
+          <form id="form5" novalidate>
+            <!-- Houve Demolição -->
+            <div class="form-group">
+              <label>Houve Demolição? <span class="required">*</span></label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="demolicaoSim" name="houveDemolicao" value="Sim" onchange="toggleDemolicao()">
+                  <label for="demolicaoSim">
+                    <span class="radio-dot"></span>
+                    SIM
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="demolicaoNao" name="houveDemolicao" value="Não" onchange="toggleDemolicao()">
+                  <label for="demolicaoNao">
+                    <span class="radio-dot"></span>
+                    NÃO
+                  </label>
+                </div>
+              </div>
+              <p class="error-message" id="errorHouveDemolicao">Selecione uma opção</p>
+            </div>
+
+            <!-- Campos de Demolição (aparecem se Sim) -->
+            <div id="camposDemolicao" style="display: none;">
+              
+              <!-- PROJETO DE DEMOLIÇÃO -->
+              <div class="form-group">
+                <label>Projeto/Plano de Demolição?</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="projetoDemolicaoSim" name="projetoDemolicao" value="Sim" onchange="toggleProjetoDemolicao()">
+                    <label for="projetoDemolicaoSim">
+                      <span class="radio-dot"></span>
+                      SIM
+                    </label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="projetoDemolicaoNao" name="projetoDemolicao" value="Não" onchange="toggleProjetoDemolicao()">
+                    <label for="projetoDemolicaoNao">
+                      <span class="radio-dot"></span>
+                      NÃO
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Profissional do Projeto -->
+              <fieldset id="fieldsetProjetoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
+                <div class="form-group" style="position: relative;">
+                  <label for="profissionalProjetoDemol">Profissional <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="profissionalProjetoDemol" 
+                    name="profissionalProjetoDemol" 
+                    placeholder="Nome completo do profissional"
+                    autocomplete="new-password"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                  >
+                  <div class="autocomplete-list" id="autocompleteProfissionalProjetoDemol"></div>
+                  <p class="error-message" id="errorProfissionalProjetoDemol">Informe o profissional</p>
+                </div>
+
+                <div class="form-group">
+                  <label for="cpfProjetoDemol">CPF <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="cpfProjetoDemol" 
+                    name="cpfProjetoDemol" 
+                    placeholder="000.000.000-00"
+                    maxlength="14"
+                  >
+                  <p class="hint">Formato: 000.000.000-00</p>
+                  <p class="error-message" id="errorCpfProjetoDemol">CPF inválido</p>
+                </div>
+
+                <!-- CREA/Outros -->
+                <div class="form-group">
+                  <label>CREA / Outros</label>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="regCreaProjetoDemol" name="tipoRegistroProjetoDemol" value="CREA" onchange="mostrarCampoRegistroPD('crea')">
+                      <label for="regCreaProjetoDemol">
+                        <span class="radio-dot"></span>
+                        CREA
+                      </label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="regOutrosProjetoDemol" name="tipoRegistroProjetoDemol" value="Outros" onchange="mostrarCampoRegistroPD('outros')">
+                      <label for="regOutrosProjetoDemol">
+                        <span class="radio-dot"></span>
+                        Outros
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoCreaProjetoDemol">
+                    <input type="text" id="numeroCreaProjetoDemol" placeholder="Número do CREA">
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoOutrosProjetoDemol">
+                    <div class="form-row">
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="siglaConselhoProjetoDemol" placeholder="Nome/Sigla">
+                      </div>
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="numeroConselhoProjetoDemol" placeholder="Número">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ART/Outros -->
+                <div class="form-group">
+                  <label>ART / Outros</label>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="tipoArtProjetoDemol" name="tipoArtProjetoDemol" value="ART" onchange="mostrarCampoArtPD('art')">
+                      <label for="tipoArtProjetoDemol">
+                        <span class="radio-dot"></span>
+                        ART
+                      </label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="tipoOutrosArtProjetoDemol" name="tipoArtProjetoDemol" value="Outros" onchange="mostrarCampoArtPD('outros')">
+                      <label for="tipoOutrosArtProjetoDemol">
+                        <span class="radio-dot"></span>
+                        Outros
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoArtProjetoDemol">
+                    <input type="text" id="artNumeroProjetoDemol" placeholder="Número da ART" inputmode="numeric">
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoOutrosArtProjetoDemol">
+                    <div class="form-row">
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="nomeOutrosArtProjetoDemol" placeholder="Nome (ex: RRT)">
+                      </div>
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="numeroOutrosArtProjetoDemol" placeholder="Número">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <hr style="margin: 32px 0; border: none; border-top: 1px solid var(--border);">
+
+              <!-- EXECUÇÃO DE DEMOLIÇÃO -->
+              <div class="form-group">
+                <label>Execução Demolição?</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="execucaoDemolicaoSim" name="execucaoDemolicao" value="Sim" onchange="toggleExecucaoDemolicao()">
+                    <label for="execucaoDemolicaoSim">
+                      <span class="radio-dot"></span>
+                      SIM
+                    </label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="execucaoDemolicaoNao" name="execucaoDemolicao" value="Não" onchange="toggleExecucaoDemolicao()">
+                    <label for="execucaoDemolicaoNao">
+                      <span class="radio-dot"></span>
+                      NÃO
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Profissional da Execução -->
+              <fieldset id="fieldsetExecucaoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
+                <div class="form-group" style="position: relative;">
+                  <label for="profissionalExecDemol">Profissional <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="profissionalExecDemol" 
+                    name="profissionalExecDemol" 
+                    placeholder="Nome completo do profissional"
+                    autocomplete="new-password"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                  >
+                  <div class="autocomplete-list" id="autocompleteProfissionalExecDemol"></div>
+                  <p class="error-message" id="errorProfissionalExecDemol">Informe o profissional</p>
+                </div>
+
+                <div class="form-group">
+                  <label for="cpfExecDemol">CPF <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="cpfExecDemol" 
+                    name="cpfExecDemol" 
+                    placeholder="000.000.000-00"
+                    maxlength="14"
+                  >
+                  <p class="hint">Formato: 000.000.000-00</p>
+                  <p class="error-message" id="errorCpfExecDemol">CPF inválido</p>
+                </div>
+
+                <!-- CREA/Outros -->
+                <div class="form-group">
+                  <label>CREA / Outros</label>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="regCreaExecDemol" name="tipoRegistroExecDemol" value="CREA" onchange="mostrarCampoRegistroED('crea')">
+                      <label for="regCreaExecDemol">
+                        <span class="radio-dot"></span>
+                        CREA
+                      </label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="regOutrosExecDemol" name="tipoRegistroExecDemol" value="Outros" onchange="mostrarCampoRegistroED('outros')">
+                      <label for="regOutrosExecDemol">
+                        <span class="radio-dot"></span>
+                        Outros
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoCreaExecDemol">
+                    <input type="text" id="numeroCreaExecDemol" placeholder="Número do CREA">
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoOutrosExecDemol">
+                    <div class="form-row">
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="siglaConselhoExecDemol" placeholder="Nome/Sigla">
+                      </div>
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="numeroConselhoExecDemol" placeholder="Número">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ART/Outros -->
+                <div class="form-group">
+                  <label>ART / Outros</label>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="tipoArtExecDemol" name="tipoArtExecDemol" value="ART" onchange="mostrarCampoArtED('art')">
+                      <label for="tipoArtExecDemol">
+                        <span class="radio-dot"></span>
+                        ART
+                      </label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="tipoOutrosArtExecDemol" name="tipoArtExecDemol" value="Outros" onchange="mostrarCampoArtED('outros')">
+                      <label for="tipoOutrosArtExecDemol">
+                        <span class="radio-dot"></span>
+                        Outros
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoArtExecDemol">
+                    <input type="text" id="artNumeroExecDemol" placeholder="Número da ART" inputmode="numeric">
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoOutrosArtExecDemol">
+                    <div class="form-row">
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="nomeOutrosArtExecDemol" placeholder="Nome (ex: RRT)">
+                      </div>
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="numeroOutrosArtExecDemol" placeholder="Número">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Empresa -->
+                <div class="form-group">
+                  <label for="empresaDemol">Empresa</label>
+                  <input 
+                    type="text" 
+                    id="empresaDemol" 
+                    name="empresaDemol" 
+                    placeholder="Nome da empresa"
+                  >
+                </div>
+
+                <!-- CNPJ -->
+                <div class="form-group">
+                  <label for="cnpjDemol">CNPJ</label>
+                  <input 
+                    type="text" 
+                    id="cnpjDemol" 
+                    name="cnpjDemol" 
+                    placeholder="00.000.000/0000-00"
+                    maxlength="18"
+                  >
+                  <p class="hint">Formato: 00.000.000/0000-00</p>
+                  <p class="error-message" id="errorCnpjDemol">CNPJ inválido</p>
+                </div>
+              </fieldset>
+
+            </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" onclick="retornar(5)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(5)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(5)">
+                Avançar →
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 6: Equipe Técnica -->
+    <div class="page" id="page6">
+      <div class="card">
+        <div class="card-header">
+          <h1>👥 Equipe Técnica</h1>
+          <p>Outros engenheiros responsáveis e/ou integrantes da equipe</p>
+        </div>
+        <div class="card-body">
+          <form id="form6" novalidate>
+            
+            <!-- Bloco 1: Coordenação -->
+            <div class="section-title" style="margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: 700;">
+              📌 Coordenação
+            </div>
+            
+            <div class="form-group" style="position: relative;">
+              <label for="profCoordenacao">Profissional <span class="required">*</span></label>
+              <input type="text" id="profCoordenacao" name="profCoordenacao" placeholder="Nome do Coordenador" autocomplete="new-password">
+              <div class="autocomplete-list" id="autocompleteCoordenacao"></div>
+              <p class="error-message" id="errorProfCoordenacao">Informe o profissional</p>
+            </div>
+
+            <div class="form-group">
+              <label for="cpfCoordenacao">CPF <span class="required">*</span></label>
+              <input type="text" id="cpfCoordenacao" name="cpfCoordenacao" placeholder="000.000.000-00" maxlength="14">
+              <p class="error-message" id="errorCpfCoordenacao">CPF inválido</p>
+            </div>
+
+            <div class="form-group">
+              <label>CREA / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="regCreaCoord" name="regCoord" value="CREA" onchange="mostrarRegistroEquipe('Coord', 'crea')">
+                  <label for="regCreaCoord"><span class="radio-dot"></span> CREA</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regOutrosCoord" name="regCoord" value="Outros" onchange="mostrarRegistroEquipe('Coord', 'outros')">
+                  <label for="regOutrosCoord"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoCreaCoord">
+                <input type="text" id="numCreaCoord" placeholder="Número do CREA">
+              </div>
+              <div class="campo-condicional" id="campoOutrosCoord">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="siglaCoord" placeholder="Sigla"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="numOutrosCoord" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ART / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="artCoord" name="tipoArtCoord" value="ART" onchange="mostrarArtEquipe('Coord', 'art')">
+                  <label for="artCoord"><span class="radio-dot"></span> ART</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="outrosArtCoord" name="tipoArtCoord" value="Outros" onchange="mostrarArtEquipe('Coord', 'outros')">
+                  <label for="outrosArtCoord"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoArtCoord"><input type="text" id="numArtCoord" placeholder="Número ART"></div>
+              <div class="campo-condicional" id="campoOutrosArtCoord">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="nomeArtCoord" placeholder="Nome (ex: RRT)"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="valArtCoord" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <hr style="margin: 40px 0; border: none; border-top: 2px dashed var(--border);">
+
+            <!-- Bloco 2: Orçamento -->
+            <div class="section-title" style="margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: 700;">
+              📌 Orçamento
+            </div>
+            
+            <div class="form-group" style="position: relative;">
+              <label for="profOrcamento">Profissional <span class="required">*</span></label>
+              <input type="text" id="profOrcamento" name="profOrcamento" placeholder="Nome do Responsável pelo Orçamento" autocomplete="new-password">
+              <div class="autocomplete-list" id="autocompleteOrcamento"></div>
+              <p class="error-message" id="errorProfOrcamento">Informe o profissional</p>
+            </div>
+
+            <div class="form-group">
+              <label for="cpfOrcamento">CPF <span class="required">*</span></label>
+              <input type="text" id="cpfOrcamento" name="cpfOrcamento" placeholder="000.000.000-00" maxlength="14">
+              <p class="error-message" id="errorCpfOrcamento">CPF inválido</p>
+            </div>
+
+            <div class="form-group">
+              <label>CREA / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="regCreaOrc" name="regOrc" value="CREA" onchange="mostrarRegistroEquipe('Orc', 'crea')">
+                  <label for="regCreaOrc"><span class="radio-dot"></span> CREA</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regOutrosOrc" name="regOrc" value="Outros" onchange="mostrarRegistroEquipe('Orc', 'outros')">
+                  <label for="regOutrosOrc"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoCreaOrc">
+                <input type="text" id="numCreaOrc" placeholder="Número do CREA">
+              </div>
+              <div class="campo-condicional" id="campoOutrosOrc">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="siglaOrc" placeholder="Sigla"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="numOutrosOrc" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ART / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="artOrc" name="tipoArtOrc" value="ART" onchange="mostrarArtEquipe('Orc', 'art')">
+                  <label for="artOrc"><span class="radio-dot"></span> ART</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="outrosArtOrc" name="tipoArtOrc" value="Outros" onchange="mostrarArtEquipe('Orc', 'outros')">
+                  <label for="outrosArtOrc"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoArtOrc"><input type="text" id="numArtOrc" placeholder="Número ART"></div>
+              <div class="campo-condicional" id="campoOutrosArtOrc">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="nomeArtOrc" placeholder="Nome (ex: RRT)"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="valArtOrc" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <hr style="margin: 40px 0; border: none; border-top: 2px dashed var(--border);">
+
+            <!-- Bloco 3: Residente -->
+            <div class="section-title" style="margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); color: var(--primary); font-weight: 700;">
+              📌 Residente
+            </div>
+            
+            <div class="form-group" style="position: relative;">
+              <label for="profResidente">Profissional <span class="required">*</span></label>
+              <input type="text" id="profResidente" name="profResidente" placeholder="Nome do Engenheiro Residente" autocomplete="new-password">
+              <div class="autocomplete-list" id="autocompleteResidente"></div>
+              <p class="error-message" id="errorProfResidente">Informe o profissional</p>
+            </div>
+
+            <div class="form-group">
+              <label for="cpfResidente">CPF <span class="required">*</span></label>
+              <input type="text" id="cpfResidente" name="cpfResidente" placeholder="000.000.000-00" maxlength="14">
+              <p class="error-message" id="errorCpfResidente">CPF inválido</p>
+            </div>
+
+            <div class="form-group">
+              <label>CREA / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="regCreaRes" name="regRes" value="CREA" onchange="mostrarRegistroEquipe('Res', 'crea')">
+                  <label for="regCreaRes"><span class="radio-dot"></span> CREA</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="regOutrosRes" name="regRes" value="Outros" onchange="mostrarRegistroEquipe('Res', 'outros')">
+                  <label for="regOutrosRes"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoCreaRes">
+                <input type="text" id="numCreaRes" placeholder="Número do CREA">
+              </div>
+              <div class="campo-condicional" id="campoOutrosRes">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="siglaRes" placeholder="Sigla"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="numOutrosRes" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>ART / Outros</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="artRes" name="tipoArtRes" value="ART" onchange="mostrarArtEquipe('Res', 'art')">
+                  <label for="artRes"><span class="radio-dot"></span> ART</label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="outrosArtRes" name="tipoArtRes" value="Outros" onchange="mostrarArtEquipe('Res', 'outros')">
+                  <label for="outrosArtRes"><span class="radio-dot"></span> Outros</label>
+                </div>
+              </div>
+              <div class="campo-condicional" id="campoArtRes"><input type="text" id="numArtRes" placeholder="Número ART"></div>
+              <div class="campo-condicional" id="campoOutrosArtRes">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="nomeArtRes" placeholder="Nome (ex: RRT)"></div>
+                  <div class="form-group" style="margin-bottom: 0;"><input type="text" id="valArtRes" placeholder="Número"></div>
+                </div>
+              </div>
+            </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" onclick="retornar(6)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(6)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(6)">
+                Avançar →
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
   </div>
 
+  <!-- Toast notification -->
   <div class="toast" id="toast"></div>
 
-  <!-- SCRIPTS -->
-  <script src="js/validators.js"></script>
-  <script src="js/autocomplete.js"></script>
-  <script src="js/app.js"></script>
+  <script>
+    // =============================================
+    // SISTEMA DE DADOS E CACHE
+    // =============================================
+    
+    // Objeto principal para armazenar todos os dados do formulário
+    let formData = {
+      page1: {
+        localObra: '',
+        bairro: '',
+        cidade: '',
+        cep: '',
+        saved: false
+      },
+      page2: {
+        tipoNatureza: '',
+        area: '',
+        pavimentos: '',
+        processoNum: '',
+        alvaraNum: '',
+        alvaraDe: '',
+        proprietario: '',
+        tipoCpfCnpj: 'cpf',
+        cpfCnpj: '',
+        enderecoProprietario: '',
+        saved: false
+      },
+      page3: {
+        placaAfixada: '',
+        profissional: '',
+        tipoRegistro: '',
+        numeroCrea: '',
+        cpfProfissional: '',
+        siglaConselho: '',
+        numeroConselho: '',
+        titulo: '',
+        tipoArtRrt: '',
+        artNumero: '',
+        rrtNumero: '',
+        empresa: '',
+        tipoEmpresaRegistro: '',
+        empresaRegistro: '',
+        saved: false
+      },
+      page4: {
+        placaAfixadaRT: '',
+        profissionalRT: '',
+        cpfRT: '',
+        tipoRegistroRT: '',
+        numeroCreaRT: '',
+        siglaConselhoRT: '',
+        numeroConselhoRT: '',
+        tipoArtOutrosRT: '',
+        artNumeroRT: '',
+        nomeOutrosArtRT: '',
+        numeroOutrosArtRT: '',
+        empresaRT: '',
+        tipoEmpresaRegistroRT: '',
+        empresaRegistroRT: '',
+        saved: false
+      },
+      page5: {
+        houveDemolicao: '',
+        projetoDemolicao: '',
+        profissionalProjetoDemol: '',
+        cpfProjetoDemol: '',
+        tipoRegistroProjetoDemol: '',
+        numeroCreaProjetoDemol: '',
+        siglaConselhoProjetoDemol: '',
+        numeroConselhoProjetoDemol: '',
+        tipoArtProjetoDemol: '',
+        artNumeroProjetoDemol: '',
+        nomeOutrosArtProjetoDemol: '',
+        numeroOutrosArtProjetoDemol: '',
+        execucaoDemolicao: '',
+        profissionalExecDemol: '',
+        cpfExecDemol: '',
+        tipoRegistroExecDemol: '',
+        numeroCreaExecDemol: '',
+        siglaConselhoExecDemol: '',
+        numeroConselhoExecDemol: '',
+        tipoArtExecDemol: '',
+        artNumeroExecDemol: '',
+        nomeOutrosArtExecDemol: '',
+        numeroOutrosArtExecDemol: '',
+        empresaDemol: '',
+        cnpjDemol: '',
+        saved: false
+      },
+      page6: {
+        coordenacao: { nome: '', cpf: '', reg: '', numCrea: '', sigla: '', numOutros: '', tipoArt: '', numArt: '', nomeArtOutros: '', numArtOutros: '' },
+        orcamento: { nome: '', cpf: '', reg: '', numCrea: '', sigla: '', numOutros: '', tipoArt: '', numArt: '', nomeArtOutros: '', numArtOutros: '' },
+        residente: { nome: '', cpf: '', reg: '', numCrea: '', sigla: '', numOutros: '', tipoArt: '', numArt: '', nomeArtOutros: '', numArtOutros: '' },
+        saved: false
+      }
+    };
+
+    // Total de páginas
+    const totalPages = 6;
+    let currentPage = 1;
+    
+    // Controle do tipo de documento (CPF ou CNPJ)
+    let tipoDocumento = 'cpf';
+    
+    // Controle do tipo de registro da empresa
+    let tipoEmpresaRegistro = '';
+    
+    // Controle do tipo de registro da empresa (página 4)
+    let tipoEmpresaRegistroRT = '';
+    
+    // =============================================
+    // SISTEMA DE AUTOCOMPLETE DE PROFISSIONAIS
+    // =============================================
+    
+    // Lista de profissionais já cadastrados
+    let profissionaisCadastrados = [];
+    
+    // Adicionar ou atualizar profissional na lista
+    function adicionarProfissional(nome, cpf, crea) {
+      if (!nome || !nome.trim()) return;
+      
+      // Verificar se já existe
+      const index = profissionaisCadastrados.findIndex(p => 
+        p.nome.toLowerCase() === nome.toLowerCase()
+      );
+      
+      if (index !== -1) {
+        // Já existe - atualizar dados se tiver valores novos
+        const profExistente = profissionaisCadastrados[index];
+        
+        // Atualizar CPF se tiver novo valor
+        if (cpf && cpf.trim()) {
+          profExistente.cpf = cpf.trim();
+        }
+        
+        // Atualizar CREA se tiver novo valor
+        if (crea && crea.trim()) {
+          profExistente.crea = crea.trim();
+        }
+      } else {
+        // Não existe - adicionar novo
+        profissionaisCadastrados.push({
+          nome: nome.trim(),
+          cpf: cpf || '',
+          crea: crea || ''
+        });
+      }
+      
+      salvarProfissionaisNoCache();
+    }
+    
+    // Criar autocomplete customizado para um campo
+    function criarAutocomplete(inputId, autocompleteId, cpfCampoId, creaCampoId) {
+      const input = document.getElementById(inputId);
+      const autocompleteDiv = document.getElementById(autocompleteId);
+      
+      if (!input || !autocompleteDiv) return;
+      
+      // Ao digitar
+      input.addEventListener('input', function() {
+        const valor = this.value.toLowerCase().trim();
+        autocompleteDiv.innerHTML = '';
+        
+        // Só mostrar se digitou pelo menos 2 caracteres
+        if (valor.length < 2) {
+          autocompleteDiv.classList.remove('show');
+          return;
+        }
+        
+        // Filtrar profissionais que contém o texto digitado
+        const filtrados = profissionaisCadastrados.filter(p => 
+          p.nome.toLowerCase().includes(valor)
+        );
+        
+        if (filtrados.length === 0) {
+          autocompleteDiv.classList.remove('show');
+          return;
+        }
+        
+        // Mostrar resultados
+        filtrados.forEach(prof => {
+          const div = document.createElement('div');
+          div.className = 'autocomplete-item';
+          div.innerHTML = `
+            <strong>${prof.nome}</strong>
+            <small>CPF: ${prof.cpf || 'N/A'} ${prof.crea ? '| CREA: ' + prof.crea : ''}</small>
+          `;
+          
+          div.addEventListener('click', function() {
+            input.value = prof.nome;
+            autocompleteDiv.classList.remove('show');
+            autocompleteDiv.innerHTML = '';
+            
+            // Preencher CPF e CREA automaticamente
+            preencherDadosAuto(inputId, prof, cpfCampoId, creaCampoId);
+            showToast('✨ Dados preenchidos automaticamente!', 'success');
+          });
+          
+          autocompleteDiv.appendChild(div);
+        });
+        
+        autocompleteDiv.classList.add('show');
+      });
+      
+      // Fechar ao clicar fora
+      document.addEventListener('click', function(e) {
+        if (e.target !== input && e.target.closest('.autocomplete-list') !== autocompleteDiv) {
+          autocompleteDiv.classList.remove('show');
+        }
+      });
+    }
+    
+    // Preencher dados automaticamente ao selecionar profissional
+    function preencherDadosAuto(inputId, prof, cpfCampoId, creaCampoId) {
+      // Preencher CPF
+      if (cpfCampoId && prof.cpf) {
+        const cpfInput = document.getElementById(cpfCampoId);
+        if (cpfInput) cpfInput.value = prof.cpf;
+      }
+      
+      // Preencher CREA se tiver
+      if (creaCampoId && prof.crea) {
+        // Identificar qual página é baseado no inputId
+        if (inputId === 'profissional') {
+          const radioCrea = document.getElementById('regCrea');
+          if (radioCrea) { radioCrea.checked = true; mostrarCampoRegistro('crea'); document.getElementById('numeroCrea').value = prof.crea; }
+        } else if (inputId === 'profissionalRT') {
+          const radioCrea = document.getElementById('regCreaRT');
+          if (radioCrea) { radioCrea.checked = true; mostrarCampoRegistroRT('crea'); document.getElementById('numeroCreaRT').value = prof.crea; }
+        } else if (inputId === 'profissionalProjetoDemol') {
+          const radioCrea = document.getElementById('regCreaProjetoDemol');
+          if (radioCrea) { radioCrea.checked = true; mostrarCampoRegistroPD('crea'); document.getElementById('numeroCreaProjetoDemol').value = prof.crea; }
+        } else if (inputId === 'profissionalExecDemol') {
+          const radioCrea = document.getElementById('regCreaExecDemol');
+          if (radioCrea) { radioCrea.checked = true; mostrarCampoRegistroED('crea'); document.getElementById('numeroCreaExecDemol').value = prof.crea; }
+        }
+        // Página 6
+        else if (inputId === 'profCoordenacao') {
+          const radioCrea = document.getElementById('regCreaCoord');
+          if (radioCrea) { radioCrea.checked = true; mostrarRegistroEquipe('Coord', 'crea'); document.getElementById('numCreaCoord').value = prof.crea; }
+        } else if (inputId === 'profOrcamento') {
+          const radioCrea = document.getElementById('regCreaOrc');
+          if (radioCrea) { radioCrea.checked = true; mostrarRegistroEquipe('Orc', 'crea'); document.getElementById('numCreaOrc').value = prof.crea; }
+        } else if (inputId === 'profResidente') {
+          const radioCrea = document.getElementById('regCreaRes');
+          if (radioCrea) { radioCrea.checked = true; mostrarRegistroEquipe('Res', 'crea'); document.getElementById('numCreaRes').value = prof.crea; }
+        }
+      }
+    }
+
+    // Funções Auxiliares Página 6
+    function mostrarRegistroEquipe(prefix, tipo) {
+      document.getElementById('campoCrea' + prefix).classList.remove('show');
+      document.getElementById('campoOutros' + prefix).classList.remove('show');
+      if (tipo === 'crea') document.getElementById('campoCrea' + prefix).classList.add('show');
+      else if (tipo === 'outros') document.getElementById('campoOutros' + prefix).classList.add('show');
+    }
+
+    function mostrarArtEquipe(prefix, tipo) {
+      document.getElementById('campoArt' + prefix).classList.remove('show');
+      document.getElementById('campoOutrosArt' + prefix).classList.remove('show');
+      if (tipo === 'art') document.getElementById('campoArt' + prefix).classList.add('show');
+      else if (tipo === 'outros') document.getElementById('campoOutrosArt' + prefix).classList.add('show');
+    }
+
+    // Máscaras CPF Página 6
+    ['cpfCoordenacao', 'cpfOrcamento', 'cpfResidente'].forEach(id => {
+      document.getElementById(id).addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, '');
+        if (v.length > 3) v = v.substring(0,3) + '.' + v.substring(3);
+        if (v.length > 7) v = v.substring(0,7) + '.' + v.substring(7);
+        if (v.length > 11) v = v.substring(0,11) + '-' + v.substring(11,13);
+        e.target.value = v;
+      });
+    });
+    
+    // Salvar lista de profissionais no cache
+    function salvarProfissionaisNoCache() {
+      try {
+        localStorage.setItem('profissionaisCadastrados', JSON.stringify(profissionaisCadastrados));
+      } catch (e) {
+        console.error('Erro ao salvar profissionais no cache:', e);
+      }
+    }
+    
+    // Carregar lista de profissionais do cache
+    function carregarProfissionaisDoCache() {
+      try {
+        const cached = localStorage.getItem('profissionaisCadastrados');
+        if (cached) {
+          profissionaisCadastrados = JSON.parse(cached);
+        }
+      } catch (e) {
+        console.error('Erro ao carregar profissionais do cache:', e);
+      }
+    }
+    
+    // Buscar dados de um profissional pelo nome
+    function buscarProfissionalPorNome(nome) {
+      return profissionaisCadastrados.find(p => 
+        p.nome.toLowerCase() === nome.toLowerCase()
+      );
+    }
+    
+
+    // Carregar dados do localStorage ao iniciar
+    function loadFromCache() {
+      const cached = localStorage.getItem('formDataObra');
+      if (cached) {
+        try {
+          formData = JSON.parse(cached);
+          populateFields();
+          
+          // Extrair profissionais já salvos das páginas 3 e 4
+          if (formData.page3 && formData.page3.profissional) {
+            const cpf3 = formData.page3.tipoRegistro === 'CPF' ? formData.page3.cpfProfissional : '';
+            const crea3 = formData.page3.tipoRegistro === 'CREA' ? formData.page3.numeroCrea : '';
+            adicionarProfissional(formData.page3.profissional, cpf3, crea3);
+          }
+          
+          if (formData.page4 && formData.page4.profissionalRT) {
+            const cpf4 = formData.page4.cpfRT;
+            const crea4 = formData.page4.tipoRegistroRT === 'CREA' ? formData.page4.numeroCreaRT : '';
+            adicionarProfissional(formData.page4.profissionalRT, cpf4, crea4);
+          }
+          
+          if (formData.page5) {
+            if (formData.page5.profissionalProjetoDemol) {
+              const cpf5p = formData.page5.cpfProjetoDemol;
+              const crea5p = formData.page5.tipoRegistroProjetoDemol === 'CREA' ? formData.page5.numeroCreaProjetoDemol : '';
+              adicionarProfissional(formData.page5.profissionalProjetoDemol, cpf5p, crea5p);
+            }
+            if (formData.page5.profissionalExecDemol) {
+              const cpf5e = formData.page5.cpfExecDemol;
+              const crea5e = formData.page5.tipoRegistroExecDemol === 'CREA' ? formData.page5.numeroCreaExecDemol : '';
+              adicionarProfissional(formData.page5.profissionalExecDemol, cpf5e, crea5e);
+            }
+          }
+          
+          showToast('Dados anteriores restaurados!', 'success');
+        } catch (e) {
+          console.error('Erro ao carregar cache:', e);
+        }
+      }
+    }
+
+    // Salvar dados no localStorage
+    function saveToCache() {
+      try {
+        localStorage.setItem('formDataObra', JSON.stringify(formData));
+        return true;
+      } catch (e) {
+        console.error('Erro ao salvar cache:', e);
+        return false;
+      }
+    }
+
+    // Preencher campos com dados salvos
+    function populateFields() {
+      // Página 1
+      if (formData.page1) {
+        document.getElementById('localObra').value = formData.page1.localObra || '';
+        document.getElementById('bairro').value = formData.page1.bairro || '';
+        document.getElementById('cidade').value = formData.page1.cidade || 'São Paulo';
+        document.getElementById('cep').value = formData.page1.cep || '';
+      }
+      
+      // Página 2
+      if (formData.page2) {
+        // Tipo/Natureza
+        if (formData.page2.tipoNatureza) {
+          const radioBtn = document.querySelector(`input[name="tipoNatureza"][value="${formData.page2.tipoNatureza}"]`);
+          if (radioBtn) radioBtn.checked = true;
+        }
+        document.getElementById('area').value = formData.page2.area || '';
+        document.getElementById('pavimentos').value = formData.page2.pavimentos || '';
+        document.getElementById('processoNum').value = formData.page2.processoNum || '';
+        document.getElementById('alvaraNum').value = formData.page2.alvaraNum || '';
+        document.getElementById('alvaraDe').value = formData.page2.alvaraDe || '';
+        document.getElementById('proprietario').value = formData.page2.proprietario || '';
+        document.getElementById('enderecoProprietario').value = formData.page2.enderecoProprietario || '';
+        
+        // Restaurar tipo de documento e valor do CPF/CNPJ
+        if (formData.page2.tipoCpfCnpj) {
+          tipoDocumento = formData.page2.tipoCpfCnpj;
+          toggleCpfCnpj(tipoDocumento, true); // preservar valor
+          document.getElementById('cpfCnpj').value = formData.page2.cpfCnpj || '';
+        }
+      }
+      
+      // Página 3
+      if (formData.page3) {
+        // Placa afixada
+        if (formData.page3.placaAfixada) {
+          const radioBtn = document.querySelector(`input[name="placaAfixada"][value="${formData.page3.placaAfixada}"]`);
+          if (radioBtn) radioBtn.checked = true;
+        }
+        document.getElementById('profissional').value = formData.page3.profissional || '';
+        
+        // Tipo de registro
+        if (formData.page3.tipoRegistro) {
+          const radioBtn = document.querySelector(`input[name="tipoRegistro"][value="${formData.page3.tipoRegistro}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoRegistro(formData.page3.tipoRegistro.toLowerCase());
+          }
+        }
+        document.getElementById('numeroCrea').value = formData.page3.numeroCrea || '';
+        document.getElementById('cpfProfissional').value = formData.page3.cpfProfissional || '';
+        document.getElementById('siglaConselho').value = formData.page3.siglaConselho || '';
+        document.getElementById('numeroConselho').value = formData.page3.numeroConselho || '';
+        document.getElementById('titulo').value = formData.page3.titulo || '';
+        
+        // Restaurar ART/RRT
+        if (formData.page3.tipoArtRrt) {
+          const radioArtRrt = document.querySelector(`input[name="tipoArtRrt"][value="${formData.page3.tipoArtRrt}"]`);
+          if (radioArtRrt) {
+            radioArtRrt.checked = true;
+            mostrarCampoArtRrt(formData.page3.tipoArtRrt.toLowerCase());
+          }
+        }
+        document.getElementById('artNumero').value = formData.page3.artNumero || '';
+        document.getElementById('rrtNumero').value = formData.page3.rrtNumero || '';
+        document.getElementById('empresa').value = formData.page3.empresa || '';
+        
+        // Restaurar tipo de registro da empresa
+        if (formData.page3.tipoEmpresaRegistro) {
+          tipoEmpresaRegistro = formData.page3.tipoEmpresaRegistro;
+          toggleEmpresaRegistro(tipoEmpresaRegistro, true); // preservar valor
+          document.getElementById('empresaRegistro').value = formData.page3.empresaRegistro || '';
+        }
+      }
+      
+      // Página 4
+      if (formData.page4) {
+        // Placa afixada
+        if (formData.page4.placaAfixadaRT) {
+          const radioBtn = document.querySelector(`input[name="placaAfixadaRT"][value="${formData.page4.placaAfixadaRT}"]`);
+          if (radioBtn) radioBtn.checked = true;
+        }
+        document.getElementById('profissionalRT').value = formData.page4.profissionalRT || '';
+        document.getElementById('cpfRT').value = formData.page4.cpfRT || '';
+        
+        // Tipo de registro
+        if (formData.page4.tipoRegistroRT) {
+          const radioBtn = document.querySelector(`input[name="tipoRegistroRT"][value="${formData.page4.tipoRegistroRT}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoRegistroRT(formData.page4.tipoRegistroRT.toLowerCase());
+          }
+        }
+        document.getElementById('numeroCreaRT').value = formData.page4.numeroCreaRT || '';
+        document.getElementById('siglaConselhoRT').value = formData.page4.siglaConselhoRT || '';
+        document.getElementById('numeroConselhoRT').value = formData.page4.numeroConselhoRT || '';
+        
+        // ART/Outros
+        if (formData.page4.tipoArtOutrosRT) {
+          const radioBtn = document.querySelector(`input[name="tipoArtOutrosRT"][value="${formData.page4.tipoArtOutrosRT}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoArtOutrosRT(formData.page4.tipoArtOutrosRT.toLowerCase());
+          }
+        }
+        document.getElementById('artNumeroRT').value = formData.page4.artNumeroRT || '';
+        document.getElementById('nomeOutrosArtRT').value = formData.page4.nomeOutrosArtRT || '';
+        document.getElementById('numeroOutrosArtRT').value = formData.page4.numeroOutrosArtRT || '';
+        
+        document.getElementById('empresaRT').value = formData.page4.empresaRT || '';
+        
+        // Restaurar tipo de registro da empresa
+        if (formData.page4.tipoEmpresaRegistroRT) {
+          tipoEmpresaRegistroRT = formData.page4.tipoEmpresaRegistroRT;
+          toggleEmpresaRegistroRT(tipoEmpresaRegistroRT, true);
+          document.getElementById('empresaRegistroRT').value = formData.page4.empresaRegistroRT || '';
+        }
+      }
+      
+      // Página 5 - Demolição
+      if (formData.page5) {
+        // Houve Demolição
+        if (formData.page5.houveDemolicao) {
+          const radioBtn = document.querySelector(`input[name="houveDemolicao"][value="${formData.page5.houveDemolicao}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            toggleDemolicao();
+          }
+        }
+        
+        // Projeto de Demolição
+        if (formData.page5.projetoDemolicao) {
+          const radioBtn = document.querySelector(`input[name="projetoDemolicao"][value="${formData.page5.projetoDemolicao}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            toggleProjetoDemolicao();
+          }
+        }
+        
+        document.getElementById('profissionalProjetoDemol').value = formData.page5.profissionalProjetoDemol || '';
+        document.getElementById('cpfProjetoDemol').value = formData.page5.cpfProjetoDemol || '';
+        
+        if (formData.page5.tipoRegistroProjetoDemol) {
+          const radioBtn = document.querySelector(`input[name="tipoRegistroProjetoDemol"][value="${formData.page5.tipoRegistroProjetoDemol}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoRegistroPD(formData.page5.tipoRegistroProjetoDemol.toLowerCase());
+          }
+        }
+        
+        document.getElementById('numeroCreaProjetoDemol').value = formData.page5.numeroCreaProjetoDemol || '';
+        document.getElementById('siglaConselhoProjetoDemol').value = formData.page5.siglaConselhoProjetoDemol || '';
+        document.getElementById('numeroConselhoProjetoDemol').value = formData.page5.numeroConselhoProjetoDemol || '';
+        
+        if (formData.page5.tipoArtProjetoDemol) {
+          const radioBtn = document.querySelector(`input[name="tipoArtProjetoDemol"][value="${formData.page5.tipoArtProjetoDemol}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoArtPD(formData.page5.tipoArtProjetoDemol.toLowerCase());
+          }
+        }
+        
+        document.getElementById('artNumeroProjetoDemol').value = formData.page5.artNumeroProjetoDemol || '';
+        document.getElementById('nomeOutrosArtProjetoDemol').value = formData.page5.nomeOutrosArtProjetoDemol || '';
+        document.getElementById('numeroOutrosArtProjetoDemol').value = formData.page5.numeroOutrosArtProjetoDemol || '';
+        
+        // Execução de Demolição
+        if (formData.page5.execucaoDemolicao) {
+          const radioBtn = document.querySelector(`input[name="execucaoDemolicao"][value="${formData.page5.execucaoDemolicao}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            toggleExecucaoDemolicao();
+          }
+        }
+        
+        document.getElementById('profissionalExecDemol').value = formData.page5.profissionalExecDemol || '';
+        document.getElementById('cpfExecDemol').value = formData.page5.cpfExecDemol || '';
+        
+        if (formData.page5.tipoRegistroExecDemol) {
+          const radioBtn = document.querySelector(`input[name="tipoRegistroExecDemol"][value="${formData.page5.tipoRegistroExecDemol}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoRegistroED(formData.page5.tipoRegistroExecDemol.toLowerCase());
+          }
+        }
+        
+        document.getElementById('numeroCreaExecDemol').value = formData.page5.numeroCreaExecDemol || '';
+        document.getElementById('siglaConselhoExecDemol').value = formData.page5.siglaConselhoExecDemol || '';
+        document.getElementById('numeroConselhoExecDemol').value = formData.page5.numeroConselhoExecDemol || '';
+        
+        if (formData.page5.tipoArtExecDemol) {
+          const radioBtn = document.querySelector(`input[name="tipoArtExecDemol"][value="${formData.page5.tipoArtExecDemol}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoArtED(formData.page5.tipoArtExecDemol.toLowerCase());
+          }
+        }
+        
+        document.getElementById('artNumeroExecDemol').value = formData.page5.artNumeroExecDemol || '';
+        document.getElementById('nomeOutrosArtExecDemol').value = formData.page5.nomeOutrosArtExecDemol || '';
+        document.getElementById('numeroOutrosArtExecDemol').value = formData.page5.numeroOutrosArtExecDemol || '';
+        document.getElementById('empresaDemol').value = formData.page5.empresaDemol || '';
+        document.getElementById('cnpjDemol').value = formData.page5.cnpjDemol || '';
+      }
+
+      // Página 6
+      if (formData.page6 && formData.page6.saved) {
+        const p6 = formData.page6;
+        const subpaginas = [
+          { key: 'coordenacao', prefix: 'Coord', idSuffix: 'Coordenacao' },
+          { key: 'orcamento', prefix: 'Orc', idSuffix: 'Orcamento' },
+          { key: 'residente', prefix: 'Res', idSuffix: 'Residente' }
+        ];
+
+        subpaginas.forEach(s => {
+          const data = p6[s.key];
+          document.getElementById('prof' + s.idSuffix).value = data.nome || '';
+          document.getElementById('cpf' + s.idSuffix).value = data.cpf || '';
+          
+          if (data.reg) {
+            const radio = document.querySelector(`input[name="reg${s.idSuffix === 'Coordenacao' ? 'Coord' : (s.idSuffix === 'Orcamento' ? 'Orc' : 'Res')}"][value="${data.reg}"]`);
+            if (radio) {
+              radio.checked = true;
+              mostrarRegistroEquipe(s.prefix, data.reg.toLowerCase());
+            }
+          }
+          document.getElementById('numCrea' + s.prefix).value = data.numCrea || '';
+          document.getElementById('sigla' + s.prefix).value = data.sigla || '';
+          document.getElementById('numOutros' + s.prefix).value = data.numOutros || '';
+
+          if (data.tipoArt) {
+            const radioArt = document.querySelector(`input[name="tipoArt${s.idSuffix === 'Coordenacao' ? 'Coord' : (s.idSuffix === 'Orcamento' ? 'Orc' : 'Res')}"][value="${data.tipoArt}"]`);
+            if (radioArt) {
+              radioArt.checked = true;
+              mostrarArtEquipe(s.prefix, data.tipoArt.toLowerCase());
+            }
+          }
+          document.getElementById('numArt' + s.prefix).value = data.numArt || '';
+          document.getElementById('nomeArt' + s.prefix).value = data.nomeArtOutros || '';
+          document.getElementById('valArt' + s.prefix).value = data.numArtOutros || '';
+        });
+      }
+    }
+
+    // =============================================
+    // VALIDAÇÕES
+    // =============================================
+
+    // Formatar CEP enquanto digita
+    document.getElementById('cep').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 5) {
+        value = value.substring(0, 5) + '-' + value.substring(5, 8);
+      }
+      e.target.value = value;
+      
+      // Remover erro enquanto digita
+      e.target.classList.remove('error');
+      document.getElementById('errorCep').classList.remove('show');
+    });
+
+    // Validar CEP de São Paulo
+    function validarCepSaoPaulo(cep, cidade) {
+      // Remover hífen para validação
+      const cepNumeros = cep.replace(/\D/g, '');
+      
+      // Verificar se tem 8 dígitos
+      if (cepNumeros.length !== 8) {
+        return { valid: false, message: 'CEP deve ter 8 dígitos' };
+      }
+
+      // Se a cidade for São Paulo, validar range de CEP
+      if (cidade.toLowerCase().includes('são paulo') || cidade.toLowerCase().includes('sao paulo')) {
+        const prefixo = parseInt(cepNumeros.substring(0, 2));
+        
+        // CEPs de São Paulo capital: 01000-000 a 05999-999 e 08000-000 a 08499-999
+        const isSaoPauloCapital = (prefixo >= 1 && prefixo <= 5) || (prefixo === 8);
+        
+        if (!isSaoPauloCapital) {
+          return { 
+            valid: false, 
+            message: 'CEP não corresponde à cidade de São Paulo. CEPs de SP começam com 01 a 05 ou 08.' 
+          };
+        }
+      }
+
+      return { valid: true };
+    }
+
+    // Validar CPF (algoritmo oficial)
+    function validarCPF(cpf) {
+      // Remove caracteres não numéricos
+      cpf = cpf.replace(/\D/g, '');
+      
+      // Verifica se tem 11 dígitos
+      if (cpf.length !== 11) return false;
+      
+      // Verifica se todos os dígitos são iguais (ex: 111.111.111-11)
+      if (/^(\d)\1+$/.test(cpf)) return false;
+      
+      // Calcula o primeiro dígito verificador
+      let soma = 0;
+      for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.charAt(9))) return false;
+      
+      // Calcula o segundo dígito verificador
+      soma = 0;
+      for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.charAt(10))) return false;
+      
+      return true;
+    }
+
+    // Validar CNPJ (algoritmo oficial)
+    function validarCNPJ(cnpj) {
+      // Remove caracteres não numéricos
+      cnpj = cnpj.replace(/\D/g, '');
+      
+      // Verifica se tem 14 dígitos
+      if (cnpj.length !== 14) return false;
+      
+      // Verifica se todos os dígitos são iguais
+      if (/^(\d)\1+$/.test(cnpj)) return false;
+      
+      // Calcula o primeiro dígito verificador
+      let tamanho = cnpj.length - 2;
+      let numeros = cnpj.substring(0, tamanho);
+      let digitos = cnpj.substring(tamanho);
+      let soma = 0;
+      let pos = tamanho - 7;
+      
+      for (let i = tamanho; i >= 1; i--) {
+        soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+        if (pos < 2) pos = 9;
+      }
+      
+      let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado !== parseInt(digitos.charAt(0))) return false;
+      
+      // Calcula o segundo dígito verificador
+      tamanho = tamanho + 1;
+      numeros = cnpj.substring(0, tamanho);
+      soma = 0;
+      pos = tamanho - 7;
+      
+      for (let i = tamanho; i >= 1; i--) {
+        soma += parseInt(numeros.charAt(tamanho - i)) * pos--;
+        if (pos < 2) pos = 9;
+      }
+      
+      resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado !== parseInt(digitos.charAt(1))) return false;
+      
+      return true;
+    }
+
+    // Validar campo obrigatório
+    function validarCampoObrigatorio(input, errorElement) {
+      if (!input.value.trim()) {
+        input.classList.add('error');
+        errorElement.classList.add('show');
+        return false;
+      }
+      input.classList.remove('error');
+      input.classList.add('success');
+      errorElement.classList.remove('show');
+      return true;
+    }
+
+    // Validar Página 1
+    function validarPagina1() {
+      let isValid = true;
+
+      // Local da obra
+      const localObra = document.getElementById('localObra');
+      const errorLocalObra = document.getElementById('errorLocalObra');
+      if (!validarCampoObrigatorio(localObra, errorLocalObra)) {
+        isValid = false;
+      }
+
+      // Bairro
+      const bairro = document.getElementById('bairro');
+      const errorBairro = document.getElementById('errorBairro');
+      if (!validarCampoObrigatorio(bairro, errorBairro)) {
+        isValid = false;
+      }
+
+      // Cidade
+      const cidade = document.getElementById('cidade');
+      const errorCidade = document.getElementById('errorCidade');
+      if (!validarCampoObrigatorio(cidade, errorCidade)) {
+        isValid = false;
+      }
+
+      // CEP
+      const cep = document.getElementById('cep');
+      const errorCep = document.getElementById('errorCep');
+      
+      if (!cep.value.trim()) {
+        cep.classList.add('error');
+        errorCep.textContent = 'Por favor, informe o CEP';
+        errorCep.classList.add('show');
+        isValid = false;
+      } else {
+        const validacaoCep = validarCepSaoPaulo(cep.value, cidade.value);
+        if (!validacaoCep.valid) {
+          cep.classList.add('error');
+          errorCep.textContent = validacaoCep.message;
+          errorCep.classList.add('show');
+          isValid = false;
+        } else {
+          cep.classList.remove('error');
+          cep.classList.add('success');
+          errorCep.classList.remove('show');
+        }
+      }
+
+      return isValid;
+    }
+
+    // Toggle CPF/CNPJ
+    function toggleCpfCnpj(tipo, preserveValue = false) {
+      tipoDocumento = tipo;
+      const btnCpf = document.getElementById('btnCpf');
+      const btnCnpj = document.getElementById('btnCnpj');
+      const input = document.getElementById('cpfCnpj');
+      const hint = document.getElementById('hintCpfCnpj');
+      const errorMsg = document.getElementById('errorCpfCnpj');
+      
+      // Limpar valor atual (só se não estiver preservando)
+      if (!preserveValue) {
+        input.value = '';
+      }
+      input.classList.remove('error', 'success');
+      errorMsg.classList.remove('show');
+      
+      if (tipo === 'cpf') {
+        btnCpf.classList.add('active');
+        btnCnpj.classList.remove('active');
+        input.placeholder = '000.000.000-00';
+        input.maxLength = 14;
+        hint.textContent = 'Formato: 000.000.000-00';
+      } else {
+        btnCnpj.classList.add('active');
+        btnCpf.classList.remove('active');
+        input.placeholder = '00.000.000/0000-00';
+        input.maxLength = 18;
+        hint.textContent = 'Formato: 00.000.000/0000-00';
+      }
+    }
+
+    // Formatar área enquanto digita (1.000)
+    document.getElementById('area').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value) {
+        value = parseInt(value).toLocaleString('pt-BR');
+      }
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorArea').classList.remove('show');
+    });
+
+    // Formatar CPF/CNPJ enquanto digita
+    document.getElementById('cpfCnpj').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      
+      if (tipoDocumento === 'cpf') {
+        // Formato CPF: 000.000.000-00
+        if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+        if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+        if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      } else {
+        // Formato CNPJ: 00.000.000/0000-00
+        if (value.length > 2) value = value.substring(0,2) + '.' + value.substring(2);
+        if (value.length > 6) value = value.substring(0,6) + '.' + value.substring(6);
+        if (value.length > 10) value = value.substring(0,10) + '/' + value.substring(10);
+        if (value.length > 15) value = value.substring(0,15) + '-' + value.substring(15,17);
+      }
+      
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCpfCnpj').classList.remove('show');
+    });
+
+    // Validar apenas números inteiros no pavimentos
+    document.getElementById('pavimentos').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorPavimentos').classList.remove('show');
+    });
+
+    // Validar ano do alvará (só 4 números)
+    document.getElementById('alvaraDe').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorAlvaraDe').classList.remove('show');
+    });
+
+    // Mostrar campo de registro conforme seleção (Página 3)
+    function mostrarCampoRegistro(tipo) {
+      // Esconder todos
+      document.getElementById('campoCrea').classList.remove('show');
+      document.getElementById('campoCpfProf').classList.remove('show');
+      document.getElementById('campoOutros').classList.remove('show');
+      
+      // Limpar erros
+      document.getElementById('errorRegistro').classList.remove('show');
+      
+      // Mostrar o selecionado
+      if (tipo === 'crea') {
+        document.getElementById('campoCrea').classList.add('show');
+      } else if (tipo === 'cpf') {
+        document.getElementById('campoCpfProf').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutros').classList.add('show');
+      }
+    }
+
+    // Formatar CPF do profissional enquanto digita
+    document.getElementById('cpfProfissional').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+      if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+      if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      e.target.value = value;
+    });
+
+    // Mostrar campo ART ou RRT
+    function mostrarCampoArtRrt(tipo) {
+      document.getElementById('campoArt').classList.remove('show');
+      document.getElementById('campoRrt').classList.remove('show');
+      
+      if (tipo === 'art') {
+        document.getElementById('campoArt').classList.add('show');
+      } else if (tipo === 'rrt') {
+        document.getElementById('campoRrt').classList.add('show');
+      }
+    }
+
+    // Formatar ART/RRT (só números)
+    document.getElementById('artNumero').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+    
+    document.getElementById('rrtNumero').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Toggle tipo de registro da empresa (CREA/CAU/CNPJ)
+    function toggleEmpresaRegistro(tipo, preserveValue = false) {
+      tipoEmpresaRegistro = tipo;
+      const btnCrea = document.getElementById('btnEmpCrea');
+      const btnCau = document.getElementById('btnEmpCau');
+      const btnCnpj = document.getElementById('btnEmpCnpj');
+      const input = document.getElementById('empresaRegistro');
+      const errorMsg = document.getElementById('errorEmpresaRegistro');
+      
+      // Remover active de todos
+      btnCrea.classList.remove('active');
+      btnCau.classList.remove('active');
+      btnCnpj.classList.remove('active');
+      
+      // Limpar valor e erros (só se não estiver preservando)
+      if (!preserveValue) {
+        input.value = '';
+      }
+      input.disabled = false;
+      input.classList.remove('error', 'success');
+      errorMsg.classList.remove('show');
+      
+      if (tipo === 'crea') {
+        btnCrea.classList.add('active');
+        input.placeholder = 'Número do CREA';
+        input.maxLength = 50;
+      } else if (tipo === 'cau') {
+        btnCau.classList.add('active');
+        input.placeholder = 'Número do CAU';
+        input.maxLength = 50;
+      } else if (tipo === 'cnpj') {
+        btnCnpj.classList.add('active');
+        input.placeholder = '00.000.000/0000-00';
+        input.maxLength = 18;
+      }
+    }
+
+    // Formatar CNPJ da empresa enquanto digita
+    document.getElementById('empresaRegistro').addEventListener('input', function(e) {
+      if (tipoEmpresaRegistro === 'cnpj') {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 2) value = value.substring(0,2) + '.' + value.substring(2);
+        if (value.length > 6) value = value.substring(0,6) + '.' + value.substring(6);
+        if (value.length > 10) value = value.substring(0,10) + '/' + value.substring(10);
+        if (value.length > 15) value = value.substring(0,15) + '-' + value.substring(15,17);
+        e.target.value = value;
+      }
+      e.target.classList.remove('error');
+      document.getElementById('errorEmpresaRegistro').classList.remove('show');
+    });
+
+    // =============================================
+    // PÁGINA 4 - FUNÇÕES
+    // =============================================
+
+    // Formatar CPF do Responsável Técnico
+    document.getElementById('cpfRT').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+      if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+      if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCpfRT').classList.remove('show');
+    });
+
+    // Mostrar campo de registro (CREA/Outros) - Página 4
+    function mostrarCampoRegistroRT(tipo) {
+      document.getElementById('campoCreaRT').classList.remove('show');
+      document.getElementById('campoOutrosRT').classList.remove('show');
+      
+      if (tipo === 'crea') {
+        document.getElementById('campoCreaRT').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosRT').classList.add('show');
+      }
+    }
+
+    // Mostrar campo ART/Outros - Página 4
+    function mostrarCampoArtOutrosRT(tipo) {
+      document.getElementById('campoArtRT').classList.remove('show');
+      document.getElementById('campoOutrosArtRT').classList.remove('show');
+      
+      if (tipo === 'art') {
+        document.getElementById('campoArtRT').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosArtRT').classList.add('show');
+      }
+    }
+
+    // Formatar ART (só números) - Página 4
+    document.getElementById('artNumeroRT').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Toggle tipo de registro da empresa (CREA/CAU/CNPJ) - Página 4
+    function toggleEmpresaRegistroRT(tipo, preserveValue = false) {
+      tipoEmpresaRegistroRT = tipo;
+      const btnCrea = document.getElementById('btnEmpCreaRT');
+      const btnCau = document.getElementById('btnEmpCauRT');
+      const btnCnpj = document.getElementById('btnEmpCnpjRT');
+      const input = document.getElementById('empresaRegistroRT');
+      const errorMsg = document.getElementById('errorEmpresaRegistroRT');
+      
+      btnCrea.classList.remove('active');
+      btnCau.classList.remove('active');
+      btnCnpj.classList.remove('active');
+      
+      if (!preserveValue) {
+        input.value = '';
+      }
+      input.disabled = false;
+      input.classList.remove('error', 'success');
+      errorMsg.classList.remove('show');
+      
+      if (tipo === 'crea') {
+        btnCrea.classList.add('active');
+        input.placeholder = 'Número do CREA';
+        input.maxLength = 50;
+      } else if (tipo === 'cau') {
+        btnCau.classList.add('active');
+        input.placeholder = 'Número do CAU';
+        input.maxLength = 50;
+      } else if (tipo === 'cnpj') {
+        btnCnpj.classList.add('active');
+        input.placeholder = '00.000.000/0000-00';
+        input.maxLength = 18;
+      }
+    }
+
+    // Formatar CNPJ da empresa enquanto digita - Página 4
+    document.getElementById('empresaRegistroRT').addEventListener('input', function(e) {
+      if (tipoEmpresaRegistroRT === 'cnpj') {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 2) value = value.substring(0,2) + '.' + value.substring(2);
+        if (value.length > 6) value = value.substring(0,6) + '.' + value.substring(6);
+        if (value.length > 10) value = value.substring(0,10) + '/' + value.substring(10);
+        if (value.length > 15) value = value.substring(0,15) + '-' + value.substring(15,17);
+        e.target.value = value;
+      }
+      e.target.classList.remove('error');
+      document.getElementById('errorEmpresaRegistroRT').classList.remove('show');
+    });
+
+    // =============================================
+    // PÁGINA 5 - DEMOLIÇÃO - FUNÇÕES
+    // =============================================
+
+    // Toggle geral de demolição
+    function toggleDemolicao() {
+      const houve = document.querySelector('input[name="houveDemolicao"]:checked');
+      const campos = document.getElementById('camposDemolicao');
+      
+      if (houve && houve.value === 'Sim') {
+        campos.style.display = 'block';
+      } else {
+        campos.style.display = 'none';
+        // Limpar campos
+        limparCamposDemolicao();
+      }
+    }
+
+    // Toggle Projeto de Demolição
+    function toggleProjetoDemolicao() {
+      const projeto = document.querySelector('input[name="projetoDemolicao"]:checked');
+      const fieldset = document.getElementById('fieldsetProjetoDemolicao');
+      
+      if (projeto && projeto.value === 'Sim') {
+        fieldset.disabled = false;
+      } else {
+        fieldset.disabled = true;
+      }
+    }
+
+    // Toggle Execução de Demolição
+    function toggleExecucaoDemolicao() {
+      const execucao = document.querySelector('input[name="execucaoDemolicao"]:checked');
+      const fieldset = document.getElementById('fieldsetExecucaoDemolicao');
+      
+      if (execucao && execucao.value === 'Sim') {
+        fieldset.disabled = false;
+      } else {
+        fieldset.disabled = true;
+      }
+    }
+
+    // Limpar todos os campos de demolição
+    function limparCamposDemolicao() {
+      const radios = document.querySelectorAll('#camposDemolicao input[type="radio"]');
+      radios.forEach(r => r.checked = false);
+      
+      const inputs = document.querySelectorAll('#camposDemolicao input[type="text"]');
+      inputs.forEach(i => i.value = '');
+      
+      toggleProjetoDemolicao();
+      toggleExecucaoDemolicao();
+    }
+
+    // Mostrar campo Registro - Projeto Demolição
+    function mostrarCampoRegistroPD(tipo) {
+      document.getElementById('campoCreaProjetoDemol').classList.remove('show');
+      document.getElementById('campoOutrosProjetoDemol').classList.remove('show');
+      
+      if (tipo === 'crea') {
+        document.getElementById('campoCreaProjetoDemol').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosProjetoDemol').classList.add('show');
+      }
+    }
+
+    // Mostrar campo ART - Projeto Demolição
+    function mostrarCampoArtPD(tipo) {
+      document.getElementById('campoArtProjetoDemol').classList.remove('show');
+      document.getElementById('campoOutrosArtProjetoDemol').classList.remove('show');
+      
+      if (tipo === 'art') {
+        document.getElementById('campoArtProjetoDemol').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosArtProjetoDemol').classList.add('show');
+      }
+    }
+
+    // Mostrar campo Registro - Execução Demolição
+    function mostrarCampoRegistroED(tipo) {
+      document.getElementById('campoCreaExecDemol').classList.remove('show');
+      document.getElementById('campoOutrosExecDemol').classList.remove('show');
+      
+      if (tipo === 'crea') {
+        document.getElementById('campoCreaExecDemol').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosExecDemol').classList.add('show');
+      }
+    }
+
+    // Mostrar campo ART - Execução Demolição
+    function mostrarCampoArtED(tipo) {
+      document.getElementById('campoArtExecDemol').classList.remove('show');
+      document.getElementById('campoOutrosArtExecDemol').classList.remove('show');
+      
+      if (tipo === 'art') {
+        document.getElementById('campoArtExecDemol').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosArtExecDemol').classList.add('show');
+      }
+    }
+
+    // Formatar CPFs - Projeto Demolição
+    document.getElementById('cpfProjetoDemol').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+      if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+      if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCpfProjetoDemol').classList.remove('show');
+    });
+
+    // Formatar CPFs - Execução Demolição
+    document.getElementById('cpfExecDemol').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+      if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+      if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCpfExecDemol').classList.remove('show');
+    });
+
+    // Formatar CNPJ - Demolição
+    document.getElementById('cnpjDemol').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 2) value = value.substring(0,2) + '.' + value.substring(2);
+      if (value.length > 6) value = value.substring(0,6) + '.' + value.substring(6);
+      if (value.length > 10) value = value.substring(0,10) + '/' + value.substring(10);
+      if (value.length > 15) value = value.substring(0,15) + '-' + value.substring(15,17);
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCnpjDemol').classList.remove('show');
+    });
+
+    // Formatar ART (só números)
+    document.getElementById('artNumeroProjetoDemol').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+    
+    document.getElementById('artNumeroExecDemol').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+
+    // Validar Página 2
+    function validarPagina2() {
+      let isValid = true;
+      let avisos = [];
+
+      // Tipo/Natureza (obrigatório)
+      const tipoSelecionado = document.querySelector('input[name="tipoNatureza"]:checked');
+      const errorTipo = document.getElementById('errorTipoNatureza');
+      if (!tipoSelecionado) {
+        errorTipo.classList.add('show');
+        isValid = false;
+      } else {
+        errorTipo.classList.remove('show');
+      }
+
+      // Área (obrigatório)
+      const area = document.getElementById('area');
+      const errorArea = document.getElementById('errorArea');
+      if (!area.value.trim()) {
+        area.classList.add('error');
+        errorArea.classList.add('show');
+        isValid = false;
+      } else {
+        area.classList.remove('error');
+        area.classList.add('success');
+        errorArea.classList.remove('show');
+      }
+
+      // Pavimentos (obrigatório, mínimo 1)
+      const pavimentos = document.getElementById('pavimentos');
+      const errorPavimentos = document.getElementById('errorPavimentos');
+      const pavValue = parseInt(pavimentos.value);
+      if (!pavimentos.value.trim() || isNaN(pavValue) || pavValue < 1) {
+        pavimentos.classList.add('error');
+        errorPavimentos.classList.add('show');
+        isValid = false;
+      } else {
+        pavimentos.classList.remove('error');
+        pavimentos.classList.add('success');
+        errorPavimentos.classList.remove('show');
+      }
+
+      // Processo (opcional - aviso)
+      const processoNum = document.getElementById('processoNum');
+      if (!processoNum.value.trim()) {
+        avisos.push('Processo nº');
+      }
+
+      // Alvará (opcional - aviso)
+      const alvaraNum = document.getElementById('alvaraNum');
+      if (!alvaraNum.value.trim()) {
+        avisos.push('Alvará nº');
+      }
+
+      // Ano do Alvará (opcional - mas se preencher tem que ser 4 dígitos)
+      const alvaraDe = document.getElementById('alvaraDe');
+      const errorAlvaraDe = document.getElementById('errorAlvaraDe');
+      if (alvaraDe.value.trim()) {
+        const ano = parseInt(alvaraDe.value);
+        if (alvaraDe.value.length !== 4 || isNaN(ano) || ano < 1900 || ano > 2100) {
+          alvaraDe.classList.add('error');
+          errorAlvaraDe.classList.add('show');
+          isValid = false;
+        } else {
+          alvaraDe.classList.remove('error');
+          alvaraDe.classList.add('success');
+          errorAlvaraDe.classList.remove('show');
+        }
+      } else {
+        avisos.push('Ano do Alvará');
+      }
+
+      // Proprietário (obrigatório)
+      const proprietario = document.getElementById('proprietario');
+      const errorProprietario = document.getElementById('errorProprietario');
+      if (!validarCampoObrigatorio(proprietario, errorProprietario)) {
+        isValid = false;
+      }
+
+      // CPF/CNPJ (obrigatório)
+      const cpfCnpj = document.getElementById('cpfCnpj');
+      const errorCpfCnpj = document.getElementById('errorCpfCnpj');
+      const cpfCnpjNumeros = cpfCnpj.value.replace(/\D/g, '');
+      
+      if (!cpfCnpj.value.trim()) {
+        cpfCnpj.classList.add('error');
+        errorCpfCnpj.textContent = tipoDocumento === 'cpf' ? 'Informe o CPF' : 'Informe o CNPJ';
+        errorCpfCnpj.classList.add('show');
+        isValid = false;
+      } else if (tipoDocumento === 'cpf') {
+        if (!validarCPF(cpfCnpjNumeros)) {
+          cpfCnpj.classList.add('error');
+          errorCpfCnpj.textContent = 'CPF inválido';
+          errorCpfCnpj.classList.add('show');
+          isValid = false;
+        } else {
+          cpfCnpj.classList.remove('error');
+          cpfCnpj.classList.add('success');
+          errorCpfCnpj.classList.remove('show');
+        }
+      } else if (tipoDocumento === 'cnpj') {
+        if (!validarCNPJ(cpfCnpjNumeros)) {
+          cpfCnpj.classList.add('error');
+          errorCpfCnpj.textContent = 'CNPJ inválido';
+          errorCpfCnpj.classList.add('show');
+          isValid = false;
+        } else {
+          cpfCnpj.classList.remove('error');
+          cpfCnpj.classList.add('success');
+          errorCpfCnpj.classList.remove('show');
+        }
+      }
+
+      // Endereço (obrigatório)
+      const endereco = document.getElementById('enderecoProprietario');
+      const errorEndereco = document.getElementById('errorEnderecoProprietario');
+      if (!validarCampoObrigatorio(endereco, errorEndereco)) {
+        isValid = false;
+      }
+
+      // Retornar resultado com avisos
+      return { isValid, avisos };
+    }
+
+    // Validar Página 3
+    function validarPagina3() {
+      let isValid = true;
+      let avisos = [];
+
+      // Placa afixada (obrigatório)
+      const placaSelecionada = document.querySelector('input[name="placaAfixada"]:checked');
+      const errorPlaca = document.getElementById('errorPlacaAfixada');
+      if (!placaSelecionada) {
+        errorPlaca.classList.add('show');
+        isValid = false;
+      } else {
+        errorPlaca.classList.remove('show');
+      }
+
+      // Profissional (obrigatório)
+      const profissional = document.getElementById('profissional');
+      const errorProfissional = document.getElementById('errorProfissional');
+      if (!profissional.value.trim()) {
+        profissional.classList.add('error');
+        errorProfissional.classList.add('show');
+        isValid = false;
+      } else {
+        profissional.classList.remove('error');
+        profissional.classList.add('success');
+        errorProfissional.classList.remove('show');
+      }
+
+      // Tipo de Registro (obrigatório)
+      const tipoRegistroSelecionado = document.querySelector('input[name="tipoRegistro"]:checked');
+      const errorRegistro = document.getElementById('errorRegistro');
+      
+      if (!tipoRegistroSelecionado) {
+        errorRegistro.textContent = 'Selecione um tipo de registro';
+        errorRegistro.classList.add('show');
+        isValid = false;
+      } else {
+        const tipo = tipoRegistroSelecionado.value;
+        
+        if (tipo === 'CREA') {
+          const numeroCrea = document.getElementById('numeroCrea');
+          if (!numeroCrea.value.trim()) {
+            numeroCrea.classList.add('error');
+            errorRegistro.textContent = 'Informe o número do CREA';
+            errorRegistro.classList.add('show');
+            isValid = false;
+          } else {
+            numeroCrea.classList.remove('error');
+            numeroCrea.classList.add('success');
+            errorRegistro.classList.remove('show');
+          }
+        } else if (tipo === 'CPF') {
+          const cpfProf = document.getElementById('cpfProfissional');
+          const cpfNumeros = cpfProf.value.replace(/\D/g, '');
+          
+          if (!cpfProf.value.trim()) {
+            cpfProf.classList.add('error');
+            errorRegistro.textContent = 'Informe o CPF';
+            errorRegistro.classList.add('show');
+            isValid = false;
+          } else if (!validarCPF(cpfNumeros)) {
+            cpfProf.classList.add('error');
+            errorRegistro.textContent = 'CPF inválido';
+            errorRegistro.classList.add('show');
+            isValid = false;
+          } else {
+            cpfProf.classList.remove('error');
+            cpfProf.classList.add('success');
+            errorRegistro.classList.remove('show');
+          }
+        } else if (tipo === 'Outros') {
+          const sigla = document.getElementById('siglaConselho');
+          const numero = document.getElementById('numeroConselho');
+          
+          if (!sigla.value.trim() || !numero.value.trim()) {
+            if (!sigla.value.trim()) sigla.classList.add('error');
+            if (!numero.value.trim()) numero.classList.add('error');
+            errorRegistro.textContent = 'Informe a sigla e o número do conselho';
+            errorRegistro.classList.add('show');
+            isValid = false;
+          } else {
+            sigla.classList.remove('error');
+            sigla.classList.add('success');
+            numero.classList.remove('error');
+            numero.classList.add('success');
+            errorRegistro.classList.remove('show');
+          }
+        }
+      }
+
+      // Título (opcional - aviso)
+      const titulo = document.getElementById('titulo');
+      if (!titulo.value.trim()) {
+        avisos.push('Título');
+      }
+
+      // ART/RRT (opcional - aviso)
+      const tipoArtRrtSelecionado = document.querySelector('input[name="tipoArtRrt"]:checked');
+      if (!tipoArtRrtSelecionado) {
+        avisos.push('ART/RRT');
+      } else {
+        const tipoAR = tipoArtRrtSelecionado.value;
+        if (tipoAR === 'ART' && !document.getElementById('artNumero').value.trim()) {
+          avisos.push('Número da ART');
+        } else if (tipoAR === 'RRT' && !document.getElementById('rrtNumero').value.trim()) {
+          avisos.push('Número do RRT');
+        }
+      }
+
+      // Empresa (opcional - aviso)
+      const empresa = document.getElementById('empresa');
+      if (!empresa.value.trim()) {
+        avisos.push('Empresa');
+      }
+
+      // Registro da empresa (validar CNPJ apenas se tipo for CNPJ)
+      const empresaRegistro = document.getElementById('empresaRegistro');
+      const errorEmpresaRegistro = document.getElementById('errorEmpresaRegistro');
+      
+      if (!tipoEmpresaRegistro || !empresaRegistro.value.trim()) {
+        avisos.push('Registro da Empresa');
+      } else if (tipoEmpresaRegistro === 'cnpj' && empresaRegistro.value.trim()) {
+        const cnpjNumeros = empresaRegistro.value.replace(/\D/g, '');
+        if (!validarCNPJ(cnpjNumeros)) {
+          empresaRegistro.classList.add('error');
+          errorEmpresaRegistro.classList.add('show');
+          isValid = false;
+        } else {
+          empresaRegistro.classList.remove('error');
+          empresaRegistro.classList.add('success');
+          errorEmpresaRegistro.classList.remove('show');
+        }
+      } else {
+        // Não é CNPJ, aceitar
+        empresaRegistro.classList.remove('error');
+        errorEmpresaRegistro.classList.remove('show');
+      }
+
+      return { isValid, avisos };
+    }
+
+    // Validar Página 4
+    function validarPagina4() {
+      let isValid = true;
+      let avisos = [];
+
+      // Placa afixada (obrigatório)
+      const placaSelecionada = document.querySelector('input[name="placaAfixadaRT"]:checked');
+      const errorPlaca = document.getElementById('errorPlacaAfixadaRT');
+      if (!placaSelecionada) {
+        errorPlaca.classList.add('show');
+        isValid = false;
+      } else {
+        errorPlaca.classList.remove('show');
+      }
+
+      // Profissional (obrigatório)
+      const profissional = document.getElementById('profissionalRT');
+      const errorProfissional = document.getElementById('errorProfissionalRT');
+      if (!profissional.value.trim()) {
+        profissional.classList.add('error');
+        errorProfissional.classList.add('show');
+        isValid = false;
+      } else {
+        profissional.classList.remove('error');
+        profissional.classList.add('success');
+        errorProfissional.classList.remove('show');
+      }
+
+      // CPF (obrigatório e validar)
+      const cpfRT = document.getElementById('cpfRT');
+      const errorCpfRT = document.getElementById('errorCpfRT');
+      const cpfNumeros = cpfRT.value.replace(/\D/g, '');
+      
+      if (!cpfRT.value.trim()) {
+        cpfRT.classList.add('error');
+        errorCpfRT.textContent = 'Informe o CPF';
+        errorCpfRT.classList.add('show');
+        isValid = false;
+      } else if (!validarCPF(cpfNumeros)) {
+        cpfRT.classList.add('error');
+        errorCpfRT.textContent = 'CPF inválido';
+        errorCpfRT.classList.add('show');
+        isValid = false;
+      } else {
+        cpfRT.classList.remove('error');
+        cpfRT.classList.add('success');
+        errorCpfRT.classList.remove('show');
+      }
+
+      // CREA/Outros (opcional - aviso)
+      const tipoRegistroRT = document.querySelector('input[name="tipoRegistroRT"]:checked');
+      if (!tipoRegistroRT) {
+        avisos.push('CREA/Outros');
+      } else {
+        const tipo = tipoRegistroRT.value;
+        if (tipo === 'CREA' && !document.getElementById('numeroCreaRT').value.trim()) {
+          avisos.push('Número do CREA');
+        } else if (tipo === 'Outros') {
+          if (!document.getElementById('siglaConselhoRT').value.trim() || !document.getElementById('numeroConselhoRT').value.trim()) {
+            avisos.push('Dados do conselho');
+          }
+        }
+      }
+
+      // ART/Outros (opcional - aviso)
+      const tipoArtOutrosRT = document.querySelector('input[name="tipoArtOutrosRT"]:checked');
+      if (!tipoArtOutrosRT) {
+        avisos.push('ART/Outros');
+      } else {
+        const tipoArt = tipoArtOutrosRT.value;
+        if (tipoArt === 'ART' && !document.getElementById('artNumeroRT').value.trim()) {
+          avisos.push('Número da ART');
+        } else if (tipoArt === 'Outros') {
+          if (!document.getElementById('nomeOutrosArtRT').value.trim() || !document.getElementById('numeroOutrosArtRT').value.trim()) {
+            avisos.push('Dados do registro');
+          }
+        }
+      }
+
+      // Empresa (opcional - aviso)
+      if (!document.getElementById('empresaRT').value.trim()) {
+        avisos.push('Empresa');
+      }
+
+      // Registro da empresa (validar CNPJ se escolhido)
+      const empresaRegistro = document.getElementById('empresaRegistroRT');
+      const errorEmpresaRegistro = document.getElementById('errorEmpresaRegistroRT');
+      
+      if (!tipoEmpresaRegistroRT || !empresaRegistro.value.trim()) {
+        avisos.push('Registro da Empresa');
+      } else if (tipoEmpresaRegistroRT === 'cnpj' && empresaRegistro.value.trim()) {
+        const cnpjNumeros = empresaRegistro.value.replace(/\D/g, '');
+        if (!validarCNPJ(cnpjNumeros)) {
+          empresaRegistro.classList.add('error');
+          errorEmpresaRegistro.classList.add('show');
+          isValid = false;
+        } else {
+          empresaRegistro.classList.remove('error');
+          empresaRegistro.classList.add('success');
+          errorEmpresaRegistro.classList.remove('show');
+        }
+      }
+
+      return { isValid, avisos };
+    }
+
+    // Validar Página 5 - Demolição
+    function validarPagina5() {
+      let isValid = true;
+      let avisos = [];
+
+      // Houve Demolição (obrigatório)
+      const houveDemolicao = document.querySelector('input[name="houveDemolicao"]:checked');
+      const errorHouveDemolicao = document.getElementById('errorHouveDemolicao');
+      
+      if (!houveDemolicao) {
+        errorHouveDemolicao.classList.add('show');
+        isValid = false;
+      } else {
+        errorHouveDemolicao.classList.remove('show');
+        
+        // Se houve demolição = SIM, validar campos internos
+        if (houveDemolicao.value === 'Sim') {
+          
+          // PROJETO DE DEMOLIÇÃO
+          const projetoDemolicao = document.querySelector('input[name="projetoDemolicao"]:checked');
+          
+          if (projetoDemolicao && projetoDemolicao.value === 'Sim') {
+            // Validar profissional (obrigatório)
+            const profProjeto = document.getElementById('profissionalProjetoDemol');
+            const errorProfProjeto = document.getElementById('errorProfissionalProjetoDemol');
+            
+            if (!profProjeto.value.trim()) {
+              profProjeto.classList.add('error');
+              errorProfProjeto.classList.add('show');
+              isValid = false;
+            } else {
+              profProjeto.classList.remove('error');
+              profProjeto.classList.add('success');
+              errorProfProjeto.classList.remove('show');
+            }
+            
+            // Validar CPF (obrigatório)
+            const cpfProjeto = document.getElementById('cpfProjetoDemol');
+            const errorCpfProjeto = document.getElementById('errorCpfProjetoDemol');
+            const cpfNums = cpfProjeto.value.replace(/\D/g, '');
+            
+            if (!cpfProjeto.value.trim()) {
+              cpfProjeto.classList.add('error');
+              errorCpfProjeto.textContent = 'Informe o CPF';
+              errorCpfProjeto.classList.add('show');
+              isValid = false;
+            } else if (!validarCPF(cpfNums)) {
+              cpfProjeto.classList.add('error');
+              errorCpfProjeto.textContent = 'CPF inválido';
+              errorCpfProjeto.classList.add('show');
+              isValid = false;
+            } else {
+              cpfProjeto.classList.remove('error');
+              cpfProjeto.classList.add('success');
+              errorCpfProjeto.classList.remove('show');
+            }
+          }
+          
+          // EXECUÇÃO DE DEMOLIÇÃO
+          const execucaoDemolicao = document.querySelector('input[name="execucaoDemolicao"]:checked');
+          
+          if (execucaoDemolicao && execucaoDemolicao.value === 'Sim') {
+            // Validar profissional (obrigatório)
+            const profExec = document.getElementById('profissionalExecDemol');
+            const errorProfExec = document.getElementById('errorProfissionalExecDemol');
+            
+            if (!profExec.value.trim()) {
+              profExec.classList.add('error');
+              errorProfExec.classList.add('show');
+              isValid = false;
+            } else {
+              profExec.classList.remove('error');
+              profExec.classList.add('success');
+              errorProfExec.classList.remove('show');
+            }
+            
+            // Validar CPF (obrigatório)
+            const cpfExec = document.getElementById('cpfExecDemol');
+            const errorCpfExec = document.getElementById('errorCpfExecDemol');
+            const cpfExecNums = cpfExec.value.replace(/\D/g, '');
+            
+            if (!cpfExec.value.trim()) {
+              cpfExec.classList.add('error');
+              errorCpfExec.textContent = 'Informe o CPF';
+              errorCpfExec.classList.add('show');
+              isValid = false;
+            } else if (!validarCPF(cpfExecNums)) {
+              cpfExec.classList.add('error');
+              errorCpfExec.textContent = 'CPF inválido';
+              errorCpfExec.classList.add('show');
+              isValid = false;
+            } else {
+              cpfExec.classList.remove('error');
+              cpfExec.classList.add('success');
+              errorCpfExec.classList.remove('show');
+            }
+            
+            // Validar CNPJ se preenchido
+            const cnpjDemol = document.getElementById('cnpjDemol');
+            const errorCnpjDemol = document.getElementById('errorCnpjDemol');
+            const cnpjNums = cnpjDemol.value.replace(/\D/g, '');
+            
+            if (cnpjDemol.value.trim() && cnpjNums.length === 14) {
+              if (!validarCNPJ(cnpjNums)) {
+                cnpjDemol.classList.add('error');
+                errorCnpjDemol.classList.add('show');
+                isValid = false;
+              } else {
+                cnpjDemol.classList.remove('error');
+                cnpjDemol.classList.add('success');
+                errorCnpjDemol.classList.remove('show');
+              }
+            } else {
+              cnpjDemol.classList.remove('error');
+              errorCnpjDemol.classList.remove('show');
+            }
+          }
+        }
+      }
+
+      return { isValid, avisos };
+    }
+
+    // Validar Página 6 - Equipe Técnica
+    function validarPagina6() {
+      let isValid = true;
+      let avisos = [];
+
+      const blocos = [
+        { id: 'Coordenacao', label: 'Coordenação' },
+        { id: 'Orcamento', label: 'Orçamento' },
+        { id: 'Residente', label: 'Residente' }
+      ];
+
+      blocos.forEach(b => {
+        const prof = document.getElementById('prof' + b.id);
+        const cpf = document.getElementById('cpf' + b.id);
+        const errorProf = document.getElementById('errorProf' + b.id);
+        const errorCpf = document.getElementById('errorCpf' + b.id);
+
+        if (!prof.value.trim()) {
+          prof.classList.add('error');
+          errorProf.classList.add('show');
+          isValid = false;
+        } else {
+          prof.classList.remove('error');
+          errorProf.classList.remove('show');
+        }
+
+        const cpfNums = cpf.value.replace(/\D/g, '');
+        if (!cpf.value.trim() || !validarCPF(cpfNums)) {
+          cpf.classList.add('error');
+          errorCpf.classList.add('show');
+          isValid = false;
+        } else {
+          cpf.classList.remove('error');
+          errorCpf.classList.remove('show');
+        }
+
+        // Avisos opcionais
+        const reg = document.querySelector(`input[name="reg${b.id}"]:checked`);
+        if (!reg) avisos.push('Registro ' + b.label);
+        
+        const art = document.querySelector(`input[name="tipoArt${b.id}"]:checked`);
+        if (!art) avisos.push('ART ' + b.label);
+      });
+
+      return { isValid, avisos };
+    }
+
+    // =============================================
+    // AÇÕES DOS BOTÕES
+    // =============================================
+
+    // Salvar página
+    function salvarPagina(pageNum) {
+      let isValid = false;
+      let avisos = [];
+      
+      switch(pageNum) {
+        case 1:
+          isValid = validarPagina1();
+          if (isValid) {
+            formData.page1 = {
+              localObra: document.getElementById('localObra').value.trim(),
+              bairro: document.getElementById('bairro').value.trim(),
+              cidade: document.getElementById('cidade').value.trim(),
+              cep: document.getElementById('cep').value.trim(),
+              saved: true
+            };
+          }
+          break;
+          
+        case 2:
+          const resultado2 = validarPagina2();
+          isValid = resultado2.isValid;
+          avisos = resultado2.avisos;
+          
+          if (isValid) {
+            const tipoSelecionado = document.querySelector('input[name="tipoNatureza"]:checked');
+            formData.page2 = {
+              tipoNatureza: tipoSelecionado ? tipoSelecionado.value : '',
+              area: document.getElementById('area').value.trim(),
+              pavimentos: document.getElementById('pavimentos').value.trim(),
+              processoNum: document.getElementById('processoNum').value.trim(),
+              alvaraNum: document.getElementById('alvaraNum').value.trim(),
+              alvaraDe: document.getElementById('alvaraDe').value.trim(),
+              proprietario: document.getElementById('proprietario').value.trim(),
+              tipoCpfCnpj: tipoDocumento,
+              cpfCnpj: document.getElementById('cpfCnpj').value.trim(),
+              enderecoProprietario: document.getElementById('enderecoProprietario').value.trim(),
+              saved: true
+            };
+          }
+          break;
+          
+        case 3:
+          const resultado3 = validarPagina3();
+          isValid = resultado3.isValid;
+          avisos = resultado3.avisos;
+          
+          if (isValid) {
+            const placaSelecionada = document.querySelector('input[name="placaAfixada"]:checked');
+            const tipoRegistroSelecionado = document.querySelector('input[name="tipoRegistro"]:checked');
+            const tipoArtRrtSelecionado = document.querySelector('input[name="tipoArtRrt"]:checked');
+            
+            formData.page3 = {
+              placaAfixada: placaSelecionada ? placaSelecionada.value : '',
+              profissional: document.getElementById('profissional').value.trim(),
+              tipoRegistro: tipoRegistroSelecionado ? tipoRegistroSelecionado.value : '',
+              numeroCrea: document.getElementById('numeroCrea').value.trim(),
+              cpfProfissional: document.getElementById('cpfProfissional').value.trim(),
+              siglaConselho: document.getElementById('siglaConselho').value.trim(),
+              numeroConselho: document.getElementById('numeroConselho').value.trim(),
+              titulo: document.getElementById('titulo').value.trim(),
+              tipoArtRrt: tipoArtRrtSelecionado ? tipoArtRrtSelecionado.value : '',
+              artNumero: document.getElementById('artNumero').value.trim(),
+              rrtNumero: document.getElementById('rrtNumero').value.trim(),
+              empresa: document.getElementById('empresa').value.trim(),
+              tipoEmpresaRegistro: tipoEmpresaRegistro,
+              empresaRegistro: document.getElementById('empresaRegistro').value.trim(),
+              saved: true
+            };
+            
+            // Adicionar profissional à lista de autocomplete
+            const nomeProfissional = document.getElementById('profissional').value.trim();
+            const cpfProf = tipoRegistroSelecionado?.value === 'CPF' ? document.getElementById('cpfProfissional').value.trim() : '';
+            const creaProf = tipoRegistroSelecionado?.value === 'CREA' ? document.getElementById('numeroCrea').value.trim() : '';
+            adicionarProfissional(nomeProfissional, cpfProf, creaProf);
+          }
+          break;
+          
+        case 4:
+          const resultado4 = validarPagina4();
+          isValid = resultado4.isValid;
+          avisos = resultado4.avisos;
+          
+          if (isValid) {
+            const placaSelecionadaRT = document.querySelector('input[name="placaAfixadaRT"]:checked');
+            const tipoRegistroSelecionadoRT = document.querySelector('input[name="tipoRegistroRT"]:checked');
+            const tipoArtOutrosSelecionadoRT = document.querySelector('input[name="tipoArtOutrosRT"]:checked');
+            
+            formData.page4 = {
+              placaAfixadaRT: placaSelecionadaRT ? placaSelecionadaRT.value : '',
+              profissionalRT: document.getElementById('profissionalRT').value.trim(),
+              cpfRT: document.getElementById('cpfRT').value.trim(),
+              tipoRegistroRT: tipoRegistroSelecionadoRT ? tipoRegistroSelecionadoRT.value : '',
+              numeroCreaRT: document.getElementById('numeroCreaRT').value.trim(),
+              siglaConselhoRT: document.getElementById('siglaConselhoRT').value.trim(),
+              numeroConselhoRT: document.getElementById('numeroConselhoRT').value.trim(),
+              tipoArtOutrosRT: tipoArtOutrosSelecionadoRT ? tipoArtOutrosSelecionadoRT.value : '',
+              artNumeroRT: document.getElementById('artNumeroRT').value.trim(),
+              nomeOutrosArtRT: document.getElementById('nomeOutrosArtRT').value.trim(),
+              numeroOutrosArtRT: document.getElementById('numeroOutrosArtRT').value.trim(),
+              empresaRT: document.getElementById('empresaRT').value.trim(),
+              tipoEmpresaRegistroRT: tipoEmpresaRegistroRT,
+              empresaRegistroRT: document.getElementById('empresaRegistroRT').value.trim(),
+              saved: true
+            };
+            
+            // Adicionar profissional à lista de autocomplete
+            const nomeProfissionalRT = document.getElementById('profissionalRT').value.trim();
+            const cpfRT = document.getElementById('cpfRT').value.trim();
+            const creaRT = tipoRegistroSelecionadoRT?.value === 'CREA' ? document.getElementById('numeroCreaRT').value.trim() : '';
+            adicionarProfissional(nomeProfissionalRT, cpfRT, creaRT);
+          }
+          break;
+          
+        case 5:
+          const resultado5 = validarPagina5();
+          isValid = resultado5.isValid;
+          avisos = resultado5.avisos;
+          
+          if (isValid) {
+            const houveDemolicao = document.querySelector('input[name="houveDemolicao"]:checked');
+            const projetoDemolicao = document.querySelector('input[name="projetoDemolicao"]:checked');
+            const tipoRegistroProjetoDemol = document.querySelector('input[name="tipoRegistroProjetoDemol"]:checked');
+            const tipoArtProjetoDemol = document.querySelector('input[name="tipoArtProjetoDemol"]:checked');
+            const execucaoDemolicao = document.querySelector('input[name="execucaoDemolicao"]:checked');
+            const tipoRegistroExecDemol = document.querySelector('input[name="tipoRegistroExecDemol"]:checked');
+            const tipoArtExecDemol = document.querySelector('input[name="tipoArtExecDemol"]:checked');
+            
+            formData.page5 = {
+              houveDemolicao: houveDemolicao ? houveDemolicao.value : '',
+              projetoDemolicao: projetoDemolicao ? projetoDemolicao.value : '',
+              profissionalProjetoDemol: document.getElementById('profissionalProjetoDemol').value.trim(),
+              cpfProjetoDemol: document.getElementById('cpfProjetoDemol').value.trim(),
+              tipoRegistroProjetoDemol: tipoRegistroProjetoDemol ? tipoRegistroProjetoDemol.value : '',
+              numeroCreaProjetoDemol: document.getElementById('numeroCreaProjetoDemol').value.trim(),
+              siglaConselhoProjetoDemol: document.getElementById('siglaConselhoProjetoDemol').value.trim(),
+              numeroConselhoProjetoDemol: document.getElementById('numeroConselhoProjetoDemol').value.trim(),
+              tipoArtProjetoDemol: tipoArtProjetoDemol ? tipoArtProjetoDemol.value : '',
+              artNumeroProjetoDemol: document.getElementById('artNumeroProjetoDemol').value.trim(),
+              nomeOutrosArtProjetoDemol: document.getElementById('nomeOutrosArtProjetoDemol').value.trim(),
+              numeroOutrosArtProjetoDemol: document.getElementById('numeroOutrosArtProjetoDemol').value.trim(),
+              execucaoDemolicao: execucaoDemolicao ? execucaoDemolicao.value : '',
+              profissionalExecDemol: document.getElementById('profissionalExecDemol').value.trim(),
+              cpfExecDemol: document.getElementById('cpfExecDemol').value.trim(),
+              tipoRegistroExecDemol: tipoRegistroExecDemol ? tipoRegistroExecDemol.value : '',
+              numeroCreaExecDemol: document.getElementById('numeroCreaExecDemol').value.trim(),
+              siglaConselhoExecDemol: document.getElementById('siglaConselhoExecDemol').value.trim(),
+              numeroConselhoExecDemol: document.getElementById('numeroConselhoExecDemol').value.trim(),
+              tipoArtExecDemol: tipoArtExecDemol ? tipoArtExecDemol.value : '',
+              artNumeroExecDemol: document.getElementById('artNumeroExecDemol').value.trim(),
+              nomeOutrosArtExecDemol: document.getElementById('nomeOutrosArtExecDemol').value.trim(),
+              numeroOutrosArtExecDemol: document.getElementById('numeroOutrosArtExecDemol').value.trim(),
+              empresaDemol: document.getElementById('empresaDemol').value.trim(),
+              cnpjDemol: document.getElementById('cnpjDemol').value.trim(),
+              saved: true
+            };
+            
+            // Adicionar profissionais à lista de autocomplete
+            if (projetoDemolicao && projetoDemolicao.value === 'Sim') {
+              const nomeProjeto = document.getElementById('profissionalProjetoDemol').value.trim();
+              const cpfProjeto = document.getElementById('cpfProjetoDemol').value.trim();
+              const creaProjeto = tipoRegistroProjetoDemol?.value === 'CREA' ? document.getElementById('numeroCreaProjetoDemol').value.trim() : '';
+              adicionarProfissional(nomeProjeto, cpfProjeto, creaProjeto);
+            }
+            
+            if (execucaoDemolicao && execucaoDemolicao.value === 'Sim') {
+              const nomeExec = document.getElementById('profissionalExecDemol').value.trim();
+              const cpfExec = document.getElementById('cpfExecDemol').value.trim();
+              const creaExec = tipoRegistroExecDemol?.value === 'CREA' ? document.getElementById('numeroCreaExecDemol').value.trim() : '';
+              adicionarProfissional(nomeExec, cpfExec, creaExec);
+            }
+          }
+          break;
+
+        case 6:
+          const resultado6 = validarPagina6();
+          isValid = resultado6.isValid;
+          avisos = resultado6.avisos;
+          
+          if (isValid) {
+            const getRadioVal = (name) => {
+              const el = document.querySelector(`input[name="${name}"]:checked`);
+              return el ? el.value : '';
+            };
+
+            formData.page6 = {
+              coordenacao: {
+                nome: document.getElementById('profCoordenacao').value.trim(),
+                cpf: document.getElementById('cpfCoordenacao').value.trim(),
+                reg: getRadioVal('regCoord'),
+                numCrea: document.getElementById('numCreaCoord').value.trim(),
+                sigla: document.getElementById('siglaCoord').value.trim(),
+                numOutros: document.getElementById('numOutrosCoord').value.trim(),
+                tipoArt: getRadioVal('tipoArtCoord'),
+                numArt: document.getElementById('numArtCoord').value.trim(),
+                nomeArtOutros: document.getElementById('nomeArtCoord').value.trim(),
+                numArtOutros: document.getElementById('valArtCoord').value.trim()
+              },
+              orcamento: {
+                nome: document.getElementById('profOrcamento').value.trim(),
+                cpf: document.getElementById('cpfOrcamento').value.trim(),
+                reg: getRadioVal('regOrc'),
+                numCrea: document.getElementById('numCreaOrc').value.trim(),
+                sigla: document.getElementById('siglaOrc').value.trim(),
+                numOutros: document.getElementById('numOutrosOrc').value.trim(),
+                tipoArt: getRadioVal('tipoArtOrc'),
+                numArt: document.getElementById('numArtOrc').value.trim(),
+                nomeArtOutros: document.getElementById('nomeArtOrc').value.trim(),
+                numArtOutros: document.getElementById('valArtOrc').value.trim()
+              },
+              residente: {
+                nome: document.getElementById('profResidente').value.trim(),
+                cpf: document.getElementById('cpfResidente').value.trim(),
+                reg: getRadioVal('regRes'),
+                numCrea: document.getElementById('numCreaRes').value.trim(),
+                sigla: document.getElementById('siglaRes').value.trim(),
+                numOutros: document.getElementById('numOutrosRes').value.trim(),
+                tipoArt: getRadioVal('tipoArtRes'),
+                numArt: document.getElementById('numArtRes').value.trim(),
+                nomeArtOutros: document.getElementById('nomeArtRes').value.trim(),
+                numArtOutros: document.getElementById('valArtRes').value.trim()
+              },
+              saved: true
+            };
+
+            // Alimentar autocomplete
+            ['coordenacao', 'orcamento', 'residente'].forEach(key => {
+              const p = formData.page6[key];
+              const creaNum = p.reg === 'CREA' ? p.numCrea : '';
+              adicionarProfissional(p.nome, p.cpf, creaNum);
+            });
+          }
+          break;
+      }
+
+      if (isValid) {
+        if (saveToCache()) {
+          showToast('✓ Dados salvos com sucesso!', 'success');
+        } else {
+          showToast('Dados salvos na memória (cache indisponível)', 'success');
+        }
+        
+        // Mostrar avisos sobre campos opcionais não preenchidos
+        if (avisos.length > 0) {
+          setTimeout(() => {
+            showToast(`⚠️ Campos não preenchidos: ${avisos.join(', ')}`, 'warning');
+          }, 1800);
+        }
+      } else {
+        showToast('Por favor, corrija os erros antes de salvar', 'error');
+      }
+
+      return isValid;
+    }
+
+    // Avançar página
+    function avancar(currentPageNum) {
+      // Verificar se a página atual foi salva
+      if (!formData[`page${currentPageNum}`]?.saved) {
+        showToast('⚠️ Salve os dados antes de avançar!', 'error');
+        return;
+      }
+
+      if (currentPageNum < totalPages) {
+        showPage(currentPageNum + 1);
+      }
+    }
+
+    // Retornar página
+    function retornar(currentPageNum) {
+      if (currentPageNum > 1) {
+        showPage(currentPageNum - 1);
+      }
+    }
+
+    // Mostrar página específica
+    function showPage(pageNum) {
+      // Limpar toasts ao mudar de página
+      limparToast();
+      
+      // Esconder todas as páginas
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+
+      // Mostrar página selecionada
+      const targetPage = document.getElementById(`page${pageNum}`);
+      if (targetPage) {
+        targetPage.classList.add('active');
+        currentPage = pageNum;
+        updateProgress();
+      }
+    }
+
+    // Atualizar barra de progresso
+    function updateProgress() {
+      const progressFill = document.getElementById('progressFill');
+      const progressStep = document.getElementById('progressStep');
+      
+      const percentage = (currentPage / totalPages) * 100;
+      progressFill.style.width = `${percentage}%`;
+      progressStep.textContent = `Página ${currentPage} de ${totalPages}`;
+    }
+
+    // =============================================
+    // UTILITÁRIOS
+    // =============================================
+
+    // Variável para controlar o timeout do toast
+    let toastTimeout = null;
+
+    // Mostrar toast
+    function showToast(message, type = 'success', duration = 3000) {
+      const toast = document.getElementById('toast');
+      
+      // Cancelar timeout anterior se existir
+      if (toastTimeout) {
+        clearTimeout(toastTimeout);
+      }
+      
+      toast.textContent = message;
+      toast.className = `toast ${type} show`;
+      
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+        toastTimeout = null;
+      }, duration);
+    }
+    
+    // Limpar toast imediatamente
+    function limparToast() {
+      const toast = document.getElementById('toast');
+      if (toastTimeout) {
+        clearTimeout(toastTimeout);
+        toastTimeout = null;
+      }
+      toast.classList.remove('show');
+    }
+
+    // =============================================
+    // INICIALIZAÇÃO
+    // =============================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadFromCache();
+      updateProgress();
+      carregarProfissionaisDoCache();
+      
+      // Ativar autocomplete customizado
+      criarAutocomplete('profissional', 'autocompleteProfissional', 'cpfProfissional', 'numeroCrea');
+      criarAutocomplete('profissionalRT', 'autocompleteProfissionalRT', 'cpfRT', 'numeroCreaRT');
+      criarAutocomplete('profissionalProjetoDemol', 'autocompleteProfissionalProjetoDemol', 'cpfProjetoDemol', 'numeroCreaProjetoDemol');
+      criarAutocomplete('profissionalExecDemol', 'autocompleteProfissionalExecDemol', 'cpfExecDemol', 'numeroCreaExecDemol');
+      
+      // Autocomplete Página 6
+      criarAutocomplete('profCoordenacao', 'autocompleteCoordenacao', 'cpfCoordenacao', 'numCreaCoord');
+      criarAutocomplete('profOrcamento', 'autocompleteOrcamento', 'cpfOrcamento', 'numCreaOrc');
+      criarAutocomplete('profResidente', 'autocompleteResidente', 'cpfResidente', 'numCreaRes');
+    });
+  </script>
 </body>
 </html>
