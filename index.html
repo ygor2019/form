@@ -737,13 +737,16 @@
               </div>
 
               <div class="form-group">
-                <label for="alvaraDe">de:</label>
+                <label for="alvaraDe">de: (ano)</label>
                 <input 
                   type="text" 
                   id="alvaraDe" 
                   name="alvaraDe" 
-                  placeholder="Data/Ano"
+                  placeholder="Ex: 2024"
+                  maxlength="4"
+                  inputmode="numeric"
                 >
+                <p class="error-message" id="errorAlvaraDe">Ano inválido (4 dígitos)</p>
               </div>
             </div>
 
@@ -2666,6 +2669,14 @@
       document.getElementById('errorPavimentos').classList.remove('show');
     });
 
+    // Validar ano do alvará (só 4 números)
+    document.getElementById('alvaraDe').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorAlvaraDe').classList.remove('show');
+    });
+
     // Mostrar campo de registro conforme seleção (Página 3)
     function mostrarCampoRegistro(tipo) {
       // Esconder todos
@@ -3058,6 +3069,24 @@
       const alvaraNum = document.getElementById('alvaraNum');
       if (!alvaraNum.value.trim()) {
         avisos.push('Alvará nº');
+      }
+
+      // Ano do Alvará (opcional - mas se preencher tem que ser 4 dígitos)
+      const alvaraDe = document.getElementById('alvaraDe');
+      const errorAlvaraDe = document.getElementById('errorAlvaraDe');
+      if (alvaraDe.value.trim()) {
+        const ano = parseInt(alvaraDe.value);
+        if (alvaraDe.value.length !== 4 || isNaN(ano) || ano < 1900 || ano > 2100) {
+          alvaraDe.classList.add('error');
+          errorAlvaraDe.classList.add('show');
+          isValid = false;
+        } else {
+          alvaraDe.classList.remove('error');
+          alvaraDe.classList.add('success');
+          errorAlvaraDe.classList.remove('show');
+        }
+      } else {
+        avisos.push('Ano do Alvará');
       }
 
       // Proprietário (obrigatório)
