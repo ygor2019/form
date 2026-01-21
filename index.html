@@ -333,6 +333,126 @@
     .saved-indicator.show {
       opacity: 1;
     }
+
+    /* Radio buttons customizados */
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .radio-option {
+      position: relative;
+    }
+
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .radio-option label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+
+    .radio-option input[type="radio"]:checked + label {
+      border-color: var(--primary);
+      background: rgba(26, 54, 93, 0.05);
+      color: var(--primary);
+    }
+
+    .radio-option label:hover {
+      border-color: var(--primary-light);
+    }
+
+    .radio-option .radio-dot {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .radio-option input[type="radio"]:checked + label .radio-dot {
+      border-color: var(--primary);
+    }
+
+    .radio-option input[type="radio"]:checked + label .radio-dot::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: var(--primary);
+      border-radius: 50%;
+    }
+
+    /* CPF/CNPJ toggle */
+    .toggle-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: 2px solid var(--border);
+      background: white;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--text-muted);
+    }
+
+    .toggle-btn.active {
+      border-color: var(--primary);
+      background: rgba(26, 54, 93, 0.05);
+      color: var(--primary);
+    }
+
+    .toggle-btn:hover:not(.active) {
+      border-color: var(--primary-light);
+    }
+
+    /* Form row com 3 colunas */
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .form-row-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Aviso (warning) */
+    .toast.warning {
+      background: linear-gradient(135deg, #d69e2e, #b7791f);
+    }
+
+    /* Label opcional */
+    .optional {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 12px;
+    }
   </style>
 </head>
 <body>
@@ -427,8 +547,169 @@
       </div>
     </div>
 
-    <!-- Placeholder para próximas páginas -->
-    <!-- Serão adicionadas conforme você especificar -->
+    <!-- Page 2: Empreendimento -->
+    <div class="page" id="page2">
+      <div class="card">
+        <div class="card-header">
+          <h1>🏢 Empreendimento</h1>
+          <p>Informe os dados do empreendimento</p>
+        </div>
+        <div class="card-body">
+          <form id="form2" novalidate>
+            <!-- Tipo/Natureza -->
+            <div class="form-group">
+              <label>Tipo/Natureza <span class="required">*</span></label>
+              <div class="radio-group" id="tipoNatureza">
+                <div class="radio-option">
+                  <input type="radio" id="tipoResid" name="tipoNatureza" value="Residencial">
+                  <label for="tipoResid">
+                    <span class="radio-dot"></span>
+                    Residencial
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="tipoComl" name="tipoNatureza" value="Comercial">
+                  <label for="tipoComl">
+                    <span class="radio-dot"></span>
+                    Comercial
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="tipoInd" name="tipoNatureza" value="Industrial">
+                  <label for="tipoInd">
+                    <span class="radio-dot"></span>
+                    Industrial
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="tipoMista" name="tipoNatureza" value="Mista">
+                  <label for="tipoMista">
+                    <span class="radio-dot"></span>
+                    Mista
+                  </label>
+                </div>
+              </div>
+              <p class="error-message" id="errorTipoNatureza">Selecione o tipo do empreendimento</p>
+            </div>
+
+            <!-- Área e Pavimentos -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="area">Área (m²) <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="area" 
+                  name="area" 
+                  placeholder="Ex: 1.500"
+                  inputmode="numeric"
+                >
+                <p class="error-message" id="errorArea">Informe a área</p>
+              </div>
+
+              <div class="form-group">
+                <label for="pavimentos">Nº Pavimentos <span class="required">*</span></label>
+                <input 
+                  type="number" 
+                  id="pavimentos" 
+                  name="pavimentos" 
+                  placeholder="Ex: 2"
+                  min="1"
+                  step="1"
+                >
+                <p class="error-message" id="errorPavimentos">Mínimo 1 pavimento</p>
+              </div>
+            </div>
+
+            <!-- Processo e Alvará -->
+            <div class="form-row-3">
+              <div class="form-group">
+                <label for="processoNum">Processo nº <span class="optional">(opcional)</span></label>
+                <input 
+                  type="text" 
+                  id="processoNum" 
+                  name="processoNum" 
+                  placeholder="Nº do processo"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="alvaraNum">Alvará nº <span class="optional">(opcional)</span></label>
+                <input 
+                  type="text" 
+                  id="alvaraNum" 
+                  name="alvaraNum" 
+                  placeholder="Nº do alvará"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="alvaraDe">de: <span class="optional">(opcional)</span></label>
+                <input 
+                  type="text" 
+                  id="alvaraDe" 
+                  name="alvaraDe" 
+                  placeholder="Data/Ano"
+                >
+              </div>
+            </div>
+
+            <!-- Proprietário -->
+            <div class="form-group">
+              <label for="proprietario">Proprietário <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="proprietario" 
+                name="proprietario" 
+                placeholder="Nome completo do proprietário"
+              >
+              <p class="error-message" id="errorProprietario">Informe o proprietário</p>
+            </div>
+
+            <!-- CPF ou CNPJ -->
+            <div class="form-group">
+              <label>CPF ou CNPJ <span class="required">*</span></label>
+              <div class="toggle-group">
+                <button type="button" class="toggle-btn active" id="btnCpf" onclick="toggleCpfCnpj('cpf')">CPF</button>
+                <button type="button" class="toggle-btn" id="btnCnpj" onclick="toggleCpfCnpj('cnpj')">CNPJ</button>
+              </div>
+              <input 
+                type="text" 
+                id="cpfCnpj" 
+                name="cpfCnpj" 
+                placeholder="000.000.000-00"
+                maxlength="14"
+              >
+              <p class="hint" id="hintCpfCnpj">Formato: 000.000.000-00</p>
+              <p class="error-message" id="errorCpfCnpj">CPF inválido</p>
+            </div>
+
+            <!-- Endereço -->
+            <div class="form-group">
+              <label for="enderecoProprietario">Endereço <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="enderecoProprietario" 
+                name="enderecoProprietario" 
+                placeholder="Endereço completo do proprietário"
+              >
+              <p class="error-message" id="errorEnderecoProprietario">Informe o endereço</p>
+            </div>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" onclick="retornar(2)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(2)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(2)">
+                Avançar →
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
   </div>
 
@@ -448,13 +729,28 @@
         cidade: '',
         cep: '',
         saved: false
+      },
+      page2: {
+        tipoNatureza: '',
+        area: '',
+        pavimentos: '',
+        processoNum: '',
+        alvaraNum: '',
+        alvaraDe: '',
+        proprietario: '',
+        tipoCpfCnpj: 'cpf',
+        cpfCnpj: '',
+        enderecoProprietario: '',
+        saved: false
       }
-      // Novas páginas serão adicionadas aqui
     };
 
-    // Total de páginas (será atualizado conforme adicionar páginas)
-    const totalPages = 1;
+    // Total de páginas
+    const totalPages = 2;
     let currentPage = 1;
+    
+    // Controle do tipo de documento (CPF ou CNPJ)
+    let tipoDocumento = 'cpf';
 
     // Carregar dados do localStorage ao iniciar
     function loadFromCache() {
@@ -490,7 +786,29 @@
         document.getElementById('cidade').value = formData.page1.cidade || 'São Paulo';
         document.getElementById('cep').value = formData.page1.cep || '';
       }
-      // Adicionar mais páginas aqui conforme necessário
+      
+      // Página 2
+      if (formData.page2) {
+        // Tipo/Natureza
+        if (formData.page2.tipoNatureza) {
+          const radioBtn = document.querySelector(`input[name="tipoNatureza"][value="${formData.page2.tipoNatureza}"]`);
+          if (radioBtn) radioBtn.checked = true;
+        }
+        document.getElementById('area').value = formData.page2.area || '';
+        document.getElementById('pavimentos').value = formData.page2.pavimentos || '';
+        document.getElementById('processoNum').value = formData.page2.processoNum || '';
+        document.getElementById('alvaraNum').value = formData.page2.alvaraNum || '';
+        document.getElementById('alvaraDe').value = formData.page2.alvaraDe || '';
+        document.getElementById('proprietario').value = formData.page2.proprietario || '';
+        document.getElementById('cpfCnpj').value = formData.page2.cpfCnpj || '';
+        document.getElementById('enderecoProprietario').value = formData.page2.enderecoProprietario || '';
+        
+        // Restaurar tipo de documento
+        if (formData.page2.tipoCpfCnpj) {
+          tipoDocumento = formData.page2.tipoCpfCnpj;
+          toggleCpfCnpj(tipoDocumento);
+        }
+      }
     }
 
     // =============================================
@@ -602,6 +920,174 @@
       return isValid;
     }
 
+    // Toggle CPF/CNPJ
+    function toggleCpfCnpj(tipo) {
+      tipoDocumento = tipo;
+      const btnCpf = document.getElementById('btnCpf');
+      const btnCnpj = document.getElementById('btnCnpj');
+      const input = document.getElementById('cpfCnpj');
+      const hint = document.getElementById('hintCpfCnpj');
+      const errorMsg = document.getElementById('errorCpfCnpj');
+      
+      // Limpar valor atual
+      input.value = '';
+      input.classList.remove('error', 'success');
+      errorMsg.classList.remove('show');
+      
+      if (tipo === 'cpf') {
+        btnCpf.classList.add('active');
+        btnCnpj.classList.remove('active');
+        input.placeholder = '000.000.000-00';
+        input.maxLength = 14;
+        hint.textContent = 'Formato: 000.000.000-00';
+      } else {
+        btnCnpj.classList.add('active');
+        btnCpf.classList.remove('active');
+        input.placeholder = '00.000.000/0000-00';
+        input.maxLength = 18;
+        hint.textContent = 'Formato: 00.000.000/0000-00';
+      }
+    }
+
+    // Formatar área enquanto digita (1.000)
+    document.getElementById('area').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value) {
+        value = parseInt(value).toLocaleString('pt-BR');
+      }
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorArea').classList.remove('show');
+    });
+
+    // Formatar CPF/CNPJ enquanto digita
+    document.getElementById('cpfCnpj').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      
+      if (tipoDocumento === 'cpf') {
+        // Formato CPF: 000.000.000-00
+        if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+        if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+        if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      } else {
+        // Formato CNPJ: 00.000.000/0000-00
+        if (value.length > 2) value = value.substring(0,2) + '.' + value.substring(2);
+        if (value.length > 6) value = value.substring(0,6) + '.' + value.substring(6);
+        if (value.length > 10) value = value.substring(0,10) + '/' + value.substring(10);
+        if (value.length > 15) value = value.substring(0,15) + '-' + value.substring(15,17);
+      }
+      
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCpfCnpj').classList.remove('show');
+    });
+
+    // Validar apenas números inteiros no pavimentos
+    document.getElementById('pavimentos').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorPavimentos').classList.remove('show');
+    });
+
+    // Validar Página 2
+    function validarPagina2() {
+      let isValid = true;
+      let avisos = [];
+
+      // Tipo/Natureza (obrigatório)
+      const tipoSelecionado = document.querySelector('input[name="tipoNatureza"]:checked');
+      const errorTipo = document.getElementById('errorTipoNatureza');
+      if (!tipoSelecionado) {
+        errorTipo.classList.add('show');
+        isValid = false;
+      } else {
+        errorTipo.classList.remove('show');
+      }
+
+      // Área (obrigatório)
+      const area = document.getElementById('area');
+      const errorArea = document.getElementById('errorArea');
+      if (!area.value.trim()) {
+        area.classList.add('error');
+        errorArea.classList.add('show');
+        isValid = false;
+      } else {
+        area.classList.remove('error');
+        area.classList.add('success');
+        errorArea.classList.remove('show');
+      }
+
+      // Pavimentos (obrigatório, mínimo 1)
+      const pavimentos = document.getElementById('pavimentos');
+      const errorPavimentos = document.getElementById('errorPavimentos');
+      const pavValue = parseInt(pavimentos.value);
+      if (!pavimentos.value.trim() || isNaN(pavValue) || pavValue < 1) {
+        pavimentos.classList.add('error');
+        errorPavimentos.classList.add('show');
+        isValid = false;
+      } else {
+        pavimentos.classList.remove('error');
+        pavimentos.classList.add('success');
+        errorPavimentos.classList.remove('show');
+      }
+
+      // Processo (opcional - aviso)
+      const processoNum = document.getElementById('processoNum');
+      if (!processoNum.value.trim()) {
+        avisos.push('Processo nº');
+      }
+
+      // Alvará (opcional - aviso)
+      const alvaraNum = document.getElementById('alvaraNum');
+      if (!alvaraNum.value.trim()) {
+        avisos.push('Alvará nº');
+      }
+
+      // Proprietário (obrigatório)
+      const proprietario = document.getElementById('proprietario');
+      const errorProprietario = document.getElementById('errorProprietario');
+      if (!validarCampoObrigatorio(proprietario, errorProprietario)) {
+        isValid = false;
+      }
+
+      // CPF/CNPJ (obrigatório)
+      const cpfCnpj = document.getElementById('cpfCnpj');
+      const errorCpfCnpj = document.getElementById('errorCpfCnpj');
+      const cpfCnpjNumeros = cpfCnpj.value.replace(/\D/g, '');
+      
+      if (!cpfCnpj.value.trim()) {
+        cpfCnpj.classList.add('error');
+        errorCpfCnpj.textContent = tipoDocumento === 'cpf' ? 'Informe o CPF' : 'Informe o CNPJ';
+        errorCpfCnpj.classList.add('show');
+        isValid = false;
+      } else if (tipoDocumento === 'cpf' && cpfCnpjNumeros.length !== 11) {
+        cpfCnpj.classList.add('error');
+        errorCpfCnpj.textContent = 'CPF deve ter 11 dígitos';
+        errorCpfCnpj.classList.add('show');
+        isValid = false;
+      } else if (tipoDocumento === 'cnpj' && cpfCnpjNumeros.length !== 14) {
+        cpfCnpj.classList.add('error');
+        errorCpfCnpj.textContent = 'CNPJ deve ter 14 dígitos';
+        errorCpfCnpj.classList.add('show');
+        isValid = false;
+      } else {
+        cpfCnpj.classList.remove('error');
+        cpfCnpj.classList.add('success');
+        errorCpfCnpj.classList.remove('show');
+      }
+
+      // Endereço (obrigatório)
+      const endereco = document.getElementById('enderecoProprietario');
+      const errorEndereco = document.getElementById('errorEnderecoProprietario');
+      if (!validarCampoObrigatorio(endereco, errorEndereco)) {
+        isValid = false;
+      }
+
+      // Retornar resultado com avisos
+      return { isValid, avisos };
+    }
+
     // =============================================
     // AÇÕES DOS BOTÕES
     // =============================================
@@ -609,6 +1095,7 @@
     // Salvar página
     function salvarPagina(pageNum) {
       let isValid = false;
+      let avisos = [];
       
       switch(pageNum) {
         case 1:
@@ -623,7 +1110,29 @@
             };
           }
           break;
-        // Adicionar mais cases conforme necessário
+          
+        case 2:
+          const resultado2 = validarPagina2();
+          isValid = resultado2.isValid;
+          avisos = resultado2.avisos;
+          
+          if (isValid) {
+            const tipoSelecionado = document.querySelector('input[name="tipoNatureza"]:checked');
+            formData.page2 = {
+              tipoNatureza: tipoSelecionado ? tipoSelecionado.value : '',
+              area: document.getElementById('area').value.trim(),
+              pavimentos: document.getElementById('pavimentos').value.trim(),
+              processoNum: document.getElementById('processoNum').value.trim(),
+              alvaraNum: document.getElementById('alvaraNum').value.trim(),
+              alvaraDe: document.getElementById('alvaraDe').value.trim(),
+              proprietario: document.getElementById('proprietario').value.trim(),
+              tipoCpfCnpj: tipoDocumento,
+              cpfCnpj: document.getElementById('cpfCnpj').value.trim(),
+              enderecoProprietario: document.getElementById('enderecoProprietario').value.trim(),
+              saved: true
+            };
+          }
+          break;
       }
 
       if (isValid) {
@@ -631,6 +1140,13 @@
           showToast('✓ Dados salvos com sucesso!', 'success');
         } else {
           showToast('Dados salvos na memória (cache indisponível)', 'success');
+        }
+        
+        // Mostrar avisos sobre campos opcionais não preenchidos
+        if (avisos.length > 0) {
+          setTimeout(() => {
+            showToast(`⚠️ Campos não preenchidos: ${avisos.join(', ')}`, 'warning');
+          }, 1500);
         }
       } else {
         showToast('Por favor, corrija os erros antes de salvar', 'error');
