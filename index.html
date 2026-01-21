@@ -501,6 +501,50 @@
     fieldset:disabled label {
       cursor: not-allowed;
     }
+
+    /* Autocomplete customizado */
+    .autocomplete-list {
+      position: absolute;
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: none;
+      margin-top: 4px;
+    }
+
+    .autocomplete-list.show {
+      display: block;
+    }
+
+    .autocomplete-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-item:hover {
+      background: rgba(26, 54, 93, 0.05);
+    }
+
+    .autocomplete-item strong {
+      color: var(--primary);
+    }
+
+    .autocomplete-item small {
+      display: block;
+      color: var(--text-muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
   </style>
 </head>
 <body>
@@ -795,17 +839,16 @@
             </div>
 
             <!-- Profissional -->
-            <div class="form-group">
+            <div class="form-group" style="position: relative;">
               <label for="profissional">Profissional <span class="required">*</span></label>
               <input 
                 type="text" 
                 id="profissional" 
                 name="profissional" 
                 placeholder="Nome completo do profissional"
-                list="listaProfissionais"
                 autocomplete="off"
               >
-              <datalist id="listaProfissionais"></datalist>
+              <div class="autocomplete-list" id="autocompleteProfissional"></div>
               <p class="error-message" id="errorProfissional">Informe o nome do profissional</p>
             </div>
 
@@ -1024,16 +1067,16 @@
             </div>
 
             <!-- Profissional -->
-            <div class="form-group">
+            <div class="form-group" style="position: relative;">
               <label for="profissionalRT">Profissional <span class="required">*</span></label>
               <input 
                 type="text" 
                 id="profissionalRT" 
                 name="profissionalRT" 
                 placeholder="Nome completo do profissional"
-                list="listaProfissionais"
                 autocomplete="off"
               >
+              <div class="autocomplete-list" id="autocompleteProfissionalRT"></div>
               <p class="error-message" id="errorProfissionalRT">Informe o nome do profissional</p>
             </div>
 
@@ -1262,16 +1305,16 @@
 
               <!-- Profissional do Projeto -->
               <fieldset id="fieldsetProjetoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
-                <div class="form-group">
+                <div class="form-group" style="position: relative;">
                   <label for="profissionalProjetoDemol">Profissional <span class="required">*</span></label>
                   <input 
                     type="text" 
                     id="profissionalProjetoDemol" 
                     name="profissionalProjetoDemol" 
                     placeholder="Nome completo do profissional"
-                    list="listaProfissionais"
                     autocomplete="off"
                   >
+                  <div class="autocomplete-list" id="autocompleteProfissionalProjetoDemol"></div>
                   <p class="error-message" id="errorProfissionalProjetoDemol">Informe o profissional</p>
                 </div>
 
@@ -1386,16 +1429,16 @@
 
               <!-- Profissional da Execução -->
               <fieldset id="fieldsetExecucaoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
-                <div class="form-group">
+                <div class="form-group" style="position: relative;">
                   <label for="profissionalExecDemol">Profissional <span class="required">*</span></label>
                   <input 
                     type="text" 
                     id="profissionalExecDemol" 
                     name="profissionalExecDemol" 
                     placeholder="Nome completo do profissional"
-                    list="listaProfissionais"
                     autocomplete="off"
                   >
+                  <div class="autocomplete-list" id="autocompleteProfissionalExecDemol"></div>
                   <p class="error-message" id="errorProfissionalExecDemol">Informe o profissional</p>
                 </div>
 
@@ -1677,21 +1720,111 @@
         });
       }
       
-      atualizarDatalistProfissionais();
       salvarProfissionaisNoCache();
     }
     
-    // Atualizar o datalist com os profissionais
-    function atualizarDatalistProfissionais() {
-      const datalist = document.getElementById('listaProfissionais');
-      datalist.innerHTML = '';
+    // Criar autocomplete customizado para um campo
+    function criarAutocomplete(inputId, autocompleteId, cpfCampoId, creaCampoId) {
+      const input = document.getElementById(inputId);
+      const autocompleteDiv = document.getElementById(autocompleteId);
       
-      profissionaisCadastrados.forEach(prof => {
-        const option = document.createElement('option');
-        option.value = prof.nome;
-        option.textContent = `${prof.nome} - CPF: ${prof.cpf || 'N/A'}`;
-        datalist.appendChild(option);
+      if (!input || !autocompleteDiv) return;
+      
+      // Ao digitar
+      input.addEventListener('input', function() {
+        const valor = this.value.toLowerCase().trim();
+        autocompleteDiv.innerHTML = '';
+        
+        // Só mostrar se digitou pelo menos 2 caracteres
+        if (valor.length < 2) {
+          autocompleteDiv.classList.remove('show');
+          return;
+        }
+        
+        // Filtrar profissionais que contém o texto digitado
+        const filtrados = profissionaisCadastrados.filter(p => 
+          p.nome.toLowerCase().includes(valor)
+        );
+        
+        if (filtrados.length === 0) {
+          autocompleteDiv.classList.remove('show');
+          return;
+        }
+        
+        // Mostrar resultados
+        filtrados.forEach(prof => {
+          const div = document.createElement('div');
+          div.className = 'autocomplete-item';
+          div.innerHTML = `
+            <strong>${prof.nome}</strong>
+            <small>CPF: ${prof.cpf || 'N/A'} ${prof.crea ? '| CREA: ' + prof.crea : ''}</small>
+          `;
+          
+          div.addEventListener('click', function() {
+            input.value = prof.nome;
+            autocompleteDiv.classList.remove('show');
+            autocompleteDiv.innerHTML = '';
+            
+            // Preencher CPF e CREA automaticamente
+            preencherDadosAuto(inputId, prof, cpfCampoId, creaCampoId);
+            showToast('✨ Dados preenchidos automaticamente!', 'success', 2500);
+          });
+          
+          autocompleteDiv.appendChild(div);
+        });
+        
+        autocompleteDiv.classList.add('show');
       });
+      
+      // Fechar ao clicar fora
+      document.addEventListener('click', function(e) {
+        if (e.target !== input && e.target.closest('.autocomplete-list') !== autocompleteDiv) {
+          autocompleteDiv.classList.remove('show');
+        }
+      });
+    }
+    
+    // Preencher dados automaticamente ao selecionar profissional
+    function preencherDadosAuto(inputId, prof, cpfCampoId, creaCampoId) {
+      // Preencher CPF
+      if (cpfCampoId && prof.cpf) {
+        const cpfInput = document.getElementById(cpfCampoId);
+        if (cpfInput) cpfInput.value = prof.cpf;
+      }
+      
+      // Preencher CREA se tiver
+      if (creaCampoId && prof.crea) {
+        // Identificar qual página é baseado no inputId
+        if (inputId === 'profissional') {
+          const radioCrea = document.getElementById('regCrea');
+          if (radioCrea) {
+            radioCrea.checked = true;
+            mostrarCampoRegistro('crea');
+            document.getElementById('numeroCrea').value = prof.crea;
+          }
+        } else if (inputId === 'profissionalRT') {
+          const radioCrea = document.getElementById('regCreaRT');
+          if (radioCrea) {
+            radioCrea.checked = true;
+            mostrarCampoRegistroRT('crea');
+            document.getElementById('numeroCreaRT').value = prof.crea;
+          }
+        } else if (inputId === 'profissionalProjetoDemol') {
+          const radioCrea = document.getElementById('regCreaProjetoDemol');
+          if (radioCrea) {
+            radioCrea.checked = true;
+            mostrarCampoRegistroPD('crea');
+            document.getElementById('numeroCreaProjetoDemol').value = prof.crea;
+          }
+        } else if (inputId === 'profissionalExecDemol') {
+          const radioCrea = document.getElementById('regCreaExecDemol');
+          if (radioCrea) {
+            radioCrea.checked = true;
+            mostrarCampoRegistroED('crea');
+            document.getElementById('numeroCreaExecDemol').value = prof.crea;
+          }
+        }
+      }
     }
     
     // Salvar lista de profissionais no cache
@@ -1709,7 +1842,6 @@
         const cached = localStorage.getItem('profissionaisCadastrados');
         if (cached) {
           profissionaisCadastrados = JSON.parse(cached);
-          atualizarDatalistProfissionais();
         }
       } catch (e) {
         console.error('Erro ao carregar profissionais do cache:', e);
@@ -1723,46 +1855,6 @@
       );
     }
     
-    // Preencher campos quando profissional é selecionado - Página 3
-    function preencherDadosProfissional(nomeCampo, cpfCampo, creaCampo) {
-      const nomeInput = document.getElementById(nomeCampo);
-      
-      nomeInput.addEventListener('change', function() {
-        const prof = buscarProfissionalPorNome(this.value);
-        if (prof) {
-          // Preencher CPF se for Página 3
-          if (cpfCampo === 'cpfProfissional') {
-            const tipoRegistro = document.querySelector('input[name="tipoRegistro"][value="CPF"]');
-            if (tipoRegistro && prof.cpf) {
-              tipoRegistro.checked = true;
-              mostrarCampoRegistro('cpf');
-              document.getElementById(cpfCampo).value = prof.cpf;
-            }
-          }
-          // Preencher CPF se for Página 4
-          else if (cpfCampo === 'cpfRT' && prof.cpf) {
-            document.getElementById(cpfCampo).value = prof.cpf;
-          }
-          
-          // Preencher CREA se tiver
-          if (creaCampo && prof.crea) {
-            const tipoCrea = document.querySelector(`input[name="${nomeCampo === 'profissional' ? 'tipoRegistro' : 'tipoRegistroRT'}"][value="CREA"]`);
-            if (tipoCrea) {
-              tipoCrea.checked = true;
-              if (nomeCampo === 'profissional') {
-                mostrarCampoRegistro('crea');
-                document.getElementById('numeroCrea').value = prof.crea;
-              } else {
-                mostrarCampoRegistroRT('crea');
-                document.getElementById('numeroCreaRT').value = prof.crea;
-              }
-            }
-          }
-          
-          showToast('✨ Dados do profissional preenchidos automaticamente!', 'success', 3000);
-        }
-      });
-    }
 
     // Carregar dados do localStorage ao iniciar
     function loadFromCache() {
@@ -2618,9 +2710,6 @@
       e.target.value = e.target.value.replace(/\D/g, '');
     });
 
-    // Autocomplete para os profissionais da página 5
-    preencherDadosProfissional('profissionalProjetoDemol', 'cpfProjetoDemol', 'numeroCreaProjetoDemol');
-    preencherDadosProfissional('profissionalExecDemol', 'cpfExecDemol', 'numeroCreaExecDemol');
 
     // Validar Página 2
     function validarPagina2() {
@@ -3377,9 +3466,11 @@
       updateProgress();
       carregarProfissionaisDoCache();
       
-      // Ativar autocomplete de profissionais
-      preencherDadosProfissional('profissional', 'cpfProfissional', 'numeroCrea');
-      preencherDadosProfissional('profissionalRT', 'cpfRT', 'numeroCreaRT');
+      // Ativar autocomplete customizado
+      criarAutocomplete('profissional', 'autocompleteProfissional', 'cpfProfissional', 'numeroCrea');
+      criarAutocomplete('profissionalRT', 'autocompleteProfissionalRT', 'cpfRT', 'numeroCreaRT');
+      criarAutocomplete('profissionalProjetoDemol', 'autocompleteProfissionalProjetoDemol', 'cpfProjetoDemol', 'numeroCreaProjetoDemol');
+      criarAutocomplete('profissionalExecDemol', 'autocompleteProfissionalExecDemol', 'cpfExecDemol', 'numeroCreaExecDemol');
     });
   </script>
 </body>
