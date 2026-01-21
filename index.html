@@ -3819,14 +3819,22 @@
 
     // Avançar página
     function avancar(currentPageNum) {
-      // Verificar se a página atual foi salva
-      if (!formData[`page${currentPageNum}`]?.saved) {
-        showToast('⚠️ Salve os dados antes de avançar!', 'error');
-        return;
+      const nextPageNum = currentPageNum + 1;
+      const nextPageKey = `page${nextPageNum}`;
+      const currentPageKey = `page${currentPageNum}`;
+
+      // Regra: Se a PRÓXIMA página nunca foi salva (é uma página nova),
+      // o usuário é OBRIGADO a salvar a página atual para prosseguir.
+      if (nextPageNum <= totalPages && !formData[nextPageKey]?.saved) {
+        if (!formData[currentPageKey]?.saved) {
+          showToast('⚠️ Salve os dados antes de avançar para uma nova página!', 'error');
+          return;
+        }
       }
 
+      // Se já passou da validação acima, permite navegar
       if (currentPageNum < totalPages) {
-        showPage(currentPageNum + 1);
+        showPage(nextPageNum);
       }
     }
 
