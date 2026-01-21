@@ -791,7 +791,10 @@
                 id="profissional" 
                 name="profissional" 
                 placeholder="Nome completo do profissional"
+                list="listaProfissionais"
+                autocomplete="off"
               >
+              <datalist id="listaProfissionais"></datalist>
               <p class="error-message" id="errorProfissional">Informe o nome do profissional</p>
             </div>
 
@@ -1017,6 +1020,8 @@
                 id="profissionalRT" 
                 name="profissionalRT" 
                 placeholder="Nome completo do profissional"
+                list="listaProfissionais"
+                autocomplete="off"
               >
               <p class="error-message" id="errorProfissionalRT">Informe o nome do profissional</p>
             </div>
@@ -1269,6 +1274,131 @@
     
     // Controle do tipo de registro da empresa (página 4)
     let tipoEmpresaRegistroRT = '';
+    
+    // =============================================
+    // SISTEMA DE AUTOCOMPLETE DE PROFISSIONAIS
+    // =============================================
+    
+    // Lista de profissionais já cadastrados
+    let profissionaisCadastrados = [];
+    
+    // Adicionar ou atualizar profissional na lista
+    function adicionarProfissional(nome, cpf, crea) {
+      if (!nome || !nome.trim()) return;
+      
+      // Verificar se já existe
+      const index = profissionaisCadastrados.findIndex(p => 
+        p.nome.toLowerCase() === nome.toLowerCase()
+      );
+      
+      if (index !== -1) {
+        // Já existe - atualizar dados se tiver valores novos
+        const profExistente = profissionaisCadastrados[index];
+        
+        // Atualizar CPF se tiver novo valor
+        if (cpf && cpf.trim()) {
+          profExistente.cpf = cpf.trim();
+        }
+        
+        // Atualizar CREA se tiver novo valor
+        if (crea && crea.trim()) {
+          profExistente.crea = crea.trim();
+        }
+      } else {
+        // Não existe - adicionar novo
+        profissionaisCadastrados.push({
+          nome: nome.trim(),
+          cpf: cpf || '',
+          crea: crea || ''
+        });
+      }
+      
+      atualizarDatalistProfissionais();
+      salvarProfissionaisNoCache();
+    }
+    
+    // Atualizar o datalist com os profissionais
+    function atualizarDatalistProfissionais() {
+      const datalist = document.getElementById('listaProfissionais');
+      datalist.innerHTML = '';
+      
+      profissionaisCadastrados.forEach(prof => {
+        const option = document.createElement('option');
+        option.value = prof.nome;
+        option.textContent = `${prof.nome} - CPF: ${prof.cpf || 'N/A'}`;
+        datalist.appendChild(option);
+      });
+    }
+    
+    // Salvar lista de profissionais no cache
+    function salvarProfissionaisNoCache() {
+      try {
+        localStorage.setItem('profissionaisCadastrados', JSON.stringify(profissionaisCadastrados));
+      } catch (e) {
+        console.error('Erro ao salvar profissionais no cache:', e);
+      }
+    }
+    
+    // Carregar lista de profissionais do cache
+    function carregarProfissionaisDoCache() {
+      try {
+        const cached = localStorage.getItem('profissionaisCadastrados');
+        if (cached) {
+          profissionaisCadastrados = JSON.parse(cached);
+          atualizarDatalistProfissionais();
+        }
+      } catch (e) {
+        console.error('Erro ao carregar profissionais do cache:', e);
+      }
+    }
+    
+    // Buscar dados de um profissional pelo nome
+    function buscarProfissionalPorNome(nome) {
+      return profissionaisCadastrados.find(p => 
+        p.nome.toLowerCase() === nome.toLowerCase()
+      );
+    }
+    
+    // Preencher campos quando profissional é selecionado - Página 3
+    function preencherDadosProfissional(nomeCampo, cpfCampo, creaCampo) {
+      const nomeInput = document.getElementById(nomeCampo);
+      
+      nomeInput.addEventListener('change', function() {
+        const prof = buscarProfissionalPorNome(this.value);
+        if (prof) {
+          // Preencher CPF se for Página 3
+          if (cpfCampo === 'cpfProfissional') {
+            const tipoRegistro = document.querySelector('input[name="tipoRegistro"][value="CPF"]');
+            if (tipoRegistro && prof.cpf) {
+              tipoRegistro.checked = true;
+              mostrarCampoRegistro('cpf');
+              document.getElementById(cpfCampo).value = prof.cpf;
+            }
+          }
+          // Preencher CPF se for Página 4
+          else if (cpfCampo === 'cpfRT' && prof.cpf) {
+            document.getElementById(cpfCampo).value = prof.cpf;
+          }
+          
+          // Preencher CREA se tiver
+          if (creaCampo && prof.crea) {
+            const tipoCrea = document.querySelector(`input[name="${nomeCampo === 'profissional' ? 'tipoRegistro' : 'tipoRegistroRT'}"][value="CREA"]`);
+            if (tipoCrea) {
+              tipoCrea.checked = true;
+              if (nomeCampo === 'profissional') {
+                mostrarCampoRegistro('crea');
+                document.getElementById('numeroCrea').value = prof.crea;
+              } else {
+                mostrarCampoRegistroRT('crea');
+                document.getElementById('numeroCreaRT').value = prof.crea;
+              }
+            }
+          }
+          
+          showToast('✨ Dados do profissional preenchidos automaticamente!', 'success', 3000);
+        }
+      });
+    }
 
     // Carregar dados do localStorage ao iniciar
     function loadFromCache() {
@@ -1277,6 +1407,20 @@
         try {
           formData = JSON.parse(cached);
           populateFields();
+          
+          // Extrair profissionais já salvos das páginas 3 e 4
+          if (formData.page3 && formData.page3.profissional) {
+            const cpf3 = formData.page3.tipoRegistro === 'CPF' ? formData.page3.cpfProfissional : '';
+            const crea3 = formData.page3.tipoRegistro === 'CREA' ? formData.page3.numeroCrea : '';
+            adicionarProfissional(formData.page3.profissional, cpf3, crea3);
+          }
+          
+          if (formData.page4 && formData.page4.profissionalRT) {
+            const cpf4 = formData.page4.cpfRT;
+            const crea4 = formData.page4.tipoRegistroRT === 'CREA' ? formData.page4.numeroCreaRT : '';
+            adicionarProfissional(formData.page4.profissionalRT, cpf4, crea4);
+          }
+          
           showToast('Dados anteriores restaurados!', 'success');
         } catch (e) {
           console.error('Erro ao carregar cache:', e);
@@ -2292,6 +2436,12 @@
               empresaRegistro: document.getElementById('empresaRegistro').value.trim(),
               saved: true
             };
+            
+            // Adicionar profissional à lista de autocomplete
+            const nomeProfissional = document.getElementById('profissional').value.trim();
+            const cpfProf = tipoRegistroSelecionado?.value === 'CPF' ? document.getElementById('cpfProfissional').value.trim() : '';
+            const creaProf = tipoRegistroSelecionado?.value === 'CREA' ? document.getElementById('numeroCrea').value.trim() : '';
+            adicionarProfissional(nomeProfissional, cpfProf, creaProf);
           }
           break;
           
@@ -2322,6 +2472,12 @@
               empresaRegistroRT: document.getElementById('empresaRegistroRT').value.trim(),
               saved: true
             };
+            
+            // Adicionar profissional à lista de autocomplete
+            const nomeProfissionalRT = document.getElementById('profissionalRT').value.trim();
+            const cpfRT = document.getElementById('cpfRT').value.trim();
+            const creaRT = tipoRegistroSelecionadoRT?.value === 'CREA' ? document.getElementById('numeroCreaRT').value.trim() : '';
+            adicionarProfissional(nomeProfissionalRT, cpfRT, creaRT);
           }
           break;
       }
@@ -2424,6 +2580,11 @@
     document.addEventListener('DOMContentLoaded', function() {
       loadFromCache();
       updateProgress();
+      carregarProfissionaisDoCache();
+      
+      // Ativar autocomplete de profissionais
+      preencherDadosProfissional('profissional', 'cpfProfissional', 'numeroCrea');
+      preencherDadosProfissional('profissionalRT', 'cpfRT', 'numeroCreaRT');
     });
   </script>
 </body>
