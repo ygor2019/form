@@ -846,7 +846,10 @@
                 id="profissional" 
                 name="profissional" 
                 placeholder="Nome completo do profissional"
-                autocomplete="off"
+                autocomplete="new-password"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
               >
               <div class="autocomplete-list" id="autocompleteProfissional"></div>
               <p class="error-message" id="errorProfissional">Informe o nome do profissional</p>
@@ -1074,7 +1077,10 @@
                 id="profissionalRT" 
                 name="profissionalRT" 
                 placeholder="Nome completo do profissional"
-                autocomplete="off"
+                autocomplete="new-password"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
               >
               <div class="autocomplete-list" id="autocompleteProfissionalRT"></div>
               <p class="error-message" id="errorProfissionalRT">Informe o nome do profissional</p>
@@ -1312,7 +1318,10 @@
                     id="profissionalProjetoDemol" 
                     name="profissionalProjetoDemol" 
                     placeholder="Nome completo do profissional"
-                    autocomplete="off"
+                    autocomplete="new-password"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
                   >
                   <div class="autocomplete-list" id="autocompleteProfissionalProjetoDemol"></div>
                   <p class="error-message" id="errorProfissionalProjetoDemol">Informe o profissional</p>
@@ -1436,7 +1445,10 @@
                     id="profissionalExecDemol" 
                     name="profissionalExecDemol" 
                     placeholder="Nome completo do profissional"
-                    autocomplete="off"
+                    autocomplete="new-password"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
                   >
                   <div class="autocomplete-list" id="autocompleteProfissionalExecDemol"></div>
                   <p class="error-message" id="errorProfissionalExecDemol">Informe o profissional</p>
@@ -1741,16 +1753,10 @@
           return;
         }
         
-        // DEBUG: mostrar quantos profissionais cadastrados existem
-        console.log('Total de profissionais cadastrados:', profissionaisCadastrados.length);
-        console.log('Lista:', profissionaisCadastrados);
-        
         // Filtrar profissionais que contém o texto digitado
         const filtrados = profissionaisCadastrados.filter(p => 
           p.nome.toLowerCase().includes(valor)
         );
-        
-        console.log('Filtrados para "' + valor + '":', filtrados);
         
         if (filtrados.length === 0) {
           autocompleteDiv.classList.remove('show');
@@ -1841,17 +1847,6 @@
         console.error('Erro ao salvar profissionais no cache:', e);
       }
     }
-    
-    // FUNÇÃO TEMPORÁRIA: Limpar todos os profissionais do cache
-    function limparCacheProfissionais() {
-      profissionaisCadastrados = [];
-      localStorage.removeItem('profissionaisCadastrados');
-      console.log('Cache de profissionais limpo!');
-      showToast('🗑️ Cache de profissionais limpo!', 'success');
-    }
-    
-    // Adicionar ao window para poder chamar do console
-    window.limparCacheProfissionais = limparCacheProfissionais;
     
     // Carregar lista de profissionais do cache
     function carregarProfissionaisDoCache() {
