@@ -2,11 +2,712 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Formulário CREA</title>
+  <title>Formulário de Obra</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a365d;
+      --primary-light: #2c5282;
+      --accent: #ed8936;
+      --accent-hover: #dd6b20;
+      --card-bg: #ffffff;
+      --text-dark: #1a202c;
+      --text-muted: #718096;
+      --border: #e2e8f0;
+      --success: #38a169;
+      --error: #e53e3e;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Imagem do topo */
+    .header-image {
+      width: 100%;
+      background: #ffffff;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-image img {
+      max-width: 320px;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+      padding-top: 24px;
+    }
+
+    /* Progress bar */
+    .progress-container {
+      margin-bottom: 24px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .progress-title {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .progress-step {
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    /* Card */
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: #f7fafc;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header h1 {
+      color: var(--primary);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .card-header p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    /* Form elements */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group:last-of-type {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    label .required {
+      color: var(--error);
+      margin-left: 2px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      font-family: inherit;
+      font-size: 15px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--text-dark);
+      transition: all 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(26, 54, 93, 0.1);
+    }
+
+    input.error, select.error, textarea.error {
+      border-color: var(--error);
+      background: #fff5f5;
+    }
+
+    input.success, select.success, textarea.success {
+      border-color: var(--success);
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    /* Form row (for side by side fields) */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Buttons */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn {
+      flex: 1;
+      padding: 16px 24px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text-dark);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(237, 137, 54, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(237, 137, 54, 0.5);
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, var(--success) 0%, #2f855a 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(56, 161, 105, 0.4);
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 161, 105, 0.5);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--text-dark);
+      color: white;
+      padding: 16px 28px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background: linear-gradient(135deg, var(--success), #2f855a);
+    }
+
+    .toast.error {
+      background: linear-gradient(135deg, var(--error), #c53030);
+    }
+
+    /* Page visibility */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* CEP formatting hint */
+    .hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Saved indicator */
+    .saved-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--success);
+      margin-left: 12px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .saved-indicator.show {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
-  <h1>Formulário CREA</h1>
-  <p>Página funcionando via GitHub Pages ✅</p>
+  <!-- Imagem do topo -->
+  <div class="header-image">
+    <img src="topo.png" alt="Cabeçalho">
+  </div>
+
+  <div class="container">
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-header">
+        <span class="progress-title">Progresso do formulário</span>
+        <span class="progress-step" id="progressStep">Página 1 de 1</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 100%"></div>
+      </div>
+    </div>
+
+    <!-- Page 1: Local da Obra -->
+    <div class="page active" id="page1">
+      <div class="card">
+        <div class="card-header">
+          <h1>📍 Local da Obra</h1>
+          <p>Informe os dados de localização da obra</p>
+        </div>
+        <div class="card-body">
+          <form id="form1" novalidate>
+            <div class="form-group">
+              <label for="localObra">Local da Obra <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="localObra" 
+                name="localObra" 
+                placeholder="Ex: Rua das Flores, 123"
+                required
+              >
+              <p class="error-message" id="errorLocalObra">Por favor, informe o local da obra</p>
+            </div>
+
+            <div class="form-group">
+              <label for="bairro">Bairro <span class="required">*</span></label>
+              <input 
+                type="text" 
+                id="bairro" 
+                name="bairro" 
+                placeholder="Ex: Vila Mariana"
+                required
+              >
+              <p class="error-message" id="errorBairro">Por favor, informe o bairro</p>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cidade">Cidade <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="cidade" 
+                  name="cidade" 
+                  value="São Paulo"
+                  required
+                >
+                <p class="error-message" id="errorCidade">Por favor, informe a cidade</p>
+              </div>
+
+              <div class="form-group">
+                <label for="cep">CEP <span class="required">*</span></label>
+                <input 
+                  type="text" 
+                  id="cep" 
+                  name="cep" 
+                  placeholder="00000-000"
+                  maxlength="9"
+                  required
+                >
+                <p class="hint">Formato: 00000-000</p>
+                <p class="error-message" id="errorCep">CEP inválido</p>
+              </div>
+            </div>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-save" onclick="salvarPagina(1)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(1)">
+                Avançar →
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Placeholder para próximas páginas -->
+    <!-- Serão adicionadas conforme você especificar -->
+
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // =============================================
+    // SISTEMA DE DADOS E CACHE
+    // =============================================
+    
+    // Objeto principal para armazenar todos os dados do formulário
+    let formData = {
+      page1: {
+        localObra: '',
+        bairro: '',
+        cidade: '',
+        cep: '',
+        saved: false
+      }
+      // Novas páginas serão adicionadas aqui
+    };
+
+    // Total de páginas (será atualizado conforme adicionar páginas)
+    const totalPages = 1;
+    let currentPage = 1;
+
+    // Carregar dados do localStorage ao iniciar
+    function loadFromCache() {
+      const cached = localStorage.getItem('formDataObra');
+      if (cached) {
+        try {
+          formData = JSON.parse(cached);
+          populateFields();
+          showToast('Dados anteriores restaurados!', 'success');
+        } catch (e) {
+          console.error('Erro ao carregar cache:', e);
+        }
+      }
+    }
+
+    // Salvar dados no localStorage
+    function saveToCache() {
+      try {
+        localStorage.setItem('formDataObra', JSON.stringify(formData));
+        return true;
+      } catch (e) {
+        console.error('Erro ao salvar cache:', e);
+        return false;
+      }
+    }
+
+    // Preencher campos com dados salvos
+    function populateFields() {
+      // Página 1
+      if (formData.page1) {
+        document.getElementById('localObra').value = formData.page1.localObra || '';
+        document.getElementById('bairro').value = formData.page1.bairro || '';
+        document.getElementById('cidade').value = formData.page1.cidade || 'São Paulo';
+        document.getElementById('cep').value = formData.page1.cep || '';
+      }
+      // Adicionar mais páginas aqui conforme necessário
+    }
+
+    // =============================================
+    // VALIDAÇÕES
+    // =============================================
+
+    // Formatar CEP enquanto digita
+    document.getElementById('cep').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 5) {
+        value = value.substring(0, 5) + '-' + value.substring(5, 8);
+      }
+      e.target.value = value;
+      
+      // Remover erro enquanto digita
+      e.target.classList.remove('error');
+      document.getElementById('errorCep').classList.remove('show');
+    });
+
+    // Validar CEP de São Paulo
+    function validarCepSaoPaulo(cep, cidade) {
+      // Remover hífen para validação
+      const cepNumeros = cep.replace(/\D/g, '');
+      
+      // Verificar se tem 8 dígitos
+      if (cepNumeros.length !== 8) {
+        return { valid: false, message: 'CEP deve ter 8 dígitos' };
+      }
+
+      // Se a cidade for São Paulo, validar range de CEP
+      if (cidade.toLowerCase().includes('são paulo') || cidade.toLowerCase().includes('sao paulo')) {
+        const prefixo = parseInt(cepNumeros.substring(0, 2));
+        
+        // CEPs de São Paulo capital: 01000-000 a 05999-999 e 08000-000 a 08499-999
+        const isSaoPauloCapital = (prefixo >= 1 && prefixo <= 5) || (prefixo === 8);
+        
+        if (!isSaoPauloCapital) {
+          return { 
+            valid: false, 
+            message: 'CEP não corresponde à cidade de São Paulo. CEPs de SP começam com 01 a 05 ou 08.' 
+          };
+        }
+      }
+
+      return { valid: true };
+    }
+
+    // Validar campo obrigatório
+    function validarCampoObrigatorio(input, errorElement) {
+      if (!input.value.trim()) {
+        input.classList.add('error');
+        errorElement.classList.add('show');
+        return false;
+      }
+      input.classList.remove('error');
+      input.classList.add('success');
+      errorElement.classList.remove('show');
+      return true;
+    }
+
+    // Validar Página 1
+    function validarPagina1() {
+      let isValid = true;
+
+      // Local da obra
+      const localObra = document.getElementById('localObra');
+      const errorLocalObra = document.getElementById('errorLocalObra');
+      if (!validarCampoObrigatorio(localObra, errorLocalObra)) {
+        isValid = false;
+      }
+
+      // Bairro
+      const bairro = document.getElementById('bairro');
+      const errorBairro = document.getElementById('errorBairro');
+      if (!validarCampoObrigatorio(bairro, errorBairro)) {
+        isValid = false;
+      }
+
+      // Cidade
+      const cidade = document.getElementById('cidade');
+      const errorCidade = document.getElementById('errorCidade');
+      if (!validarCampoObrigatorio(cidade, errorCidade)) {
+        isValid = false;
+      }
+
+      // CEP
+      const cep = document.getElementById('cep');
+      const errorCep = document.getElementById('errorCep');
+      
+      if (!cep.value.trim()) {
+        cep.classList.add('error');
+        errorCep.textContent = 'Por favor, informe o CEP';
+        errorCep.classList.add('show');
+        isValid = false;
+      } else {
+        const validacaoCep = validarCepSaoPaulo(cep.value, cidade.value);
+        if (!validacaoCep.valid) {
+          cep.classList.add('error');
+          errorCep.textContent = validacaoCep.message;
+          errorCep.classList.add('show');
+          isValid = false;
+        } else {
+          cep.classList.remove('error');
+          cep.classList.add('success');
+          errorCep.classList.remove('show');
+        }
+      }
+
+      return isValid;
+    }
+
+    // =============================================
+    // AÇÕES DOS BOTÕES
+    // =============================================
+
+    // Salvar página
+    function salvarPagina(pageNum) {
+      let isValid = false;
+      
+      switch(pageNum) {
+        case 1:
+          isValid = validarPagina1();
+          if (isValid) {
+            formData.page1 = {
+              localObra: document.getElementById('localObra').value.trim(),
+              bairro: document.getElementById('bairro').value.trim(),
+              cidade: document.getElementById('cidade').value.trim(),
+              cep: document.getElementById('cep').value.trim(),
+              saved: true
+            };
+          }
+          break;
+        // Adicionar mais cases conforme necessário
+      }
+
+      if (isValid) {
+        if (saveToCache()) {
+          showToast('✓ Dados salvos com sucesso!', 'success');
+        } else {
+          showToast('Dados salvos na memória (cache indisponível)', 'success');
+        }
+      } else {
+        showToast('Por favor, corrija os erros antes de salvar', 'error');
+      }
+
+      return isValid;
+    }
+
+    // Avançar página
+    function avancar(currentPageNum) {
+      // Verificar se a página atual foi salva
+      if (!formData[`page${currentPageNum}`]?.saved) {
+        showToast('⚠️ Salve os dados antes de avançar!', 'error');
+        return;
+      }
+
+      if (currentPageNum < totalPages) {
+        showPage(currentPageNum + 1);
+      }
+    }
+
+    // Retornar página
+    function retornar(currentPageNum) {
+      if (currentPageNum > 1) {
+        showPage(currentPageNum - 1);
+      }
+    }
+
+    // Mostrar página específica
+    function showPage(pageNum) {
+      // Esconder todas as páginas
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+
+      // Mostrar página selecionada
+      const targetPage = document.getElementById(`page${pageNum}`);
+      if (targetPage) {
+        targetPage.classList.add('active');
+        currentPage = pageNum;
+        updateProgress();
+      }
+    }
+
+    // Atualizar barra de progresso
+    function updateProgress() {
+      const progressFill = document.getElementById('progressFill');
+      const progressStep = document.getElementById('progressStep');
+      
+      const percentage = (currentPage / totalPages) * 100;
+      progressFill.style.width = `${percentage}%`;
+      progressStep.textContent = `Página ${currentPage} de ${totalPages}`;
+    }
+
+    // =============================================
+    // UTILITÁRIOS
+    // =============================================
+
+    // Mostrar toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast ${type} show`;
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // =============================================
+    // INICIALIZAÇÃO
+    // =============================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadFromCache();
+      updateProgress();
+    });
+  </script>
 </body>
 </html>
