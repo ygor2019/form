@@ -490,6 +490,17 @@
     .inline-group input {
       flex: 1;
     }
+
+    /* Fieldset desabilitado */
+    fieldset:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    fieldset:disabled input,
+    fieldset:disabled label {
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -1194,6 +1205,331 @@
       </div>
     </div>
 
+    <!-- Page 5: Demolição -->
+    <div class="page" id="page5">
+      <div class="card">
+        <div class="card-header">
+          <h1>🏗️ Demolição</h1>
+          <p>Informe os dados sobre demolição</p>
+        </div>
+        <div class="card-body">
+          <form id="form5" novalidate>
+            <!-- Houve Demolição -->
+            <div class="form-group">
+              <label>Houve Demolição? <span class="required">*</span></label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="demolicaoSim" name="houveDemolicao" value="Sim" onchange="toggleDemolicao()">
+                  <label for="demolicaoSim">
+                    <span class="radio-dot"></span>
+                    SIM
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="demolicaoNao" name="houveDemolicao" value="Não" onchange="toggleDemolicao()">
+                  <label for="demolicaoNao">
+                    <span class="radio-dot"></span>
+                    NÃO
+                  </label>
+                </div>
+              </div>
+              <p class="error-message" id="errorHouveDemolicao">Selecione uma opção</p>
+            </div>
+
+            <!-- Campos de Demolição (aparecem se Sim) -->
+            <div id="camposDemolicao" style="display: none;">
+              
+              <!-- PROJETO DE DEMOLIÇÃO -->
+              <div class="form-group">
+                <label>Projeto/Plano de Demolição?</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="projetoDemolicaoSim" name="projetoDemolicao" value="Sim" onchange="toggleProjetoDemolicao()">
+                    <label for="projetoDemolicaoSim">
+                      <span class="radio-dot"></span>
+                      SIM
+                    </label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="projetoDemolicaoNao" name="projetoDemolicao" value="Não" onchange="toggleProjetoDemolicao()">
+                    <label for="projetoDemolicaoNao">
+                      <span class="radio-dot"></span>
+                      NÃO
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Profissional do Projeto -->
+              <fieldset id="fieldsetProjetoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
+                <div class="form-group">
+                  <label for="profissionalProjetoDemol">Profissional <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="profissionalProjetoDemol" 
+                    name="profissionalProjetoDemol" 
+                    placeholder="Nome completo do profissional"
+                    list="listaProfissionais"
+                    autocomplete="off"
+                  >
+                  <p class="error-message" id="errorProfissionalProjetoDemol">Informe o profissional</p>
+                </div>
+
+                <div class="form-group">
+                  <label for="cpfProjetoDemol">CPF <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="cpfProjetoDemol" 
+                    name="cpfProjetoDemol" 
+                    placeholder="000.000.000-00"
+                    maxlength="14"
+                  >
+                  <p class="hint">Formato: 000.000.000-00</p>
+                  <p class="error-message" id="errorCpfProjetoDemol">CPF inválido</p>
+                </div>
+
+                <!-- CREA/Outros -->
+                <div class="form-group">
+                  <label>CREA / Outros</label>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="regCreaProjetoDemol" name="tipoRegistroProjetoDemol" value="CREA" onchange="mostrarCampoRegistroPD('crea')">
+                      <label for="regCreaProjetoDemol">
+                        <span class="radio-dot"></span>
+                        CREA
+                      </label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="regOutrosProjetoDemol" name="tipoRegistroProjetoDemol" value="Outros" onchange="mostrarCampoRegistroPD('outros')">
+                      <label for="regOutrosProjetoDemol">
+                        <span class="radio-dot"></span>
+                        Outros
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoCreaProjetoDemol">
+                    <input type="text" id="numeroCreaProjetoDemol" placeholder="Número do CREA">
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoOutrosProjetoDemol">
+                    <div class="form-row">
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="siglaConselhoProjetoDemol" placeholder="Nome/Sigla">
+                      </div>
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="numeroConselhoProjetoDemol" placeholder="Número">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ART/Outros -->
+                <div class="form-group">
+                  <label>ART / Outros</label>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="tipoArtProjetoDemol" name="tipoArtProjetoDemol" value="ART" onchange="mostrarCampoArtPD('art')">
+                      <label for="tipoArtProjetoDemol">
+                        <span class="radio-dot"></span>
+                        ART
+                      </label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="tipoOutrosArtProjetoDemol" name="tipoArtProjetoDemol" value="Outros" onchange="mostrarCampoArtPD('outros')">
+                      <label for="tipoOutrosArtProjetoDemol">
+                        <span class="radio-dot"></span>
+                        Outros
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoArtProjetoDemol">
+                    <input type="text" id="artNumeroProjetoDemol" placeholder="Número da ART" inputmode="numeric">
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoOutrosArtProjetoDemol">
+                    <div class="form-row">
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="nomeOutrosArtProjetoDemol" placeholder="Nome (ex: RRT)">
+                      </div>
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="numeroOutrosArtProjetoDemol" placeholder="Número">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <hr style="margin: 32px 0; border: none; border-top: 1px solid var(--border);">
+
+              <!-- EXECUÇÃO DE DEMOLIÇÃO -->
+              <div class="form-group">
+                <label>Execução Demolição?</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="execucaoDemolicaoSim" name="execucaoDemolicao" value="Sim" onchange="toggleExecucaoDemolicao()">
+                    <label for="execucaoDemolicaoSim">
+                      <span class="radio-dot"></span>
+                      SIM
+                    </label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="execucaoDemolicaoNao" name="execucaoDemolicao" value="Não" onchange="toggleExecucaoDemolicao()">
+                    <label for="execucaoDemolicaoNao">
+                      <span class="radio-dot"></span>
+                      NÃO
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Profissional da Execução -->
+              <fieldset id="fieldsetExecucaoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
+                <div class="form-group">
+                  <label for="profissionalExecDemol">Profissional <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="profissionalExecDemol" 
+                    name="profissionalExecDemol" 
+                    placeholder="Nome completo do profissional"
+                    list="listaProfissionais"
+                    autocomplete="off"
+                  >
+                  <p class="error-message" id="errorProfissionalExecDemol">Informe o profissional</p>
+                </div>
+
+                <div class="form-group">
+                  <label for="cpfExecDemol">CPF <span class="required">*</span></label>
+                  <input 
+                    type="text" 
+                    id="cpfExecDemol" 
+                    name="cpfExecDemol" 
+                    placeholder="000.000.000-00"
+                    maxlength="14"
+                  >
+                  <p class="hint">Formato: 000.000.000-00</p>
+                  <p class="error-message" id="errorCpfExecDemol">CPF inválido</p>
+                </div>
+
+                <!-- CREA/Outros -->
+                <div class="form-group">
+                  <label>CREA / Outros</label>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="regCreaExecDemol" name="tipoRegistroExecDemol" value="CREA" onchange="mostrarCampoRegistroED('crea')">
+                      <label for="regCreaExecDemol">
+                        <span class="radio-dot"></span>
+                        CREA
+                      </label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="regOutrosExecDemol" name="tipoRegistroExecDemol" value="Outros" onchange="mostrarCampoRegistroED('outros')">
+                      <label for="regOutrosExecDemol">
+                        <span class="radio-dot"></span>
+                        Outros
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoCreaExecDemol">
+                    <input type="text" id="numeroCreaExecDemol" placeholder="Número do CREA">
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoOutrosExecDemol">
+                    <div class="form-row">
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="siglaConselhoExecDemol" placeholder="Nome/Sigla">
+                      </div>
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="numeroConselhoExecDemol" placeholder="Número">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ART/Outros -->
+                <div class="form-group">
+                  <label>ART / Outros</label>
+                  <div class="radio-group">
+                    <div class="radio-option">
+                      <input type="radio" id="tipoArtExecDemol" name="tipoArtExecDemol" value="ART" onchange="mostrarCampoArtED('art')">
+                      <label for="tipoArtExecDemol">
+                        <span class="radio-dot"></span>
+                        ART
+                      </label>
+                    </div>
+                    <div class="radio-option">
+                      <input type="radio" id="tipoOutrosArtExecDemol" name="tipoArtExecDemol" value="Outros" onchange="mostrarCampoArtED('outros')">
+                      <label for="tipoOutrosArtExecDemol">
+                        <span class="radio-dot"></span>
+                        Outros
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoArtExecDemol">
+                    <input type="text" id="artNumeroExecDemol" placeholder="Número da ART" inputmode="numeric">
+                  </div>
+                  
+                  <div class="campo-condicional" id="campoOutrosArtExecDemol">
+                    <div class="form-row">
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="nomeOutrosArtExecDemol" placeholder="Nome (ex: RRT)">
+                      </div>
+                      <div class="form-group" style="margin-bottom: 0;">
+                        <input type="text" id="numeroOutrosArtExecDemol" placeholder="Número">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Empresa -->
+                <div class="form-group">
+                  <label for="empresaDemol">Empresa</label>
+                  <input 
+                    type="text" 
+                    id="empresaDemol" 
+                    name="empresaDemol" 
+                    placeholder="Nome da empresa"
+                  >
+                </div>
+
+                <!-- CNPJ -->
+                <div class="form-group">
+                  <label for="cnpjDemol">CNPJ</label>
+                  <input 
+                    type="text" 
+                    id="cnpjDemol" 
+                    name="cnpjDemol" 
+                    placeholder="00.000.000/0000-00"
+                    maxlength="18"
+                  >
+                  <p class="hint">Formato: 00.000.000/0000-00</p>
+                  <p class="error-message" id="errorCnpjDemol">CNPJ inválido</p>
+                </div>
+              </fieldset>
+
+            </div>
+
+            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" onclick="retornar(5)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(5)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="avancar(5)">
+                Avançar →
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Toast notification -->
@@ -1259,11 +1595,39 @@
         tipoEmpresaRegistroRT: '',
         empresaRegistroRT: '',
         saved: false
+      },
+      page5: {
+        houveDemolicao: '',
+        projetoDemolicao: '',
+        profissionalProjetoDemol: '',
+        cpfProjetoDemol: '',
+        tipoRegistroProjetoDemol: '',
+        numeroCreaProjetoDemol: '',
+        siglaConselhoProjetoDemol: '',
+        numeroConselhoProjetoDemol: '',
+        tipoArtProjetoDemol: '',
+        artNumeroProjetoDemol: '',
+        nomeOutrosArtProjetoDemol: '',
+        numeroOutrosArtProjetoDemol: '',
+        execucaoDemolicao: '',
+        profissionalExecDemol: '',
+        cpfExecDemol: '',
+        tipoRegistroExecDemol: '',
+        numeroCreaExecDemol: '',
+        siglaConselhoExecDemol: '',
+        numeroConselhoExecDemol: '',
+        tipoArtExecDemol: '',
+        artNumeroExecDemol: '',
+        nomeOutrosArtExecDemol: '',
+        numeroOutrosArtExecDemol: '',
+        empresaDemol: '',
+        cnpjDemol: '',
+        saved: false
       }
     };
 
     // Total de páginas
-    const totalPages = 4;
+    const totalPages = 5;
     let currentPage = 1;
     
     // Controle do tipo de documento (CPF ou CNPJ)
@@ -1421,6 +1785,19 @@
             adicionarProfissional(formData.page4.profissionalRT, cpf4, crea4);
           }
           
+          if (formData.page5) {
+            if (formData.page5.profissionalProjetoDemol) {
+              const cpf5p = formData.page5.cpfProjetoDemol;
+              const crea5p = formData.page5.tipoRegistroProjetoDemol === 'CREA' ? formData.page5.numeroCreaProjetoDemol : '';
+              adicionarProfissional(formData.page5.profissionalProjetoDemol, cpf5p, crea5p);
+            }
+            if (formData.page5.profissionalExecDemol) {
+              const cpf5e = formData.page5.cpfExecDemol;
+              const crea5e = formData.page5.tipoRegistroExecDemol === 'CREA' ? formData.page5.numeroCreaExecDemol : '';
+              adicionarProfissional(formData.page5.profissionalExecDemol, cpf5e, crea5e);
+            }
+          }
+          
           showToast('Dados anteriores restaurados!', 'success');
         } catch (e) {
           console.error('Erro ao carregar cache:', e);
@@ -1557,6 +1934,92 @@
           toggleEmpresaRegistroRT(tipoEmpresaRegistroRT, true);
           document.getElementById('empresaRegistroRT').value = formData.page4.empresaRegistroRT || '';
         }
+      }
+      
+      // Página 5 - Demolição
+      if (formData.page5) {
+        // Houve Demolição
+        if (formData.page5.houveDemolicao) {
+          const radioBtn = document.querySelector(`input[name="houveDemolicao"][value="${formData.page5.houveDemolicao}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            toggleDemolicao();
+          }
+        }
+        
+        // Projeto de Demolição
+        if (formData.page5.projetoDemolicao) {
+          const radioBtn = document.querySelector(`input[name="projetoDemolicao"][value="${formData.page5.projetoDemolicao}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            toggleProjetoDemolicao();
+          }
+        }
+        
+        document.getElementById('profissionalProjetoDemol').value = formData.page5.profissionalProjetoDemol || '';
+        document.getElementById('cpfProjetoDemol').value = formData.page5.cpfProjetoDemol || '';
+        
+        if (formData.page5.tipoRegistroProjetoDemol) {
+          const radioBtn = document.querySelector(`input[name="tipoRegistroProjetoDemol"][value="${formData.page5.tipoRegistroProjetoDemol}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoRegistroPD(formData.page5.tipoRegistroProjetoDemol.toLowerCase());
+          }
+        }
+        
+        document.getElementById('numeroCreaProjetoDemol').value = formData.page5.numeroCreaProjetoDemol || '';
+        document.getElementById('siglaConselhoProjetoDemol').value = formData.page5.siglaConselhoProjetoDemol || '';
+        document.getElementById('numeroConselhoProjetoDemol').value = formData.page5.numeroConselhoProjetoDemol || '';
+        
+        if (formData.page5.tipoArtProjetoDemol) {
+          const radioBtn = document.querySelector(`input[name="tipoArtProjetoDemol"][value="${formData.page5.tipoArtProjetoDemol}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoArtPD(formData.page5.tipoArtProjetoDemol.toLowerCase());
+          }
+        }
+        
+        document.getElementById('artNumeroProjetoDemol').value = formData.page5.artNumeroProjetoDemol || '';
+        document.getElementById('nomeOutrosArtProjetoDemol').value = formData.page5.nomeOutrosArtProjetoDemol || '';
+        document.getElementById('numeroOutrosArtProjetoDemol').value = formData.page5.numeroOutrosArtProjetoDemol || '';
+        
+        // Execução de Demolição
+        if (formData.page5.execucaoDemolicao) {
+          const radioBtn = document.querySelector(`input[name="execucaoDemolicao"][value="${formData.page5.execucaoDemolicao}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            toggleExecucaoDemolicao();
+          }
+        }
+        
+        document.getElementById('profissionalExecDemol').value = formData.page5.profissionalExecDemol || '';
+        document.getElementById('cpfExecDemol').value = formData.page5.cpfExecDemol || '';
+        
+        if (formData.page5.tipoRegistroExecDemol) {
+          const radioBtn = document.querySelector(`input[name="tipoRegistroExecDemol"][value="${formData.page5.tipoRegistroExecDemol}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoRegistroED(formData.page5.tipoRegistroExecDemol.toLowerCase());
+          }
+        }
+        
+        document.getElementById('numeroCreaExecDemol').value = formData.page5.numeroCreaExecDemol || '';
+        document.getElementById('siglaConselhoExecDemol').value = formData.page5.siglaConselhoExecDemol || '';
+        document.getElementById('numeroConselhoExecDemol').value = formData.page5.numeroConselhoExecDemol || '';
+        
+        if (formData.page5.tipoArtExecDemol) {
+          const radioBtn = document.querySelector(`input[name="tipoArtExecDemol"][value="${formData.page5.tipoArtExecDemol}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoArtED(formData.page5.tipoArtExecDemol.toLowerCase());
+          }
+        }
+        
+        document.getElementById('artNumeroExecDemol').value = formData.page5.artNumeroExecDemol || '';
+        document.getElementById('nomeOutrosArtExecDemol').value = formData.page5.nomeOutrosArtExecDemol || '';
+        document.getElementById('numeroOutrosArtExecDemol').value = formData.page5.numeroOutrosArtExecDemol || '';
+        document.getElementById('empresaDemol').value = formData.page5.empresaDemol || '';
+        document.getElementById('cnpjDemol').value = formData.page5.cnpjDemol || '';
       }
     }
 
@@ -2010,6 +2473,155 @@
       document.getElementById('errorEmpresaRegistroRT').classList.remove('show');
     });
 
+    // =============================================
+    // PÁGINA 5 - DEMOLIÇÃO - FUNÇÕES
+    // =============================================
+
+    // Toggle geral de demolição
+    function toggleDemolicao() {
+      const houve = document.querySelector('input[name="houveDemolicao"]:checked');
+      const campos = document.getElementById('camposDemolicao');
+      
+      if (houve && houve.value === 'Sim') {
+        campos.style.display = 'block';
+      } else {
+        campos.style.display = 'none';
+        // Limpar campos
+        limparCamposDemolicao();
+      }
+    }
+
+    // Toggle Projeto de Demolição
+    function toggleProjetoDemolicao() {
+      const projeto = document.querySelector('input[name="projetoDemolicao"]:checked');
+      const fieldset = document.getElementById('fieldsetProjetoDemolicao');
+      
+      if (projeto && projeto.value === 'Sim') {
+        fieldset.disabled = false;
+      } else {
+        fieldset.disabled = true;
+      }
+    }
+
+    // Toggle Execução de Demolição
+    function toggleExecucaoDemolicao() {
+      const execucao = document.querySelector('input[name="execucaoDemolicao"]:checked');
+      const fieldset = document.getElementById('fieldsetExecucaoDemolicao');
+      
+      if (execucao && execucao.value === 'Sim') {
+        fieldset.disabled = false;
+      } else {
+        fieldset.disabled = true;
+      }
+    }
+
+    // Limpar todos os campos de demolição
+    function limparCamposDemolicao() {
+      const radios = document.querySelectorAll('#camposDemolicao input[type="radio"]');
+      radios.forEach(r => r.checked = false);
+      
+      const inputs = document.querySelectorAll('#camposDemolicao input[type="text"]');
+      inputs.forEach(i => i.value = '');
+      
+      toggleProjetoDemolicao();
+      toggleExecucaoDemolicao();
+    }
+
+    // Mostrar campo Registro - Projeto Demolição
+    function mostrarCampoRegistroPD(tipo) {
+      document.getElementById('campoCreaProjetoDemol').classList.remove('show');
+      document.getElementById('campoOutrosProjetoDemol').classList.remove('show');
+      
+      if (tipo === 'crea') {
+        document.getElementById('campoCreaProjetoDemol').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosProjetoDemol').classList.add('show');
+      }
+    }
+
+    // Mostrar campo ART - Projeto Demolição
+    function mostrarCampoArtPD(tipo) {
+      document.getElementById('campoArtProjetoDemol').classList.remove('show');
+      document.getElementById('campoOutrosArtProjetoDemol').classList.remove('show');
+      
+      if (tipo === 'art') {
+        document.getElementById('campoArtProjetoDemol').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosArtProjetoDemol').classList.add('show');
+      }
+    }
+
+    // Mostrar campo Registro - Execução Demolição
+    function mostrarCampoRegistroED(tipo) {
+      document.getElementById('campoCreaExecDemol').classList.remove('show');
+      document.getElementById('campoOutrosExecDemol').classList.remove('show');
+      
+      if (tipo === 'crea') {
+        document.getElementById('campoCreaExecDemol').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosExecDemol').classList.add('show');
+      }
+    }
+
+    // Mostrar campo ART - Execução Demolição
+    function mostrarCampoArtED(tipo) {
+      document.getElementById('campoArtExecDemol').classList.remove('show');
+      document.getElementById('campoOutrosArtExecDemol').classList.remove('show');
+      
+      if (tipo === 'art') {
+        document.getElementById('campoArtExecDemol').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosArtExecDemol').classList.add('show');
+      }
+    }
+
+    // Formatar CPFs - Projeto Demolição
+    document.getElementById('cpfProjetoDemol').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+      if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+      if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCpfProjetoDemol').classList.remove('show');
+    });
+
+    // Formatar CPFs - Execução Demolição
+    document.getElementById('cpfExecDemol').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+      if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+      if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCpfExecDemol').classList.remove('show');
+    });
+
+    // Formatar CNPJ - Demolição
+    document.getElementById('cnpjDemol').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 2) value = value.substring(0,2) + '.' + value.substring(2);
+      if (value.length > 6) value = value.substring(0,6) + '.' + value.substring(6);
+      if (value.length > 10) value = value.substring(0,10) + '/' + value.substring(10);
+      if (value.length > 15) value = value.substring(0,15) + '-' + value.substring(15,17);
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCnpjDemol').classList.remove('show');
+    });
+
+    // Formatar ART (só números)
+    document.getElementById('artNumeroProjetoDemol').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+    
+    document.getElementById('artNumeroExecDemol').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Autocomplete para os profissionais da página 5
+    preencherDadosProfissional('profissionalProjetoDemol', 'cpfProjetoDemol', 'numeroCreaProjetoDemol');
+    preencherDadosProfissional('profissionalExecDemol', 'cpfExecDemol', 'numeroCreaExecDemol');
+
     // Validar Página 2
     function validarPagina2() {
       let isValid = true;
@@ -2363,6 +2975,129 @@
       return { isValid, avisos };
     }
 
+    // Validar Página 5 - Demolição
+    function validarPagina5() {
+      let isValid = true;
+      let avisos = [];
+
+      // Houve Demolição (obrigatório)
+      const houveDemolicao = document.querySelector('input[name="houveDemolicao"]:checked');
+      const errorHouveDemolicao = document.getElementById('errorHouveDemolicao');
+      
+      if (!houveDemolicao) {
+        errorHouveDemolicao.classList.add('show');
+        isValid = false;
+      } else {
+        errorHouveDemolicao.classList.remove('show');
+        
+        // Se houve demolição = SIM, validar campos internos
+        if (houveDemolicao.value === 'Sim') {
+          
+          // PROJETO DE DEMOLIÇÃO
+          const projetoDemolicao = document.querySelector('input[name="projetoDemolicao"]:checked');
+          
+          if (projetoDemolicao && projetoDemolicao.value === 'Sim') {
+            // Validar profissional (obrigatório)
+            const profProjeto = document.getElementById('profissionalProjetoDemol');
+            const errorProfProjeto = document.getElementById('errorProfissionalProjetoDemol');
+            
+            if (!profProjeto.value.trim()) {
+              profProjeto.classList.add('error');
+              errorProfProjeto.classList.add('show');
+              isValid = false;
+            } else {
+              profProjeto.classList.remove('error');
+              profProjeto.classList.add('success');
+              errorProfProjeto.classList.remove('show');
+            }
+            
+            // Validar CPF (obrigatório)
+            const cpfProjeto = document.getElementById('cpfProjetoDemol');
+            const errorCpfProjeto = document.getElementById('errorCpfProjetoDemol');
+            const cpfNums = cpfProjeto.value.replace(/\D/g, '');
+            
+            if (!cpfProjeto.value.trim()) {
+              cpfProjeto.classList.add('error');
+              errorCpfProjeto.textContent = 'Informe o CPF';
+              errorCpfProjeto.classList.add('show');
+              isValid = false;
+            } else if (!validarCPF(cpfNums)) {
+              cpfProjeto.classList.add('error');
+              errorCpfProjeto.textContent = 'CPF inválido';
+              errorCpfProjeto.classList.add('show');
+              isValid = false;
+            } else {
+              cpfProjeto.classList.remove('error');
+              cpfProjeto.classList.add('success');
+              errorCpfProjeto.classList.remove('show');
+            }
+          }
+          
+          // EXECUÇÃO DE DEMOLIÇÃO
+          const execucaoDemolicao = document.querySelector('input[name="execucaoDemolicao"]:checked');
+          
+          if (execucaoDemolicao && execucaoDemolicao.value === 'Sim') {
+            // Validar profissional (obrigatório)
+            const profExec = document.getElementById('profissionalExecDemol');
+            const errorProfExec = document.getElementById('errorProfissionalExecDemol');
+            
+            if (!profExec.value.trim()) {
+              profExec.classList.add('error');
+              errorProfExec.classList.add('show');
+              isValid = false;
+            } else {
+              profExec.classList.remove('error');
+              profExec.classList.add('success');
+              errorProfExec.classList.remove('show');
+            }
+            
+            // Validar CPF (obrigatório)
+            const cpfExec = document.getElementById('cpfExecDemol');
+            const errorCpfExec = document.getElementById('errorCpfExecDemol');
+            const cpfExecNums = cpfExec.value.replace(/\D/g, '');
+            
+            if (!cpfExec.value.trim()) {
+              cpfExec.classList.add('error');
+              errorCpfExec.textContent = 'Informe o CPF';
+              errorCpfExec.classList.add('show');
+              isValid = false;
+            } else if (!validarCPF(cpfExecNums)) {
+              cpfExec.classList.add('error');
+              errorCpfExec.textContent = 'CPF inválido';
+              errorCpfExec.classList.add('show');
+              isValid = false;
+            } else {
+              cpfExec.classList.remove('error');
+              cpfExec.classList.add('success');
+              errorCpfExec.classList.remove('show');
+            }
+            
+            // Validar CNPJ se preenchido
+            const cnpjDemol = document.getElementById('cnpjDemol');
+            const errorCnpjDemol = document.getElementById('errorCnpjDemol');
+            const cnpjNums = cnpjDemol.value.replace(/\D/g, '');
+            
+            if (cnpjDemol.value.trim() && cnpjNums.length === 14) {
+              if (!validarCNPJ(cnpjNums)) {
+                cnpjDemol.classList.add('error');
+                errorCnpjDemol.classList.add('show');
+                isValid = false;
+              } else {
+                cnpjDemol.classList.remove('error');
+                cnpjDemol.classList.add('success');
+                errorCnpjDemol.classList.remove('show');
+              }
+            } else {
+              cnpjDemol.classList.remove('error');
+              errorCnpjDemol.classList.remove('show');
+            }
+          }
+        }
+      }
+
+      return { isValid, avisos };
+    }
+
     // =============================================
     // AÇÕES DOS BOTÕES
     // =============================================
@@ -2478,6 +3213,66 @@
             const cpfRT = document.getElementById('cpfRT').value.trim();
             const creaRT = tipoRegistroSelecionadoRT?.value === 'CREA' ? document.getElementById('numeroCreaRT').value.trim() : '';
             adicionarProfissional(nomeProfissionalRT, cpfRT, creaRT);
+          }
+          break;
+          
+        case 5:
+          const resultado5 = validarPagina5();
+          isValid = resultado5.isValid;
+          avisos = resultado5.avisos;
+          
+          if (isValid) {
+            const houveDemolicao = document.querySelector('input[name="houveDemolicao"]:checked');
+            const projetoDemolicao = document.querySelector('input[name="projetoDemolicao"]:checked');
+            const tipoRegistroProjetoDemol = document.querySelector('input[name="tipoRegistroProjetoDemol"]:checked');
+            const tipoArtProjetoDemol = document.querySelector('input[name="tipoArtProjetoDemol"]:checked');
+            const execucaoDemolicao = document.querySelector('input[name="execucaoDemolicao"]:checked');
+            const tipoRegistroExecDemol = document.querySelector('input[name="tipoRegistroExecDemol"]:checked');
+            const tipoArtExecDemol = document.querySelector('input[name="tipoArtExecDemol"]:checked');
+            
+            formData.page5 = {
+              houveDemolicao: houveDemolicao ? houveDemolicao.value : '',
+              projetoDemolicao: projetoDemolicao ? projetoDemolicao.value : '',
+              profissionalProjetoDemol: document.getElementById('profissionalProjetoDemol').value.trim(),
+              cpfProjetoDemol: document.getElementById('cpfProjetoDemol').value.trim(),
+              tipoRegistroProjetoDemol: tipoRegistroProjetoDemol ? tipoRegistroProjetoDemol.value : '',
+              numeroCreaProjetoDemol: document.getElementById('numeroCreaProjetoDemol').value.trim(),
+              siglaConselhoProjetoDemol: document.getElementById('siglaConselhoProjetoDemol').value.trim(),
+              numeroConselhoProjetoDemol: document.getElementById('numeroConselhoProjetoDemol').value.trim(),
+              tipoArtProjetoDemol: tipoArtProjetoDemol ? tipoArtProjetoDemol.value : '',
+              artNumeroProjetoDemol: document.getElementById('artNumeroProjetoDemol').value.trim(),
+              nomeOutrosArtProjetoDemol: document.getElementById('nomeOutrosArtProjetoDemol').value.trim(),
+              numeroOutrosArtProjetoDemol: document.getElementById('numeroOutrosArtProjetoDemol').value.trim(),
+              execucaoDemolicao: execucaoDemolicao ? execucaoDemolicao.value : '',
+              profissionalExecDemol: document.getElementById('profissionalExecDemol').value.trim(),
+              cpfExecDemol: document.getElementById('cpfExecDemol').value.trim(),
+              tipoRegistroExecDemol: tipoRegistroExecDemol ? tipoRegistroExecDemol.value : '',
+              numeroCreaExecDemol: document.getElementById('numeroCreaExecDemol').value.trim(),
+              siglaConselhoExecDemol: document.getElementById('siglaConselhoExecDemol').value.trim(),
+              numeroConselhoExecDemol: document.getElementById('numeroConselhoExecDemol').value.trim(),
+              tipoArtExecDemol: tipoArtExecDemol ? tipoArtExecDemol.value : '',
+              artNumeroExecDemol: document.getElementById('artNumeroExecDemol').value.trim(),
+              nomeOutrosArtExecDemol: document.getElementById('nomeOutrosArtExecDemol').value.trim(),
+              numeroOutrosArtExecDemol: document.getElementById('numeroOutrosArtExecDemol').value.trim(),
+              empresaDemol: document.getElementById('empresaDemol').value.trim(),
+              cnpjDemol: document.getElementById('cnpjDemol').value.trim(),
+              saved: true
+            };
+            
+            // Adicionar profissionais à lista de autocomplete
+            if (projetoDemolicao && projetoDemolicao.value === 'Sim') {
+              const nomeProjeto = document.getElementById('profissionalProjetoDemol').value.trim();
+              const cpfProjeto = document.getElementById('cpfProjetoDemol').value.trim();
+              const creaProjeto = tipoRegistroProjetoDemol?.value === 'CREA' ? document.getElementById('numeroCreaProjetoDemol').value.trim() : '';
+              adicionarProfissional(nomeProjeto, cpfProjeto, creaProjeto);
+            }
+            
+            if (execucaoDemolicao && execucaoDemolicao.value === 'Sim') {
+              const nomeExec = document.getElementById('profissionalExecDemol').value.trim();
+              const cpfExec = document.getElementById('cpfExecDemol').value.trim();
+              const creaExec = tipoRegistroExecDemol?.value === 'CREA' ? document.getElementById('numeroCreaExecDemol').value.trim() : '';
+              adicionarProfissional(nomeExec, cpfExec, creaExec);
+            }
           }
           break;
       }
