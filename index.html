@@ -889,9 +889,27 @@
             </div>
 
             <!-- ART/RRT -->
-            <div class="form-row">
-              <div class="form-group">
-                <label for="artNumero">ART nº</label>
+            <div class="form-group">
+              <label>ART / RRT</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="tipoArt" name="tipoArtRrt" value="ART" onchange="mostrarCampoArtRrt('art')">
+                  <label for="tipoArt">
+                    <span class="radio-dot"></span>
+                    ART
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="tipoRrt" name="tipoArtRrt" value="RRT" onchange="mostrarCampoArtRrt('rrt')">
+                  <label for="tipoRrt">
+                    <span class="radio-dot"></span>
+                    RRT
+                  </label>
+                </div>
+              </div>
+              
+              <!-- Campo ART -->
+              <div class="campo-condicional" id="campoArt">
                 <input 
                   type="text" 
                   id="artNumero" 
@@ -900,8 +918,9 @@
                   inputmode="numeric"
                 >
               </div>
-              <div class="form-group">
-                <label for="rrtNumero">RRT nº</label>
+              
+              <!-- Campo RRT -->
+              <div class="campo-condicional" id="campoRrt">
                 <input 
                   type="text" 
                   id="rrtNumero" 
@@ -1000,6 +1019,7 @@
         siglaConselho: '',
         numeroConselho: '',
         titulo: '',
+        tipoArtRrt: '',
         artNumero: '',
         rrtNumero: '',
         empresa: '',
@@ -1099,6 +1119,15 @@
         document.getElementById('siglaConselho').value = formData.page3.siglaConselho || '';
         document.getElementById('numeroConselho').value = formData.page3.numeroConselho || '';
         document.getElementById('titulo').value = formData.page3.titulo || '';
+        
+        // Restaurar ART/RRT
+        if (formData.page3.tipoArtRrt) {
+          const radioArtRrt = document.querySelector(`input[name="tipoArtRrt"][value="${formData.page3.tipoArtRrt}"]`);
+          if (radioArtRrt) {
+            radioArtRrt.checked = true;
+            mostrarCampoArtRrt(formData.page3.tipoArtRrt.toLowerCase());
+          }
+        }
         document.getElementById('artNumero').value = formData.page3.artNumero || '';
         document.getElementById('rrtNumero').value = formData.page3.rrtNumero || '';
         document.getElementById('empresa').value = formData.page3.empresa || '';
@@ -1395,6 +1424,18 @@
       e.target.value = value;
     });
 
+    // Mostrar campo ART ou RRT
+    function mostrarCampoArtRrt(tipo) {
+      document.getElementById('campoArt').classList.remove('show');
+      document.getElementById('campoRrt').classList.remove('show');
+      
+      if (tipo === 'art') {
+        document.getElementById('campoArt').classList.add('show');
+      } else if (tipo === 'rrt') {
+        document.getElementById('campoRrt').classList.add('show');
+      }
+    }
+
     // Formatar ART/RRT (só números)
     document.getElementById('artNumero').addEventListener('input', function(e) {
       e.target.value = e.target.value.replace(/\D/g, '');
@@ -1562,6 +1603,7 @@
     // Validar Página 3
     function validarPagina3() {
       let isValid = true;
+      let avisos = [];
 
       // Placa afixada (obrigatório)
       const placaSelecionada = document.querySelector('input[name="placaAfixada"]:checked');
@@ -1648,11 +1690,38 @@
         }
       }
 
+      // Título (opcional - aviso)
+      const titulo = document.getElementById('titulo');
+      if (!titulo.value.trim()) {
+        avisos.push('Título');
+      }
+
+      // ART/RRT (opcional - aviso)
+      const tipoArtRrtSelecionado = document.querySelector('input[name="tipoArtRrt"]:checked');
+      if (!tipoArtRrtSelecionado) {
+        avisos.push('ART/RRT');
+      } else {
+        const tipoAR = tipoArtRrtSelecionado.value;
+        if (tipoAR === 'ART' && !document.getElementById('artNumero').value.trim()) {
+          avisos.push('Número da ART');
+        } else if (tipoAR === 'RRT' && !document.getElementById('rrtNumero').value.trim()) {
+          avisos.push('Número do RRT');
+        }
+      }
+
+      // Empresa (opcional - aviso)
+      const empresa = document.getElementById('empresa');
+      if (!empresa.value.trim()) {
+        avisos.push('Empresa');
+      }
+
       // Registro da empresa (validar CNPJ apenas se tipo for CNPJ)
       const empresaRegistro = document.getElementById('empresaRegistro');
       const errorEmpresaRegistro = document.getElementById('errorEmpresaRegistro');
       
-      if (tipoEmpresaRegistro === 'cnpj' && empresaRegistro.value.trim()) {
+      if (!tipoEmpresaRegistro || !empresaRegistro.value.trim()) {
+        avisos.push('Registro da Empresa');
+      } else if (tipoEmpresaRegistro === 'cnpj' && empresaRegistro.value.trim()) {
         const cnpjNumeros = empresaRegistro.value.replace(/\D/g, '');
         if (!validarCNPJ(cnpjNumeros)) {
           empresaRegistro.classList.add('error');
@@ -1664,12 +1733,12 @@
           errorEmpresaRegistro.classList.remove('show');
         }
       } else {
-        // Não é CNPJ ou está vazio, aceitar
+        // Não é CNPJ, aceitar
         empresaRegistro.classList.remove('error');
         errorEmpresaRegistro.classList.remove('show');
       }
 
-      return isValid;
+      return { isValid, avisos };
     }
 
     // =============================================
@@ -1719,11 +1788,14 @@
           break;
           
         case 3:
-          isValid = validarPagina3();
+          const resultado3 = validarPagina3();
+          isValid = resultado3.isValid;
+          avisos = resultado3.avisos;
           
           if (isValid) {
             const placaSelecionada = document.querySelector('input[name="placaAfixada"]:checked');
             const tipoRegistroSelecionado = document.querySelector('input[name="tipoRegistro"]:checked');
+            const tipoArtRrtSelecionado = document.querySelector('input[name="tipoArtRrt"]:checked');
             
             formData.page3 = {
               placaAfixada: placaSelecionada ? placaSelecionada.value : '',
@@ -1734,6 +1806,7 @@
               siglaConselho: document.getElementById('siglaConselho').value.trim(),
               numeroConselho: document.getElementById('numeroConselho').value.trim(),
               titulo: document.getElementById('titulo').value.trim(),
+              tipoArtRrt: tipoArtRrtSelecionado ? tipoArtRrtSelecionado.value : '',
               artNumero: document.getElementById('artNumero').value.trim(),
               rrtNumero: document.getElementById('rrtNumero').value.trim(),
               empresa: document.getElementById('empresa').value.trim(),
