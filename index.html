@@ -2221,7 +2221,7 @@
               <button type="button" class="btn btn-save" onclick="salvarPagina(8)">
                 💾 Salvar
               </button>
-              <button type="button" class="btn btn-primary" onclick="finalizarFormulario()">
+              <button type="button" class="btn btn-primary" onclick="finalizarFormulario(8)">
                 ✅ Finalizar
               </button>
             </div>
@@ -4709,7 +4709,7 @@
     }
 
     // Finalizar formulário
-    function finalizarFormulario(pageNum = 7) {
+    function finalizarFormulario(pageNum = 8) {
       // Limpar erros anteriores
       limparErrosPagina(pageNum);
 
@@ -4728,14 +4728,14 @@
       if (camposVazios.length > 0) {
         // Tem campos vazios - mostrar modal de confirmação
         // Modificamos temporariamente o comportamento para finalizar ao invés de só salvar
-        paginaParaSalvar = 7;
+        paginaParaSalvar = pageNum;
         const lista = document.getElementById('listaCamposFaltantes');
         lista.textContent = camposVazios.join(', ');
         
         // Trocar o botão de confirmar para finalizar
         document.querySelector('.modal-btn-confirmar').onclick = function() {
           fecharModal();
-          finalizarFormularioForcado();
+          finalizarFormularioForcado(pageNum);
           // Restaurar comportamento normal do botão
           document.querySelector('.modal-btn-confirmar').onclick = confirmarSalvamento;
         };
@@ -4743,11 +4743,11 @@
         document.getElementById('modalConfirmacao').classList.add('show');
       } else {
         // Todos os campos preenchidos - finalizar diretamente
-        finalizarFormularioForcado();
+        finalizarFormularioForcado(pageNum);
       }
     }
 
-    function finalizarFormularioForcado(pageNum = 7) {
+    function finalizarFormularioForcado(pageNum = 8) {
       // Salvar dados da página atual diretamente
       if (pageNum === 7) {
         const livroSelecionado = document.querySelector('input[name="livroOrdem"]:checked');
