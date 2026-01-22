@@ -5216,33 +5216,31 @@
       // PÁGINA 9 - Topografia, Sondagem, Terraplenagem, Fundações
       // ═══════════════════════════════════════════════════════════════
       page9: [
-        // TOPOGRAFIA: projeto SIM/NÃO + execução com 3 opções se SIM
+        // TOPOGRAFIA: 2.1 Projeto SIM/NÃO → se SIM, mostra 2.2 Execução (3 opções)
         { id: 'topografiaProjeto', num: '2.1', titulo: 'Topografia - Projeto', tipo: 'simNao', temExecucao: true },
         { id: 'topografiaExec', num: '2.2', titulo: 'Topografia - Execução e Acompanhamento', tipo: 'status', depende: 'topografiaProjeto' },
 
-        // SONDAGEM: só status (não iniciada, em andamento, concluída)
+        // SONDAGEM: só 3 opções (não iniciada, em andamento, concluída)
         { id: 'sondagem', num: '3', titulo: 'Sondagem', tipo: 'status' },
 
-        // TERRAPLENAGEM: projeto SIM/NÃO + execução com 3 opções se SIM
+        // MOVIMENTO DE TERRA: SIM/NÃO no topo → se SIM, mostra 4.1 Execução (3 opções)
         { id: 'terraplenagem', num: '4', titulo: 'Movimento de Terra/Terraplenagem', tipo: 'simNao', temExecucao: true },
-        { id: 'terraExec', num: '4.1', titulo: 'Terraplenagem - Execução', tipo: 'status', depende: 'terraplenagem' },
+        { id: 'terraExec', num: '4.1', titulo: 'Execução', tipo: 'status', depende: 'terraplenagem' },
 
-        // FUNDAÇÕES: projeto SIM/NÃO + execução com 3 opções se SIM
-        { id: 'fundacoesProjeto', num: '5.1', titulo: 'Fundações - Projeto/Assessoria/Consultoria', tipo: 'simNao', temExecucao: true },
-        { id: 'fundacoesExec', num: '5.2', titulo: 'Fundações - Execução', tipo: 'status', depende: 'fundacoesProjeto' }
+        // FUNDAÇÕES: 3 opções NO TOPO + 5.1 Projeto SIM/NÃO + 5.2 Execução (3 opções se 5.1=SIM)
+        { id: 'fundacoes', num: '5', titulo: 'Fundações', tipo: 'statusComSubitens', subitens: [
+          { id: 'fundacoesProjeto', num: '5.1', titulo: 'Projeto/Assessoria/Consultoria', tipo: 'simNao', temExecucao: true },
+          { id: 'fundacoesExec', num: '5.2', titulo: 'Execução', tipo: 'status', depende: 'fundacoesProjeto' }
+        ]}
       ],
       
       // ═══════════════════════════════════════════════════════════════
       // PÁGINA 10 - Estrutura e Segurança
       // ═══════════════════════════════════════════════════════════════
       page10: [
-        { id: 'calculoEstrutural', num: '6', titulo: 'Cálculo Estrutural', tipo: 'simNao', temExecucao: true },
-        { id: 'calculoEstruturalExec', num: '6.1', titulo: 'Cálculo Estrutural - Execução', tipo: 'status', depende: 'calculoEstrutural' },
-        { id: 'concretoUsinado', num: '7', titulo: 'Concreto Usinado', tipo: 'simNao', temExecucao: true },
-        { id: 'concretoUsinadoExec', num: '7.1', titulo: 'Concreto Usinado - Execução', tipo: 'status', depende: 'concretoUsinado' },
-
-        { id: 'controleTecConcreto', num: '8', titulo: 'Controle Tecnológico de Concreto', tipo: 'simNao', temExecucao: true },
-        { id: 'controleTecConcretoExec', num: '8.1', titulo: 'Controle Tecnológico de Concreto - Execução', tipo: 'status', depende: 'controleTecConcreto' },
+        { id: 'calculoEstrutural', num: '6', titulo: 'Cálculo Estrutural', tipo: 'simNao' },
+        { id: 'concretoUsinado', num: '7', titulo: 'Concreto Usinado', tipo: 'simNao' },
+        { id: 'controleTecConcreto', num: '8', titulo: 'Controle Tecnológico de Concreto', tipo: 'simNao' },
         { id: 'premoldados', num: '9', titulo: 'Premoldados', tipo: 'simNao' },
         { id: 'formasCimbramento', num: '10', titulo: 'Formas OU Cimbramento', tipo: 'simNao' },
         { id: 'andaimesPlataformas', num: '11', titulo: 'Andaimes e Plataformas', tipo: 'simNao' },
@@ -5253,11 +5251,8 @@
       // PÁGINA 11 - Equipamentos
       // ═══════════════════════════════════════════════════════════════
       page11: [
-        { id: 'gruas', num: '13', titulo: 'Montagem/Desmontagem Gruas', tipo: 'simNao', temExecucao: true },
-        { id: 'gruasExec', num: '13.1', titulo: 'Montagem/Desmontagem Gruas - Execução', tipo: 'status', depende: 'gruas' },
-
-        { id: 'guindaste', num: '14', titulo: 'Montagem/Desmontagem Guindaste', tipo: 'simNao', temExecucao: true },
-        { id: 'guindasteExec', num: '14.1', titulo: 'Montagem/Desmontagem Guindaste - Execução', tipo: 'status', depende: 'guindaste' },
+        { id: 'gruas', num: '13', titulo: 'Montagem/Desmontagem Gruas', tipo: 'simNao' },
+        { id: 'guindaste', num: '14', titulo: 'Montagem/Desmontagem Guindaste', tipo: 'simNao' },
         { id: 'geradores', num: '15', titulo: 'Instalação/Manutenção Geradores', tipo: 'simNao' },
         { id: 'compressores', num: '16', titulo: 'Manutenção Compressores', tipo: 'simNao' },
         { id: 'residuosSolidos', num: '17', titulo: 'Coleta, transporte, destinação resíduos sólidos', tipo: 'simNao' }
@@ -5267,27 +5262,33 @@
       // PÁGINA 12 - Instalações Elétricas e Hidráulicas
       // ═══════════════════════════════════════════════════════════════
       page12: [
-        // ELÉTRICAS: projeto SIM/NÃO + execução com 3 opções se SIM
-        { id: 'eletricasProjeto', num: '18.1', titulo: 'Instalações Elétricas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'eletricasExec', num: '18.2', titulo: 'Instalações Elétricas - Execução', tipo: 'status', depende: 'eletricasProjeto' },
+        // INSTALAÇÕES ELÉTRICAS: 3 opções NO TOPO + 18.1 Projeto (SIM/NÃO) + 18.2 Execução (3 opções se 18.1=SIM)
+        { id: 'instalacoesEletricas', num: '18', titulo: 'Instalações Elétricas', tipo: 'statusComSubitens', subitens: [
+          { id: 'eletricasProjeto', num: '18.1', titulo: 'Projeto', tipo: 'simNao', temExecucao: true },
+          { id: 'eletricasExec', num: '18.2', titulo: 'Execução', tipo: 'status', depende: 'eletricasProjeto' }
+        ]},
 
-        // HIDRÁULICAS: projeto SIM/NÃO + execução com 3 opções se SIM
-        { id: 'hidraulicasProjeto', num: '19.1', titulo: 'Instalações Hidráulicas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'hidraulicasExec', num: '19.2', titulo: 'Instalações Hidráulicas - Execução', tipo: 'status', depende: 'hidraulicasProjeto' }
+        // INSTALAÇÕES HIDRÁULICAS: 3 opções NO TOPO + 19.1 Projeto (SIM/NÃO) + 19.2 Execução (3 opções se 19.1=SIM)
+        { id: 'instalacoesHidraulicas', num: '19', titulo: 'Instalações Hidráulicas', tipo: 'statusComSubitens', subitens: [
+          { id: 'hidraulicasProjeto', num: '19.1', titulo: 'Projeto', tipo: 'simNao', temExecucao: true },
+          { id: 'hidraulicasExec', num: '19.2', titulo: 'Execução', tipo: 'status', depende: 'hidraulicasProjeto' }
+        ]}
       ],
       
       // ═══════════════════════════════════════════════════════════════
       // PÁGINA 13 - Ar Condicionado, Elevadores, Impermeabilização
       // ═══════════════════════════════════════════════════════════════
       page13: [
-        // AR CONDICIONADO: projeto SIM/NÃO + execução com 3 opções se SIM
-        { id: 'arCondProjeto', num: '20.1', titulo: 'Ar Condicionado - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'arCondExec', num: '20.2', titulo: 'Ar Condicionado - Execução', tipo: 'status', depende: 'arCondProjeto' },
+        // AR CONDICIONADO: 3 opções NO TOPO + 20.1 Projeto (SIM/NÃO) + 20.2 Execução (3 opções se 20.1=SIM)
+        { id: 'arCondicionado', num: '20', titulo: 'Ar Condicionado', tipo: 'statusComSubitens', subitens: [
+          { id: 'arCondProjeto', num: '20.1', titulo: 'Projeto', tipo: 'simNao', temExecucao: true },
+          { id: 'arCondExec', num: '20.2', titulo: 'Execução', tipo: 'status', depende: 'arCondProjeto' }
+        ]},
 
         // ELEVADORES: só SIM/NÃO (projeto e execução juntos)
         { id: 'elevadores', num: '21', titulo: 'Elevadores - Projeto e Execução', tipo: 'simNao' },
 
-        // IMPERMEABILIZAÇÃO: só status (não iniciada, em andamento, concluída)
+        // IMPERMEABILIZAÇÃO: só 3 opções (não iniciada, em andamento, concluída)
         { id: 'impermeabilizacao', num: '22', titulo: 'Impermeabilização', tipo: 'status' }
       ],
       
@@ -5550,6 +5551,42 @@
           <p class="error-message" id="error_${id}">Selecione o status</p>
         </div>`;
       }
+      // STATUS COM SUBITENS - 3 opções NO TOPO + subitens (Projeto + Execução)
+      else if (item.tipo === 'statusComSubitens') {
+        let subitemesHtml = '';
+        if (item.subitens && item.subitens.length > 0) {
+          item.subitens.forEach(subitem => {
+            subitemesHtml += gerarCamposSubcontratado(subitem);
+          });
+        }
+        
+        return `<div class="subcontratado-section" id="section_${id}">
+          <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+            ${item.num ? `<span style="background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${item.num}</span>` : ''}
+            ${item.titulo}
+            <span style="color: var(--error); font-size: 12px;">*</span>
+          </h3>
+          <div class="form-group">
+            <div class="radio-group" style="flex-wrap: wrap;">
+              <div class="radio-option">
+                <input type="radio" id="${id}NaoIniciada" name="${id}Status" value="nao_iniciada" onchange="limparErro('${id}')">
+                <label for="${id}NaoIniciada"><span class="radio-dot"></span>Não iniciada</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="${id}EmAndamento" name="${id}Status" value="em_andamento" onchange="limparErro('${id}')">
+                <label for="${id}EmAndamento"><span class="radio-dot"></span>Em andamento</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="${id}Concluida" name="${id}Status" value="concluida" onchange="limparErro('${id}')">
+                <label for="${id}Concluida"><span class="radio-dot"></span>Concluída</label>
+              </div>
+            </div>
+            <p class="error-message" id="error_${id}">Selecione o status</p>
+          </div>
+          ${subitemesHtml}
+        </div>
+        <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">`;
+      }
       // TERCEIRIZADAS
       else if (item.tipo === 'terceirizadas') {
         return `<div class="subcontratado-section" id="section_${id}">
@@ -5738,8 +5775,14 @@
       for (let pageNum = 9; pageNum <= 24; pageNum++) {
         const pageItems = subcontratados['page' + pageNum];
         if (pageItems) {
-          const item = pageItems.find(item => item.id === id);
-          if (item) return item;
+          for (const item of pageItems) {
+            if (item.id === id) return item;
+            // Buscar em subitens também
+            if (item.subitens && item.subitens.length > 0) {
+              const subitem = item.subitens.find(sub => sub.id === id);
+              if (subitem) return subitem;
+            }
+          }
         }
       }
       return null;
@@ -5833,7 +5876,7 @@
 
       const erros = [];
 
-      items.forEach(item => {
+      function validarItem(item) {
         const id = item.id;
 
         // Se o item depende de outro, só valida se a seção estiver visível
@@ -5849,7 +5892,7 @@
 
         if (item.tipo === 'simNao' || item.tipo === 'terceirizadas') {
           selecionado = document.querySelector(`input[name="${id}Opcao"]:checked`);
-        } else if (item.tipo === 'status') {
+        } else if (item.tipo === 'status' || item.tipo === 'statusComSubitens') {
           selecionado = document.querySelector(`input[name="${id}Status"]:checked`);
         }
 
@@ -5858,6 +5901,17 @@
           const errorMsg = document.getElementById('error_' + id);
           if (errorMsg) errorMsg.classList.add('show');
         }
+
+        // Se tem subitens, validar cada um
+        if (item.subitens && item.subitens.length > 0) {
+          item.subitens.forEach(subitem => {
+            validarItem(subitem);
+          });
+        }
+      }
+
+      items.forEach(item => {
+        validarItem(item);
       });
 
       return { valid: erros.length === 0, erros };
