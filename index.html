@@ -1806,6 +1806,62 @@
       </div>
     </div>
 
+    <!-- Page 7: Livro de Ordem -->
+    <div class="page" id="page7">
+      <div class="card">
+        <div class="card-header">
+          <h1>📚 Livro de Ordem</h1>
+          <p>Confirme se possui livro de ordem e adicione observações</p>
+        </div>
+        <div class="card-body">
+          <form id="form7" novalidate>
+            <div class="form-group">
+              <label>Livro de Ordem <span class="required">*</span></label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="livroSim" name="livroOrdem" value="Sim">
+                  <label for="livroSim">
+                    <span class="radio-dot"></span>
+                    SIM
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="livroNao" name="livroOrdem" value="Não">
+                  <label for="livroNao">
+                    <span class="radio-dot"></span>
+                    NÃO
+                  </label>
+                </div>
+              </div>
+              <p class="error-message" id="errorLivroOrdem">Selecione uma opção</p>
+            </div>
+
+            <div class="form-group">
+              <label for="observacoes">Observações</label>
+              <textarea
+                id="observacoes"
+                name="observacoes"
+                rows="4"
+                placeholder="Digite suas observações aqui (opcional)"
+              ></textarea>
+            </div>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" onclick="retornar(7)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(7)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="finalizarFormulario()">
+                ✅ Finalizar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Toast notification -->
@@ -1905,11 +1961,16 @@
         orcamento: { nome: '', cpf: '', reg: '', numCrea: '', sigla: '', numOutros: '', tipoArt: '', numArt: '', nomeArtOutros: '', numArtOutros: '' },
         residente: { nome: '', cpf: '', reg: '', numCrea: '', sigla: '', numOutros: '', tipoArt: '', numArt: '', nomeArtOutros: '', numArtOutros: '' },
         saved: false
+      },
+      page7: {
+        livroOrdem: '',
+        observacoes: '',
+        saved: false
       }
     };
 
     // Total de páginas
-    const totalPages = 6;
+    const totalPages = 7;
     let currentPage = 1;
     
     // Controle do tipo de documento (CPF ou CNPJ)
@@ -2410,6 +2471,16 @@
           document.getElementById('nomeArt' + s.prefix).value = data.nomeArtOutros || '';
           document.getElementById('valArt' + s.prefix).value = data.numArtOutros || '';
         });
+      }
+
+      // Página 7
+      if (formData.page7) {
+        // Livro de Ordem
+        if (formData.page7.livroOrdem) {
+          const radioBtn = document.querySelector(`input[name="livroOrdem"][value="${formData.page7.livroOrdem}"]`);
+          if (radioBtn) radioBtn.checked = true;
+        }
+        document.getElementById('observacoes').value = formData.page7.observacoes || '';
       }
     }
 
@@ -3558,6 +3629,22 @@
       return { isValid, avisos };
     }
 
+    function validarPagina7() {
+      let isValid = true;
+
+      // Livro de Ordem (obrigatório)
+      const livroSelecionado = document.querySelector('input[name="livroOrdem"]:checked');
+      const errorLivro = document.getElementById('errorLivroOrdem');
+      if (!livroSelecionado) {
+        errorLivro.classList.add('show');
+        isValid = false;
+      } else {
+        errorLivro.classList.remove('show');
+      }
+
+      return { isValid, avisos: [] };
+    }
+
     // =============================================
     // AÇÕES DOS BOTÕES
     // =============================================
@@ -3795,6 +3882,21 @@
             });
           }
           break;
+
+        case 7:
+          const resultado7 = validarPagina7();
+          isValid = resultado7.isValid;
+          avisos = resultado7.avisos;
+
+          if (isValid) {
+            const livroSelecionado = document.querySelector('input[name="livroOrdem"]:checked');
+            formData.page7 = {
+              livroOrdem: livroSelecionado ? livroSelecionado.value : '',
+              observacoes: document.getElementById('observacoes').value.trim(),
+              saved: true
+            };
+          }
+          break;
       }
 
       if (isValid) {
@@ -3843,6 +3945,28 @@
       if (currentPageNum > 1) {
         showPage(currentPageNum - 1);
       }
+    }
+
+    // Finalizar formulário
+    function finalizarFormulario() {
+      // Validar página atual antes de finalizar
+      const resultado7 = validarPagina7();
+      if (!resultado7.isValid) {
+        showToast('Por favor, corrija os erros antes de finalizar', 'error');
+        return;
+      }
+
+      // Salvar dados da página 7
+      salvarPagina(7);
+
+      // Mostrar mensagem de sucesso
+      showToast('✅ Formulário finalizado com sucesso!', 'success');
+
+      // Aqui você pode adicionar lógica adicional como redirecionamento
+      // ou mostrar um resumo dos dados
+      setTimeout(() => {
+        showToast('📋 Todos os dados foram salvos no cache', 'success');
+      }, 2000);
     }
 
     // Mostrar página específica
