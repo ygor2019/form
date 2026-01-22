@@ -5200,20 +5200,30 @@
     // =============================================
     // SISTEMA DE SUBCONTRATADOS DINÂMICO
     // =============================================
-
-    // Configuração de todos os subcontratados
+    
+    // ╔════════════════════════════════════════════════════════════════╗
+    // ║  CONFIGURAÇÃO DAS PÁGINAS - EDITE AQUI PARA REORGANIZAR!      ║
+    // ║  Basta mover itens entre páginas ou criar novas páginas       ║
+    // ╚════════════════════════════════════════════════════════════════╝
+    
     const subcontratados = {
-      // Page 9: Topografia, Sondagem, Terraplenagem, Fundações
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 9 - Topografia, Sondagem, Terraplenagem, Fundações
+      // ═══════════════════════════════════════════════════════════════
       page9: [
-        { id: 'topografiaProjeto', num: '2.1', titulo: 'Topografia - Projeto', tipo: 'simNao', parent: 'Topografia' },
+        { id: 'topografiaProjeto', num: '2.1', titulo: 'Topografia - Projeto', tipo: 'simNao' },
         { id: 'topografiaExec', num: '2.2', titulo: 'Topografia - Execução e Acompanhamento', tipo: 'status' },
         { id: 'sondagem', num: '3', titulo: 'Sondagem', tipo: 'status' },
         { id: 'terraplenagem', num: '4', titulo: 'Movimento de Terra/Terraplenagem', tipo: 'simNao' },
         { id: 'terraExec', num: '4.1', titulo: 'Terraplenagem - Execução', tipo: 'status' },
-        { id: 'fundacoesProjeto', num: '5.1', titulo: 'Fundações - Projeto/Assessoria/Consultoria', tipo: 'simNao', parent: 'Fundações' },
+        { id: 'fundacoesProjeto', num: '5.1', titulo: 'Fundações - Projeto/Assessoria/Consultoria', tipo: 'simNao' },
         { id: 'fundacoesExec', num: '5.2', titulo: 'Fundações - Execução', tipo: 'status' }
       ],
-      // Page 10: Estrutura e Segurança
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 10 - Estrutura e Segurança
+      // ═══════════════════════════════════════════════════════════════
       page10: [
         { id: 'calculoEstrutural', num: '6', titulo: 'Cálculo Estrutural', tipo: 'simNao' },
         { id: 'concretoUsinado', num: '7', titulo: 'Concreto Usinado', tipo: 'simNao' },
@@ -5223,7 +5233,10 @@
         { id: 'andaimesPlataformas', num: '11', titulo: 'Andaimes e Plataformas', tipo: 'simNao' },
         { id: 'protecaoQuedas', num: '12', titulo: 'Proteção contra quedas', tipo: 'simNao' }
       ],
-      // Page 11: Equipamentos
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 11 - Equipamentos
+      // ═══════════════════════════════════════════════════════════════
       page11: [
         { id: 'gruas', num: '13', titulo: 'Montagem/Desmontagem Gruas', tipo: 'simNao' },
         { id: 'guindaste', num: '14', titulo: 'Montagem/Desmontagem Guindaste', tipo: 'simNao' },
@@ -5231,105 +5244,144 @@
         { id: 'compressores', num: '16', titulo: 'Manutenção Compressores', tipo: 'simNao' },
         { id: 'residuosSolidos', num: '17', titulo: 'Coleta, transporte, destinação resíduos sólidos', tipo: 'simNao' }
       ],
-      // Page 12: Elétricas e Hidráulicas
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 12 - Instalações Elétricas e Hidráulicas
+      // ═══════════════════════════════════════════════════════════════
       page12: [
-        { id: 'eletricasProjeto', num: '18.1', titulo: 'Instalações Elétricas - Projeto', tipo: 'simNao', parent: 'Instalações Elétricas' },
+        { id: 'eletricasProjeto', num: '18.1', titulo: 'Instalações Elétricas - Projeto', tipo: 'simNao' },
         { id: 'eletricasExec', num: '18.2', titulo: 'Instalações Elétricas - Execução', tipo: 'status' },
-        { id: 'hidraulicasProjeto', num: '19.1', titulo: 'Instalações Hidráulicas - Projeto', tipo: 'simNao', parent: 'Instalações Hidráulicas' },
+        { id: 'hidraulicasProjeto', num: '19.1', titulo: 'Instalações Hidráulicas - Projeto', tipo: 'simNao' },
         { id: 'hidraulicasExec', num: '19.2', titulo: 'Instalações Hidráulicas - Execução', tipo: 'status' }
       ],
-      // Page 13: Ar Condicionado, Elevadores, Impermeabilização
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 13 - Ar Condicionado, Elevadores, Impermeabilização
+      // ═══════════════════════════════════════════════════════════════
       page13: [
-        { id: 'arCondProjeto', num: '20.1', titulo: 'Ar Condicionado - Projeto', tipo: 'simNao', parent: 'Ar Condicionado' },
+        { id: 'arCondProjeto', num: '20.1', titulo: 'Ar Condicionado - Projeto', tipo: 'simNao' },
         { id: 'arCondExec', num: '20.2', titulo: 'Ar Condicionado - Execução', tipo: 'status' },
         { id: 'elevadores', num: '21', titulo: 'Elevadores - Projeto e Execução', tipo: 'simNao' },
         { id: 'impermeabilizacao', num: '22', titulo: 'Impermeabilização', tipo: 'status' }
       ],
-      // Page 14: Gás, Incêndio, Solar, SPDA
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 14 - Gás, Incêndio, Solar, SPDA
+      // ═══════════════════════════════════════════════════════════════
       page14: [
-        { id: 'gasProjeto', num: '23.1', titulo: 'Sistemas de Gás - Projeto', tipo: 'simNao', parent: 'Sistemas de Gás' },
+        { id: 'gasProjeto', num: '23.1', titulo: 'Sistemas de Gás - Projeto', tipo: 'simNao' },
         { id: 'gasExec', num: '23.2', titulo: 'Sistemas de Gás - Execução', tipo: 'status' },
-        { id: 'incendioProjeto', num: '24.1', titulo: 'Prevenção contra Incêndio - Projeto', tipo: 'simNao', parent: 'Sistemas de Segurança e Prevenção contra Incêndio' },
+        { id: 'incendioProjeto', num: '24.1', titulo: 'Prevenção contra Incêndio - Projeto', tipo: 'simNao' },
         { id: 'incendioExec', num: '24.2', titulo: 'Prevenção contra Incêndio - Execução', tipo: 'status' },
-        { id: 'solarProjeto', num: '25.1', titulo: 'Energia Solar - Projeto', tipo: 'simNao', parent: 'Sistema de Energia Solar' },
+        { id: 'solarProjeto', num: '25.1', titulo: 'Energia Solar - Projeto', tipo: 'simNao' },
         { id: 'solarExec', num: '25.2', titulo: 'Energia Solar - Execução', tipo: 'status' },
-        { id: 'spdaProjeto', num: '26.1', titulo: 'SPDA - Projeto', tipo: 'simNao', parent: 'Sistema de Proteção contra Descargas Atmosféricas' },
+        { id: 'spdaProjeto', num: '26.1', titulo: 'SPDA - Projeto', tipo: 'simNao' },
         { id: 'spdaExec', num: '26.2', titulo: 'SPDA - Execução', tipo: 'status' }
       ],
-      // Page 15: Telefonia, Segurança Eletrônica, Central Concreto
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 15 - Telefonia, Segurança Eletrônica, Central Concreto
+      // ═══════════════════════════════════════════════════════════════
       page15: [
-        { id: 'telefoniaProjeto', num: '27.1', titulo: 'Telefonia - Projeto', tipo: 'simNao', parent: 'Telefonia' },
+        { id: 'telefoniaProjeto', num: '27.1', titulo: 'Telefonia - Projeto', tipo: 'simNao' },
         { id: 'telefoniaExec', num: '27.2', titulo: 'Telefonia - Execução', tipo: 'status' },
-        { id: 'segEletronicaProjeto', num: '28.1', titulo: 'Segurança Eletrônica - Projeto', tipo: 'simNao', parent: 'Sistemas de Segurança Eletrônica' },
+        { id: 'segEletronicaProjeto', num: '28.1', titulo: 'Segurança Eletrônica - Projeto', tipo: 'simNao' },
         { id: 'segEletronicaExec', num: '28.2', titulo: 'Segurança Eletrônica - Execução', tipo: 'status' },
-        { id: 'centralConcretoProjeto', num: '29.1', titulo: 'Central de Concreto - Projeto', tipo: 'simNao', parent: 'Central de Concreto' },
+        { id: 'centralConcretoProjeto', num: '29.1', titulo: 'Central de Concreto - Projeto', tipo: 'simNao' },
         { id: 'centralConcretoExec', num: '29.2', titulo: 'Central de Concreto - Execução', tipo: 'status' }
       ],
-      // Page 16: Elevadores de Carga, Piscinas, Água
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 16 - Elevadores de Carga, Piscinas, Água
+      // ═══════════════════════════════════════════════════════════════
       page16: [
-        { id: 'elevCargaProjeto', num: '30.1', titulo: 'Elevadores de Carga/Cremalheira - Projeto', tipo: 'simNao', parent: 'Elevadores de Carga/Cremalheira/Monta-Carga' },
+        { id: 'elevCargaProjeto', num: '30.1', titulo: 'Elevadores de Carga/Cremalheira - Projeto', tipo: 'simNao' },
         { id: 'elevCargaExec', num: '30.2', titulo: 'Elevadores de Carga - Instalação/Montagem', tipo: 'status' },
-        { id: 'piscinasProjeto', num: '31.1', titulo: 'Piscinas/Saunas - Projeto', tipo: 'simNao', parent: 'Piscinas/Saunas' },
+        { id: 'piscinasProjeto', num: '31.1', titulo: 'Piscinas/Saunas - Projeto', tipo: 'simNao' },
         { id: 'piscinasExec', num: '31.2', titulo: 'Piscinas/Saunas - Execução', tipo: 'status' },
-        { id: 'captacaoAguaProjeto', num: '32.1', titulo: 'Captação e Reuso de Água - Projeto', tipo: 'simNao', parent: 'Sistema de Captação, Limpeza e Reuso de Água' },
+        { id: 'captacaoAguaProjeto', num: '32.1', titulo: 'Captação e Reuso de Água - Projeto', tipo: 'simNao' },
         { id: 'captacaoAguaExec', num: '32.2', titulo: 'Captação e Reuso de Água - Execução', tipo: 'status' }
       ],
-      // Page 17: Fachada, Esquadrias, Poço
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 17 - Fachada, Esquadrias, Poço
+      // ═══════════════════════════════════════════════════════════════
       page17: [
         { id: 'fachada', num: '33', titulo: 'Execução de Fachada', tipo: 'simNao' },
-        { id: 'esquadriasProjeto', num: '34.1', titulo: 'Esquadrias Metálicas - Projeto', tipo: 'simNao', parent: 'Esquadrias Metálicas' },
+        { id: 'esquadriasProjeto', num: '34.1', titulo: 'Esquadrias Metálicas - Projeto', tipo: 'simNao' },
         { id: 'esquadriasExec', num: '34.2', titulo: 'Esquadrias Metálicas - Execução', tipo: 'status' },
-        { id: 'pocoProjeto', num: '35.1', titulo: 'Poço Artesiano - Projeto', tipo: 'simNao', parent: 'Poço Artesiano' },
+        { id: 'pocoProjeto', num: '35.1', titulo: 'Poço Artesiano - Projeto', tipo: 'simNao' },
         { id: 'pocoExec', num: '35.2', titulo: 'Poço Artesiano - Execução', tipo: 'status' }
       ],
-      // Page 18: Alvenaria, Revestimentos, Jardinagem
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 18 - Alvenaria, Revestimentos, Jardinagem
+      // ═══════════════════════════════════════════════════════════════
       page18: [
         { id: 'alvenaria', num: '36', titulo: 'Execução Alvenaria', tipo: 'simNao' },
         { id: 'revestimentos', num: '37', titulo: 'Execução Revestimentos', tipo: 'status' },
-        { id: 'jardinagemProjeto', num: '38.1', titulo: 'Jardinagem e Paisagismo - Projeto', tipo: 'simNao', parent: 'Jardinagem e Paisagismo' },
+        { id: 'jardinagemProjeto', num: '38.1', titulo: 'Jardinagem e Paisagismo - Projeto', tipo: 'simNao' },
         { id: 'jardinagemExec', num: '38.2', titulo: 'Jardinagem e Paisagismo - Execução', tipo: 'status' }
       ],
-      // Page 19: PGR, PCMAT, LTCAT
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 19 - PGR, PCMAT, LTCAT
+      // ═══════════════════════════════════════════════════════════════
       page19: [
-        { id: 'pgrProjeto', num: '38.1', titulo: 'PGR - Projeto/Elaboração', tipo: 'simNao', parent: 'PGR (Substituiu o PPRA)' },
+        { id: 'pgrProjeto', num: '38.1', titulo: 'PGR - Projeto/Elaboração', tipo: 'simNao' },
         { id: 'pgrImpl', num: '38.2', titulo: 'PGR - Implementação', tipo: 'status' },
         { id: 'pgrTerceirizadas', num: '39', titulo: 'PGR das Empresas Terceirizadas', tipo: 'terceirizadas' },
         { id: 'pcmat', num: '40', titulo: 'PCMAT', tipo: 'simNao' },
         { id: 'ltcat', num: '41', titulo: 'LTCAT', tipo: 'simNao' }
       ],
-      // Page 20: Drenagem, Extintores, Pintura, Instalações Gerais
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 20 - Drenagem, Extintores, Pintura, Instalações Gerais
+      // ═══════════════════════════════════════════════════════════════
       page20: [
-        { id: 'drenagemProjeto', num: '42.1', titulo: 'Drenagem - Projeto', tipo: 'simNao', parent: 'Drenagem' },
+        { id: 'drenagemProjeto', num: '42.1', titulo: 'Drenagem - Projeto', tipo: 'simNao' },
         { id: 'drenagemExec', num: '42.2', titulo: 'Drenagem - Execução', tipo: 'status' },
         { id: 'extintores', num: '43.1', titulo: 'Extintores - Recarga/Teste', tipo: 'status' },
         { id: 'pintura', num: '44', titulo: 'Execução Pintura', tipo: 'status' },
         { id: 'instalacoesGerais', num: '45', titulo: 'Instalações gerais (vasos, pias, torneiras, portas)', tipo: 'simNao' }
       ],
-      // Page 21: Pavimentação, EIA, RIMA, EIV
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 21 - Pavimentação, EIA, RIMA, EIV
+      // ═══════════════════════════════════════════════════════════════
       page21: [
-        { id: 'pavimentacaoProjeto', num: '46.1', titulo: 'Pavimentação - Projeto', tipo: 'simNao', parent: 'Pavimentação' },
+        { id: 'pavimentacaoProjeto', num: '46.1', titulo: 'Pavimentação - Projeto', tipo: 'simNao' },
         { id: 'pavimentacaoExec', num: '46.2', titulo: 'Pavimentação - Execução', tipo: 'status' },
         { id: 'eia', num: '47', titulo: 'EIA - Estudo de Impacto Ambiental', tipo: 'simNao' },
         { id: 'rima', num: '48', titulo: 'RIMA - Relatório de Impacto Ambiental', tipo: 'simNao' },
         { id: 'eiv', num: '49', titulo: 'EIV - Estudo de Impacto de Vizinhança', tipo: 'simNao' }
       ],
-      // Page 22: Rede Elétrica, Canteiro, Viabilidade
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 22 - Rede Elétrica, Canteiro, Viabilidade
+      // ═══════════════════════════════════════════════════════════════
       page22: [
-        { id: 'redeEletricaProjeto', num: '50.1', titulo: 'Rede Elétrica - Projeto', tipo: 'simNao', parent: 'Rede Elétrica' },
+        { id: 'redeEletricaProjeto', num: '50.1', titulo: 'Rede Elétrica - Projeto', tipo: 'simNao' },
         { id: 'redeEletricaExec', num: '50.2', titulo: 'Rede Elétrica - Execução', tipo: 'status' },
-        { id: 'canteiroProjeto', num: '51.1', titulo: 'Canteiro de obras/Alojamento - Projeto', tipo: 'simNao', parent: 'Canteiro de obras/Alojamento' },
+        { id: 'canteiroProjeto', num: '51.1', titulo: 'Canteiro de obras/Alojamento - Projeto', tipo: 'simNao' },
         { id: 'canteiroExec', num: '51.2', titulo: 'Canteiro de obras/Alojamento - Execução', tipo: 'status' },
         { id: 'viabilidade', num: '52', titulo: 'Estudo de Viabilidade', tipo: 'simNao' }
       ],
-      // Page 23: Sinalização, Tráfego, Controle Tecnológico
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 23 - Sinalização, Tráfego, Controle Tecnológico
+      // ═══════════════════════════════════════════════════════════════
       page23: [
-        { id: 'sinalizacaoProjeto', num: '53.1', titulo: 'Sinalização - Projeto', tipo: 'simNao', parent: 'Sinalização' },
+        { id: 'sinalizacaoProjeto', num: '53.1', titulo: 'Sinalização - Projeto', tipo: 'simNao' },
         { id: 'sinalizacaoExec', num: '53.2', titulo: 'Sinalização - Execução', tipo: 'status' },
-        { id: 'trafegoProjeto', num: '54.1', titulo: 'Projeto de Tráfego - Elaboração', tipo: 'simNao', parent: 'Projeto de Tráfego' },
+        { id: 'trafegoProjeto', num: '54.1', titulo: 'Projeto de Tráfego - Elaboração', tipo: 'simNao' },
         { id: 'trafegoExec', num: '54.2', titulo: 'Projeto de Tráfego - Execução', tipo: 'status' },
         { id: 'controleTecnologico', num: '55', titulo: 'Controle Tecnológico (Aço, Argamassa, blocos)', tipo: 'simNao' }
       ],
-      // Page 24: Outras Atividades Técnicas
+      
+      // ═══════════════════════════════════════════════════════════════
+      // PÁGINA 24 - Outras Atividades Técnicas
+      // ═══════════════════════════════════════════════════════════════
       page24: [
         { id: 'implantacao', num: '', titulo: 'Projeto de Implantação', tipo: 'simNao' },
         { id: 'obrasArte', num: '', titulo: 'Projeto de Obras de Arte Corrente (bueiros, galerias)', tipo: 'simNao' },
@@ -5343,61 +5395,70 @@
     function gerarCamposSubcontratado(item) {
       const id = item.id;
       
-      // Cabeçalho com título e opções
       let headerHtml = `<div class="subcontratado-section" id="section_${id}">
         <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
           ${item.num ? `<span style="background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${item.num}</span>` : ''}
           ${item.titulo}
+          <span style="color: var(--error); font-size: 12px;">*</span>
         </h3>`;
 
-      // Opções (SIM/NÃO ou Status)
+      // SIM/NÃO - campos só aparecem se SIM
       if (item.tipo === 'simNao') {
         headerHtml += `
         <div class="form-group">
           <div class="radio-group">
             <div class="radio-option">
-              <input type="radio" id="${id}Sim" name="${id}Opcao" value="Sim" onchange="toggleSubcontratado('${id}', true)">
+              <input type="radio" id="${id}Sim" name="${id}Opcao" value="Sim" onchange="toggleSubcontratado('${id}', 'sim')">
               <label for="${id}Sim"><span class="radio-dot"></span>SIM</label>
             </div>
             <div class="radio-option">
-              <input type="radio" id="${id}Nao" name="${id}Opcao" value="Não" onchange="toggleSubcontratado('${id}', false)">
+              <input type="radio" id="${id}Nao" name="${id}Opcao" value="Não" onchange="toggleSubcontratado('${id}', 'nao')">
               <label for="${id}Nao"><span class="radio-dot"></span>NÃO</label>
             </div>
           </div>
+          <p class="error-message" id="error_${id}">Selecione SIM ou NÃO</p>
         </div>`;
-      } else if (item.tipo === 'status') {
+      } 
+      // STATUS - campos só aparecem se "em andamento" ou "concluída"
+      else if (item.tipo === 'status') {
         headerHtml += `
         <div class="form-group">
           <div class="radio-group" style="flex-wrap: wrap;">
             <div class="radio-option">
-              <input type="radio" id="${id}NaoIniciada" name="${id}Status" value="nao_iniciada" onchange="toggleSubcontratado('${id}', true)">
+              <input type="radio" id="${id}NaoIniciada" name="${id}Status" value="nao_iniciada" onchange="toggleSubcontratado('${id}', 'nao_iniciada')">
               <label for="${id}NaoIniciada"><span class="radio-dot"></span>Não iniciada</label>
             </div>
             <div class="radio-option">
-              <input type="radio" id="${id}EmAndamento" name="${id}Status" value="em_andamento" onchange="toggleSubcontratado('${id}', true)">
+              <input type="radio" id="${id}EmAndamento" name="${id}Status" value="em_andamento" onchange="toggleSubcontratado('${id}', 'em_andamento')">
               <label for="${id}EmAndamento"><span class="radio-dot"></span>Em andamento</label>
             </div>
             <div class="radio-option">
-              <input type="radio" id="${id}Concluida" name="${id}Status" value="concluida" onchange="toggleSubcontratado('${id}', true)">
+              <input type="radio" id="${id}Concluida" name="${id}Status" value="concluida" onchange="toggleSubcontratado('${id}', 'concluida')">
               <label for="${id}Concluida"><span class="radio-dot"></span>Concluída</label>
             </div>
           </div>
+          <p class="error-message" id="error_${id}">Selecione o status</p>
         </div>`;
-      } else if (item.tipo === 'terceirizadas') {
-        // Tipo especial para PGR Terceirizadas
+      } 
+      // TERCEIRIZADAS - campos só aparecem se SIM
+      else if (item.tipo === 'terceirizadas') {
         return `<div class="subcontratado-section" id="section_${id}">
-          <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 16px;">${item.num} ${item.titulo}</h3>
+          <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 16px;">
+            ${item.num} ${item.titulo}
+            <span style="color: var(--error); font-size: 12px;">*</span>
+          </h3>
           <div class="form-group">
             <div class="radio-group">
               <div class="radio-option">
-                <input type="radio" id="${id}Sim" name="${id}Opcao" value="Sim" onchange="toggleTerceirizadas('${id}', true)">
+                <input type="radio" id="${id}Sim" name="${id}Opcao" value="Sim" onchange="toggleSubcontratado('${id}', 'sim')">
                 <label for="${id}Sim"><span class="radio-dot"></span>SIM</label>
               </div>
               <div class="radio-option">
-                <input type="radio" id="${id}Nao" name="${id}Opcao" value="Não" onchange="toggleTerceirizadas('${id}', false)">
+                <input type="radio" id="${id}Nao" name="${id}Opcao" value="Não" onchange="toggleSubcontratado('${id}', 'nao')">
                 <label for="${id}Nao"><span class="radio-dot"></span>NÃO</label>
               </div>
             </div>
+            <p class="error-message" id="error_${id}">Selecione SIM ou NÃO</p>
           </div>
           <div id="campos_${id}" style="display: none;">
             ${[1,2,3,4,5,6,7,8,9,10].map(n => `
@@ -5501,15 +5562,21 @@
       return headerHtml;
     }
 
-    // Funções auxiliares para subcontratados
-    function toggleSubcontratado(id, mostrar) {
+    // Toggle campos baseado na seleção
+    // SIM ou em_andamento/concluida = mostra campos
+    // NÃO ou nao_iniciada = esconde campos
+    function toggleSubcontratado(id, valor) {
       const campos = document.getElementById('campos_' + id);
-      if (campos) campos.style.display = mostrar ? 'block' : 'none';
-    }
-
-    function toggleTerceirizadas(id, mostrar) {
-      const campos = document.getElementById('campos_' + id);
-      if (campos) campos.style.display = mostrar ? 'block' : 'none';
+      const errorMsg = document.getElementById('error_' + id);
+      
+      // Esconder mensagem de erro ao selecionar
+      if (errorMsg) errorMsg.classList.remove('show');
+      
+      if (!campos) return;
+      
+      // Mostrar campos apenas se: SIM, em_andamento ou concluida
+      const mostrar = (valor === 'sim' || valor === 'em_andamento' || valor === 'concluida');
+      campos.style.display = mostrar ? 'block' : 'none';
     }
 
     function mostrarRegSub(id, tipo) {
@@ -5546,14 +5613,13 @@
           <div class="button-group">
             <button type="button" class="btn btn-secondary" onclick="retornar(${pageNum})">← Retornar</button>
             <button type="button" class="btn btn-save" onclick="salvarPaginaSub(${pageNum})">💾 Salvar</button>
-            <button type="button" class="btn btn-primary" onclick="avancar(${pageNum})">Avançar →</button>
+            <button type="button" class="btn btn-primary" onclick="avancarSub(${pageNum})">Avançar →</button>
           </div>
         </form>`;
 
         container.innerHTML = html;
       }
 
-      // Aplicar máscaras de CPF e CNPJ
       aplicarMascarasSubcontratados();
     }
 
@@ -5579,6 +5645,56 @@
           e.target.value = v;
         });
       });
+    }
+
+    // VALIDAR página de subcontratados - OBRIGATÓRIO selecionar opção
+    function validarPaginaSub(pageNum) {
+      const items = subcontratados['page' + pageNum];
+      if (!items) return { valid: true, erros: [] };
+
+      const erros = [];
+      
+      items.forEach(item => {
+        const id = item.id;
+        let selecionado = false;
+        
+        if (item.tipo === 'simNao' || item.tipo === 'terceirizadas') {
+          selecionado = document.querySelector(`input[name="${id}Opcao"]:checked`);
+        } else if (item.tipo === 'status') {
+          selecionado = document.querySelector(`input[name="${id}Status"]:checked`);
+        }
+        
+        if (!selecionado) {
+          erros.push(item.titulo);
+          const errorMsg = document.getElementById('error_' + id);
+          if (errorMsg) errorMsg.classList.add('show');
+        }
+      });
+
+      return { valid: erros.length === 0, erros };
+    }
+
+    // Avançar página de subcontratados COM VALIDAÇÃO
+    function avancarSub(pageNum) {
+      const validacao = validarPaginaSub(pageNum);
+      
+      if (!validacao.valid) {
+        showToast('❌ Preencha todos os campos obrigatórios', 'error');
+        // Scroll para o primeiro erro
+        const primeiroErro = document.querySelector('.error-message.show');
+        if (primeiroErro) {
+          primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+      
+      // Salvar antes de avançar
+      salvarPaginaSub(pageNum);
+      
+      // Avançar para próxima página
+      if (pageNum < totalPages) {
+        showPage(pageNum + 1);
+      }
     }
 
     // Salvar página de subcontratados
