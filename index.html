@@ -4644,11 +4644,17 @@
 
       switch(pageNum) {
         case 1:
-          // OBRIGATÓRIO: Bairro, Cidade, CEP
+          // OBRIGATÓRIO: Local da Obra, Bairro, Cidade, CEP
+          const localObra = document.getElementById('localObra').value.trim();
           const bairro = document.getElementById('bairro').value.trim();
           const cidade = document.getElementById('cidade').value.trim();
           const cep = document.getElementById('cep').value.trim();
 
+          if (!localObra) {
+            erros.push('Local da obra é obrigatório');
+            document.getElementById('localObra').classList.add('error');
+            document.getElementById('errorLocalObra').classList.add('show');
+          }
           if (!bairro) {
             erros.push('Bairro é obrigatório');
             document.getElementById('bairro').classList.add('error');
@@ -5394,7 +5400,7 @@
 
         // MOVIMENTO DE TERRA: SIM/NÃO no topo → se SIM, mostra 4.1 Execução (3 opções)
         { id: 'terraplenagem', num: '4', titulo: 'Movimento de Terra/Terraplenagem', tipo: 'simNao', temExecucao: true },
-        { id: 'terraExec', num: '4.1', titulo: 'Execução', tipo: 'status', depende: 'terraplenagem' },
+        { id: 'terraExec', num: '4.1', titulo: 'Execução', tipo: 'status', depende: 'terraplenagem', temCampos: true },
 
         // FUNDAÇÕES: MODELO B - Projeto → Execução (como Topografia)
         { id: 'fundacoesProjeto', num: '5.1', titulo: 'Fundações - Projeto/Assessoria/Consultoria', tipo: 'simNao', temExecucao: true },
@@ -5661,7 +5667,7 @@
             <p class="error-message" id="error_${id}">Selecione o status</p>
           </div>
           <div id="campos_${id}">
-            ${gerarCamposProfissional(id)}
+            ${item.temCampos ? gerarCamposProfissional(id) : ''}
           </div>
         </div>
         <hr class="separador_${id}" style="border: none; border-top: 1px solid var(--border); margin: 20px 0; display: none;">`;
@@ -5783,11 +5789,14 @@
         <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">`;
       }
 
-      // Campos VISÍVEIS de início (não escondidos!)
-      headerHtml += `
+      // Campos VISÍVEIS de início (não escondidos!) - só se NÃO tiver execução dependente
+      if (!item.temExecucao) {
+        headerHtml += `
         <div id="campos_${id}">
           ${gerarCamposProfissional(id)}
-        </div>
+        </div>`;
+      }
+      headerHtml += `
       </div>
       <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">`;
 
