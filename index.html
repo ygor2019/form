@@ -4205,9 +4205,11 @@
 
       // Salvar no cache
       if (saveToCache()) {
-        showToast('✓ Dados salvos com sucesso!', 'success');
+        console.log('Salvando dados com sucesso');
+        showToast('✓ Dados salvos com sucesso!', 'success', 4000);
       } else {
-        showToast('Dados salvos na memória (cache indisponível)', 'success');
+        console.log('Salvando na memória (cache indisponível)');
+        showToast('Dados salvos na memória (cache indisponível)', 'success', 4000);
       }
 
       return true;
@@ -4349,9 +4351,12 @@
 
     function confirmarSalvamento() {
       fecharModal();
-      if (paginaParaSalvar !== null) {
-        salvarPaginaForcado(paginaParaSalvar);
-      }
+      // Pequeno delay para garantir que o modal fechou antes de mostrar o toast
+      setTimeout(() => {
+        if (paginaParaSalvar !== null) {
+          salvarPaginaForcado(paginaParaSalvar);
+        }
+      }, 300);
     }
 
     // Verificar campos vazios de cada página (retorna lista de campos não preenchidos)
