@@ -2693,6 +2693,18 @@
         numeroConselhoEmpresaGer: '',
         placaGerenciamento: '',
         saved: false
+      },
+      page25: {
+        nomeDeclarante: '',
+        qualificacaoDeclarante: '',
+        localDataDeclarante: '',
+        agenteFiscal1: '',
+        registroAgente1: '',
+        dataFiscalizacao: '',
+        enderecoContato: '',
+        emailContato: '',
+        telefonesContato: '',
+        saved: false
       }
     };
 
@@ -3308,6 +3320,19 @@
           const radioBtn = document.querySelector(`input[name="placaGerenciamento"][value="${formData.page8.placaGerenciamento}"]`);
           if (radioBtn) radioBtn.checked = true;
         }
+      }
+
+      // Page 25
+      if (formData.page25) {
+        document.getElementById('nomeDeclarante').value = formData.page25.nomeDeclarante || '';
+        document.getElementById('qualificacaoDeclarante').value = formData.page25.qualificacaoDeclarante || '';
+        document.getElementById('localDataDeclarante').value = formData.page25.localDataDeclarante || '';
+        document.getElementById('agenteFiscal1').value = formData.page25.agenteFiscal1 || '';
+        document.getElementById('registroAgente1').value = formData.page25.registroAgente1 || '';
+        document.getElementById('dataFiscalizacao').value = formData.page25.dataFiscalizacao || '';
+        document.getElementById('enderecoContato').value = formData.page25.enderecoContato || '';
+        document.getElementById('emailContato').value = formData.page25.emailContato || '';
+        document.getElementById('telefonesContato').value = formData.page25.telefonesContato || '';
       }
     }
 
@@ -4855,6 +4880,18 @@
             }
           }
           break;
+
+        case 25:
+          // Validar e-mail se preenchido
+          const emailContato = document.getElementById('emailContato').value.trim();
+          if (emailContato) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailContato)) {
+              erros.push('E-mail inválido');
+              document.getElementById('emailContato').classList.add('error');
+            }
+          }
+          break;
       }
 
       return { valid: erros.length === 0, erros: erros };
@@ -5108,6 +5145,21 @@
         case 8:
           salvarDadosGerenciamento(true);
           break;
+
+        case 25:
+          formData.page25 = {
+            nomeDeclarante: document.getElementById('nomeDeclarante').value.trim(),
+            qualificacaoDeclarante: document.getElementById('qualificacaoDeclarante').value.trim(),
+            localDataDeclarante: document.getElementById('localDataDeclarante').value.trim(),
+            agenteFiscal1: document.getElementById('agenteFiscal1').value.trim(),
+            registroAgente1: document.getElementById('registroAgente1').value.trim(),
+            dataFiscalizacao: document.getElementById('dataFiscalizacao').value.trim(),
+            enderecoContato: document.getElementById('enderecoContato').value.trim(),
+            emailContato: document.getElementById('emailContato').value.trim(),
+            telefonesContato: document.getElementById('telefonesContato').value.trim(),
+            saved: true
+          };
+          break;
       }
 
       // Salvar no cache
@@ -5332,6 +5384,22 @@
         case 7:
           if (!document.querySelector('input[name="livroOrdem"]:checked')) camposVazios.push('Livro de Ordem');
           break;
+
+        case 8:
+          if (!document.querySelector('input[name="houveGerenciamento"]:checked')) camposVazios.push('Houve Gerenciamento?');
+          break;
+
+        case 25:
+          if (!document.getElementById('nomeDeclarante').value.trim()) camposVazios.push('Nome do Declarante');
+          if (!document.getElementById('qualificacaoDeclarante').value.trim()) camposVazios.push('Qualificação e Cargo');
+          if (!document.getElementById('localDataDeclarante').value.trim()) camposVazios.push('Local e Data');
+          if (!document.getElementById('agenteFiscal1').value.trim()) camposVazios.push('Agente Fiscal');
+          if (!document.getElementById('registroAgente1').value.trim()) camposVazios.push('Registro do Agente');
+          if (!document.getElementById('dataFiscalizacao').value.trim()) camposVazios.push('Data da Fiscalização');
+          if (!document.getElementById('enderecoContato').value.trim()) camposVazios.push('Endereço de Contato');
+          if (!document.getElementById('emailContato').value.trim()) camposVazios.push('E-mail de Contato');
+          if (!document.getElementById('telefonesContato').value.trim()) camposVazios.push('Telefones de Contato');
+          break;
       }
 
       return camposVazios;
@@ -5404,7 +5472,7 @@
 
         // FUNDAÇÕES: MODELO B - Projeto → Execução (como Topografia)
         { id: 'fundacoesProjeto', num: '5.1', titulo: 'Fundações - Projeto/Assessoria/Consultoria', tipo: 'simNao', temExecucao: true },
-        { id: 'fundacoesExec', num: '5.2', titulo: 'Fundações - Execução', tipo: 'status', depende: 'fundacoesProjeto' }
+        { id: 'fundacoesExec', num: '5.2', titulo: 'Fundações - Execução', tipo: 'status', depende: 'fundacoesProjeto', temCampos: true }
       ],
       
       // ═══════════════════════════════════════════════════════════════
