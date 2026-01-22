@@ -1446,7 +1446,7 @@
               </div>
 
               <!-- Profissional do Projeto -->
-              <fieldset id="fieldsetProjetoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
+              <fieldset id="fieldsetProjetoDemolicao" disabled style="border: none; padding: 0; margin: 0; display: none;">
                 <div class="form-group" style="position: relative;">
                   <label for="profissionalProjetoDemol">Profissional</label>
                   <input 
@@ -1573,7 +1573,7 @@
               </div>
 
               <!-- Profissional da Execução -->
-              <fieldset id="fieldsetExecucaoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
+              <fieldset id="fieldsetExecucaoDemolicao" disabled style="border: none; padding: 0; margin: 0; display: none;">
                 <div class="form-group" style="position: relative;">
                   <label for="profissionalExecDemol">Profissional</label>
                   <input 
@@ -3697,27 +3697,13 @@
     function toggleProjetoDemolicao() {
       const projeto = document.querySelector('input[name="projetoDemolicao"]:checked');
       const fieldset = document.getElementById('fieldsetProjetoDemolicao');
-
+      
       if (projeto && projeto.value === 'Sim') {
         fieldset.disabled = false;
-        // Limpar erros quando habilita
-        document.getElementById('errorProfissionalProjetoDemol').classList.remove('show');
-        document.getElementById('errorCpfProjetoDemol').classList.remove('show');
+        fieldset.style.display = 'block';
       } else {
         fieldset.disabled = true;
-        // Limpar campos quando desabilita
-        document.getElementById('profissionalProjetoDemol').value = '';
-        document.getElementById('cpfProjetoDemol').value = '';
-        document.querySelectorAll('input[name="tipoRegistroProjetoDemol"]').forEach(r => r.checked = false);
-        document.getElementById('numeroCreaProjetoDemol').value = '';
-        document.getElementById('siglaConselhoProjetoDemol').value = '';
-        document.getElementById('numeroConselhoProjetoDemol').value = '';
-        document.querySelectorAll('input[name="tipoArtProjetoDemol"]').forEach(r => r.checked = false);
-        document.getElementById('artNumeroProjetoDemol').value = '';
-        document.getElementById('nomeOutrosArtProjetoDemol').value = '';
-        document.getElementById('numeroOutrosArtProjetoDemol').value = '';
-      }
-        fieldset.disabled = true;
+        fieldset.style.display = 'none';
       }
     }
 
@@ -3728,8 +3714,10 @@
       
       if (execucao && execucao.value === 'Sim') {
         fieldset.disabled = false;
+        fieldset.style.display = 'block';
       } else {
         fieldset.disabled = true;
+        fieldset.style.display = 'none';
       }
     }
 
@@ -5478,7 +5466,7 @@
     function gerarCamposSubcontratado(item) {
       const id = item.id;
 
-      // Item que depende de outro (execução) - seção sempre visível se projeto = SIM
+      // Item que depende de outro (execução) - seção inteira escondida até projeto = SIM
       if (item.depende) {
         return `<div class="subcontratado-section" id="section_${id}" style="display: none;">
           <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
@@ -5489,15 +5477,15 @@
           <div class="form-group">
             <div class="radio-group" style="flex-wrap: wrap;">
               <div class="radio-option">
-                <input type="radio" id="${id}NaoIniciada" name="${id}Status" value="nao_iniciada" onchange="limparErro('${id}')">
+                <input type="radio" id="${id}NaoIniciada" name="${id}Status" value="nao_iniciada" onchange="toggleCamposExecucao('${id}')">
                 <label for="${id}NaoIniciada"><span class="radio-dot"></span>Não iniciada</label>
               </div>
               <div class="radio-option">
-                <input type="radio" id="${id}EmAndamento" name="${id}Status" value="em_andamento" onchange="limparErro('${id}')">
+                <input type="radio" id="${id}EmAndamento" name="${id}Status" value="em_andamento" onchange="toggleCamposExecucao('${id}')">
                 <label for="${id}EmAndamento"><span class="radio-dot"></span>Em andamento</label>
               </div>
               <div class="radio-option">
-                <input type="radio" id="${id}Concluida" name="${id}Status" value="concluida" onchange="limparErro('${id}')">
+                <input type="radio" id="${id}Concluida" name="${id}Status" value="concluida" onchange="toggleCamposExecucao('${id}')">
                 <label for="${id}Concluida"><span class="radio-dot"></span>Concluída</label>
               </div>
             </div>
@@ -5729,7 +5717,7 @@
     function toggleCamposExecucao(id) {
       const errorMsg = document.getElementById('error_' + id);
       if (errorMsg) errorMsg.classList.remove('show');
-      // Campos sempre ficam visíveis, apenas limpa erro
+      // Campos já estão visíveis, não precisa fazer nada
     }
 
     // Limpar erro
@@ -5840,34 +5828,6 @@
 
       items.forEach(item => {
         const id = item.id;
-
-        // Para página 5 (demolição), validação especial
-        if (pageNum === 5) {
-          // Sempre validar "houve demolição"
-          const houveDemolicao = document.querySelector('input[name="houveDemolicao"]:checked');
-          if (!houveDemolicao) {
-            erros.push('Houve Demolição?');
-            document.getElementById('errorHouveDemolicao').classList.add('show');
-          } else if (houveDemolicao.value === 'Sim') {
-            // Se houve demolição, validar projeto
-            const projetoDemolicao = document.querySelector('input[name="projetoDemolicao"]:checked');
-            if (!projetoDemolicao) {
-              erros.push('Projeto/Plano de Demolição?');
-              // Criar erro temporário para projeto
-              let errorDiv = document.createElement('p');
-              errorDiv.className = 'error-message show';
-              errorDiv.textContent = 'Selecione SIM ou NÃO';
-              errorDiv.id = 'errorProjetoDemolicao';
-
-              // Inserir após o campo de projeto
-              const projetoFieldset = document.querySelector('input[name="projetoDemolicao"]').closest('.form-group');
-              if (projetoFieldset && !document.getElementById('errorProjetoDemolicao')) {
-                projetoFieldset.appendChild(errorDiv);
-              }
-            }
-          }
-          return; // Página 5 tem validação própria
-        }
 
         // Se o item depende de outro, só valida se a seção estiver visível
         if (item.depende) {
