@@ -4669,18 +4669,51 @@
 
       switch(pageNum) {
         case 1:
-          // Validar APENAS FORMATO de campos PREENCHIDOS (não verifica se estão vazios)
-          const cep = document.getElementById('cep').value.trim();
+          const localObra = document.getElementById('localObra').value.trim();
+          const bairro = document.getElementById('bairro').value.trim();
           const cidade = document.getElementById('cidade').value.trim();
+          const cep = document.getElementById('cep').value.trim();
           
-          // CEP: validar formato se preenchido
+          // 1. PRIMEIRO: Validar FORMATO de campos PREENCHIDOS (CEP inválido)
           if (cep) {
             const resultadoCep = validarCepSaoPaulo(cep, cidade);
             if (!resultadoCep.valid) {
               erros.push('CEP inválido');
               document.getElementById('cep').classList.add('error');
               document.getElementById('errorCep').classList.add('show');
+              break; // Para aqui, não verifica campos vazios
             }
+          }
+          
+          // 2. SEGUNDO: Verificar se campos OBRIGATÓRIOS estão vazios (só chega aqui se não tiver erro de formato)
+          if (!localObra) {
+            erros.push('Há pelo menos um campo obrigatório não preenchido');
+            document.getElementById('localObra').classList.add('error');
+            document.getElementById('errorLocalObra').classList.add('show');
+          }
+          if (!bairro && erros.length === 0) {
+            erros.push('Há pelo menos um campo obrigatório não preenchido');
+            document.getElementById('bairro').classList.add('error');
+            document.getElementById('errorBairro').classList.add('show');
+          } else if (!bairro) {
+            document.getElementById('bairro').classList.add('error');
+            document.getElementById('errorBairro').classList.add('show');
+          }
+          if (!cidade && erros.length === 0) {
+            erros.push('Há pelo menos um campo obrigatório não preenchido');
+            document.getElementById('cidade').classList.add('error');
+            document.getElementById('errorCidade').classList.add('show');
+          } else if (!cidade) {
+            document.getElementById('cidade').classList.add('error');
+            document.getElementById('errorCidade').classList.add('show');
+          }
+          if (!cep && erros.length === 0) {
+            erros.push('Há pelo menos um campo obrigatório não preenchido');
+            document.getElementById('cep').classList.add('error');
+            document.getElementById('errorCep').classList.add('show');
+          } else if (!cep) {
+            document.getElementById('cep').classList.add('error');
+            document.getElementById('errorCep').classList.add('show');
           }
           break;
 
@@ -5309,10 +5342,8 @@
 
       switch(pageNum) {
         case 1:
-          if (!document.getElementById('localObra').value.trim()) camposVazios.push('Local da Obra');
-          if (!document.getElementById('bairro').value.trim()) camposVazios.push('Bairro');
-          if (!document.getElementById('cidade').value.trim()) camposVazios.push('Cidade');
-          if (!document.getElementById('cep').value.trim()) camposVazios.push('CEP');
+          // TODOS são obrigatórios - retorna array vazio (não tem não obrigatórios)
+          // A validação de obrigatórios da página 1 é feita em validarFormatoPagina
           break;
 
         case 2:
