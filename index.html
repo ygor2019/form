@@ -4650,11 +4650,6 @@
           const cidade = document.getElementById('cidade').value.trim();
           const cep = document.getElementById('cep').value.trim();
 
-          if (!localObra) {
-            erros.push('Local da obra é obrigatório');
-            document.getElementById('localObra').classList.add('error');
-            document.getElementById('errorLocalObra').classList.add('show');
-          }
           if (!bairro) {
             erros.push('Bairro é obrigatório');
             document.getElementById('bairro').classList.add('error');
@@ -5391,9 +5386,9 @@
       // PÁGINA 9 - Topografia, Sondagem, Terraplenagem, Fundações
       // ═══════════════════════════════════════════════════════════════
       page9: [
-        // TOPOGRAFIA: 2.1 Projeto SIM/NÃO → se SIM, mostra 2.2 Execução (3 opções)
+        // TOPOGRAFIA: 2.1 Projeto SIM/NÃO → se SIM, mostra campos + 2.2 Execução (3 opções)
         { id: 'topografiaProjeto', num: '2.1', titulo: 'Topografia - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'topografiaExec', num: '2.2', titulo: 'Topografia - Execução e Acompanhamento', tipo: 'status', depende: 'topografiaProjeto' },
+        { id: 'topografiaExec', num: '2.2', titulo: 'Topografia - Execução e Acompanhamento', tipo: 'status', depende: 'topografiaProjeto', temCampos: true },
 
         // SONDAGEM: só 3 opções (não iniciada, em andamento, concluída)
         { id: 'sondagem', num: '3', titulo: 'Sondagem', tipo: 'status' },
@@ -5789,8 +5784,8 @@
         <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">`;
       }
 
-      // Campos VISÍVEIS de início (não escondidos!) - só se NÃO tiver execução dependente
-      if (!item.temExecucao) {
+      // Campos VISÍVEIS de início (não escondidos!) - só se não for movimento de terra
+      if (id !== 'terraplenagem') {
         headerHtml += `
         <div id="campos_${id}">
           ${gerarCamposProfissional(id)}
