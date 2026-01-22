@@ -1939,6 +1939,8 @@
 
     <!-- Page 7: Livro de Ordem -->
     <div class="page" id="page7">
+      <!-- Versão do Sistema -->
+      <div style="text-align: center; font-size: 10px; color: #ccc; margin-bottom: 5px;">v1.1.0 - P8 Ativa</div>
       <div class="card">
         <div class="card-header">
           <h1>📚 Livro de Ordem</h1>
@@ -4727,11 +4729,10 @@
       
       if (camposVazios.length > 0) {
         // Tem campos vazios - mostrar modal de confirmação
-        // Modificamos temporariamente o comportamento para finalizar ao invés de só salvar
         paginaParaSalvar = pageNum;
         const lista = document.getElementById('listaCamposFaltantes');
         lista.textContent = camposVazios.join(', ');
-        
+
         // Trocar o botão de confirmar para finalizar
         document.querySelector('.modal-btn-confirmar').onclick = function() {
           fecharModal();
