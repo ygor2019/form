@@ -5354,6 +5354,8 @@
           if (!document.querySelector('input[name="tipoRegistro"]:checked')) camposVazios.push('Tipo de Registro');
           if (!document.getElementById('titulo').value.trim()) camposVazios.push('Título');
           if (!document.querySelector('input[name="tipoArtRrt"]:checked')) camposVazios.push('ART/RRT');
+          if (!document.getElementById('empresa').value.trim()) camposVazios.push('Empresa');
+          if (!document.getElementById('empresaRegistro').value.trim()) camposVazios.push('Registro da Empresa');
           break;
 
         case 4:
@@ -5362,6 +5364,8 @@
           if (!document.getElementById('cpfRT').value.trim()) camposVazios.push('CPF');
           if (!document.querySelector('input[name="tipoRegistroRT"]:checked')) camposVazios.push('Tipo de Registro');
           if (!document.querySelector('input[name="tipoArtOutrosRT"]:checked')) camposVazios.push('ART/Outros');
+          if (!document.getElementById('empresaRT').value.trim()) camposVazios.push('Empresa');
+          if (!document.getElementById('empresaRegistroRT').value.trim()) camposVazios.push('Registro da Empresa');
           break;
 
         case 5:
