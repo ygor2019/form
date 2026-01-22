@@ -1984,8 +1984,8 @@
               <button type="button" class="btn btn-save" onclick="salvarPagina(7)">
                 💾 Salvar
               </button>
-              <button type="button" class="btn btn-primary" onclick="finalizarFormulario()">
-                ✅ Finalizar
+              <button type="button" class="btn btn-primary" onclick="avancar(7)">
+                Avançar →
               </button>
             </div>
           </form>
@@ -2893,6 +2893,66 @@
         }
         document.getElementById('observacoes').value = formData.page7.observacoes || '';
       }
+
+      // Carregar dados da página 8
+      if (formData.page8) {
+        // Gerenciamento
+        if (formData.page8.houveGerenciamento) {
+          const radioBtn = document.querySelector(`input[name="houveGerenciamento"][value="${formData.page8.houveGerenciamento}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            toggleGerenciamento(); // Mostrar campos se "Sim"
+          }
+        }
+
+        document.getElementById('profissionalGerenciamento').value = formData.page8.profissionalGerenciamento || '';
+        document.getElementById('cpfGerenciamento').value = formData.page8.cpfGerenciamento || '';
+
+        // Tipo de registro profissional
+        if (formData.page8.tipoRegistroGerenciamento) {
+          const radioBtn = document.querySelector(`input[name="tipoRegistroGerenciamento"][value="${formData.page8.tipoRegistroGerenciamento}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoRegistroGer(formData.page8.tipoRegistroGerenciamento === 'CREA' ? 'crea' : 'outros');
+          }
+        }
+        document.getElementById('numeroCreaGerenciamento').value = formData.page8.numeroCreaGerenciamento || '';
+        document.getElementById('siglaConselhoGerenciamento').value = formData.page8.siglaConselhoGerenciamento || '';
+        document.getElementById('numeroConselhoGerenciamento').value = formData.page8.numeroConselhoGerenciamento || '';
+
+        // Tipo ART
+        if (formData.page8.tipoArtGerenciamento) {
+          const radioBtn = document.querySelector(`input[name="tipoArtGerenciamento"][value="${formData.page8.tipoArtGerenciamento}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoArtGer(formData.page8.tipoArtGerenciamento === 'ART' ? 'art' : 'outros');
+          }
+        }
+        document.getElementById('artNumeroGerenciamento').value = formData.page8.artNumeroGerenciamento || '';
+        document.getElementById('nomeOutrosArtGerenciamento').value = formData.page8.nomeOutrosArtGerenciamento || '';
+        document.getElementById('numeroOutrosArtGerenciamento').value = formData.page8.numeroOutrosArtGerenciamento || '';
+
+        document.getElementById('empresaGerenciamento').value = formData.page8.empresaGerenciamento || '';
+        document.getElementById('cnpjGerenciamento').value = formData.page8.cnpjGerenciamento || '';
+
+        // Registro empresa
+        if (formData.page8.tipoRegistroEmpresaGer) {
+          const radioBtn = document.querySelector(`input[name="tipoRegistroEmpresaGer"][value="${formData.page8.tipoRegistroEmpresaGer}"]`);
+          if (radioBtn) {
+            radioBtn.checked = true;
+            mostrarCampoRegistroEmpresaGer(formData.page8.tipoRegistroEmpresaGer === 'CREA' ? 'crea' : 'outros');
+          }
+        }
+        document.getElementById('numeroCreaEmpresaGer').value = formData.page8.numeroCreaEmpresaGer || '';
+        document.getElementById('siglaConselhoEmpresaGer').value = formData.page8.siglaConselhoEmpresaGer || '';
+        document.getElementById('numeroConselhoEmpresaGer').value = formData.page8.numeroConselhoEmpresaGer || '';
+
+        // Placa
+        if (formData.page8.placaGerenciamento) {
+          const radioBtn = document.querySelector(`input[name="placaGerenciamento"][value="${formData.page8.placaGerenciamento}"]`);
+          if (radioBtn) radioBtn.checked = true;
+        }
+      }
     }
 
     // =============================================
@@ -3502,6 +3562,79 @@
         document.getElementById('campoOutrosEmpresaGer').classList.add('show');
       }
     }
+
+    // =============================================
+    // SALVAR DADOS DA PÁGINA 8 - GERENCIAMENTO
+    // =============================================
+
+    function salvarDadosGerenciamento(salvarNoCache = false) {
+      const houveGerenciamento = document.querySelector('input[name="houveGerenciamento"]:checked');
+      const tipoRegistroGerenciamento = document.querySelector('input[name="tipoRegistroGerenciamento"]:checked');
+      const tipoArtGerenciamento = document.querySelector('input[name="tipoArtGerenciamento"]:checked');
+      const tipoRegistroEmpresaGer = document.querySelector('input[name="tipoRegistroEmpresaGer"]:checked');
+      const placaGerenciamento = document.querySelector('input[name="placaGerenciamento"]:checked');
+
+      formData.page8 = {
+        houveGerenciamento: houveGerenciamento ? houveGerenciamento.value : '',
+        profissionalGerenciamento: document.getElementById('profissionalGerenciamento').value.trim(),
+        cpfGerenciamento: document.getElementById('cpfGerenciamento').value.trim(),
+        tipoRegistroGerenciamento: tipoRegistroGerenciamento ? tipoRegistroGerenciamento.value : '',
+        numeroCreaGerenciamento: document.getElementById('numeroCreaGerenciamento').value.trim(),
+        siglaConselhoGerenciamento: document.getElementById('siglaConselhoGerenciamento').value.trim(),
+        numeroConselhoGerenciamento: document.getElementById('numeroConselhoGerenciamento').value.trim(),
+        tipoArtGerenciamento: tipoArtGerenciamento ? tipoArtGerenciamento.value : '',
+        artNumeroGerenciamento: document.getElementById('artNumeroGerenciamento').value.trim(),
+        nomeOutrosArtGerenciamento: document.getElementById('nomeOutrosArtGerenciamento').value.trim(),
+        numeroOutrosArtGerenciamento: document.getElementById('numeroOutrosArtGerenciamento').value.trim(),
+        empresaGerenciamento: document.getElementById('empresaGerenciamento').value.trim(),
+        cnpjGerenciamento: document.getElementById('cnpjGerenciamento').value.trim(),
+        tipoRegistroEmpresaGer: tipoRegistroEmpresaGer ? tipoRegistroEmpresaGer.value : '',
+        numeroCreaEmpresaGer: document.getElementById('numeroCreaEmpresaGer').value.trim(),
+        siglaConselhoEmpresaGer: document.getElementById('siglaConselhoEmpresaGer').value.trim(),
+        numeroConselhoEmpresaGer: document.getElementById('numeroConselhoEmpresaGer').value.trim(),
+        placaGerenciamento: placaGerenciamento ? placaGerenciamento.value : '',
+        saved: true
+      };
+
+      // Adicionar profissional à lista de autocomplete (se preenchido)
+      const nomeProfissional = document.getElementById('profissionalGerenciamento').value.trim();
+      if (nomeProfissional) {
+        const cpfProf = document.getElementById('cpfGerenciamento').value.trim();
+        const creaProf = tipoRegistroGerenciamento?.value === 'CREA' ? document.getElementById('numeroCreaGerenciamento').value.trim() : '';
+        adicionarProfissional(nomeProfissional, cpfProf, creaProf);
+      }
+
+      if (salvarNoCache) {
+        saveToCache();
+      }
+    }
+
+    // =============================================
+    // EVENT LISTENERS DA PÁGINA 8 - GERENCIAMENTO
+    // =============================================
+
+    // Formatar CPF do profissional de gerenciamento
+    document.getElementById('cpfGerenciamento').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 3) value = value.substring(0,3) + '.' + value.substring(3);
+      if (value.length > 7) value = value.substring(0,7) + '.' + value.substring(7);
+      if (value.length > 11) value = value.substring(0,11) + '-' + value.substring(11,13);
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCpfGerenciamento').classList.remove('show');
+    });
+
+    // Formatar CNPJ da empresa de gerenciamento
+    document.getElementById('cnpjGerenciamento').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 2) value = value.substring(0,2) + '.' + value.substring(2);
+      if (value.length > 6) value = value.substring(0,6) + '.' + value.substring(6);
+      if (value.length > 10) value = value.substring(0,10) + '/' + value.substring(10);
+      if (value.length > 15) value = value.substring(0,15) + '-' + value.substring(15,17);
+      e.target.value = value;
+      e.target.classList.remove('error');
+      document.getElementById('errorCnpjGerenciamento').classList.remove('show');
+    });
 
     // Formatar CPFs - Projeto Demolição
     document.getElementById('cpfProjetoDemol').addEventListener('input', function(e) {
@@ -4529,6 +4662,10 @@
             saved: true
           };
           break;
+
+        case 8:
+          salvarDadosGerenciamento(true);
+          break;
       }
 
       // Salvar no cache
@@ -4572,12 +4709,12 @@
     }
 
     // Finalizar formulário
-    function finalizarFormulario() {
+    function finalizarFormulario(pageNum = 7) {
       // Limpar erros anteriores
-      limparErrosPagina(7);
+      limparErrosPagina(pageNum);
 
       // 1. Primeiro validar o FORMATO dos campos preenchidos
-      const validacaoFormato = validarFormatoPagina(7);
+      const validacaoFormato = validarFormatoPagina(pageNum);
       
       if (!validacaoFormato.valid) {
         // Formato inválido - mostrar erro e não finalizar
@@ -4585,8 +4722,8 @@
         return;
       }
 
-      // 2. Verificar campos vazios da página 7
-      const camposVazios = verificarCamposVazios(7);
+      // 2. Verificar campos vazios da página atual
+      const camposVazios = verificarCamposVazios(pageNum);
       
       if (camposVazios.length > 0) {
         // Tem campos vazios - mostrar modal de confirmação
@@ -4610,14 +4747,19 @@
       }
     }
 
-    function finalizarFormularioForcado() {
-      // Salvar dados da página 7 diretamente
-      const livroSelecionado = document.querySelector('input[name="livroOrdem"]:checked');
-      formData.page7 = {
-        livroOrdem: livroSelecionado ? livroSelecionado.value : '',
-        observacoes: document.getElementById('observacoes').value.trim(),
-        saved: true
-      };
+    function finalizarFormularioForcado(pageNum = 7) {
+      // Salvar dados da página atual diretamente
+      if (pageNum === 7) {
+        const livroSelecionado = document.querySelector('input[name="livroOrdem"]:checked');
+        formData.page7 = {
+          livroOrdem: livroSelecionado ? livroSelecionado.value : '',
+          observacoes: document.getElementById('observacoes').value.trim(),
+          saved: true
+        };
+      } else if (pageNum === 8) {
+        // Salvar dados da página 8
+        salvarDadosGerenciamento(true);
+      }
       saveToCache();
 
       // Mostrar mensagem de sucesso
