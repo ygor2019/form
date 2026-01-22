@@ -5825,34 +5825,45 @@
       if (!items) return { valid: true, erros: [] };
 
       const erros = [];
+      console.log('🔍 Validando página', pageNum, 'com', items.length, 'itens');
 
       items.forEach(item => {
         const id = item.id;
+        console.log('🔍 Validando item:', item.titulo, 'tipo:', item.tipo, 'depende:', item.depende);
 
         // Se o item depende de outro, só valida se a seção estiver visível
         if (item.depende) {
           const secao = document.getElementById('section_' + id);
+          console.log('🔍 Seção', id, 'display:', secao ? secao.style.display : 'não encontrada');
           if (secao && secao.style.display === 'none') {
+            console.log('🔍 Item', item.titulo, 'dependente não visível - pulando validação');
             // Seção escondida (projeto = NÃO), não precisa validar
             return;
           }
         }
 
         let selecionado = false;
+        let selector = '';
 
         if (item.tipo === 'simNao' || item.tipo === 'terceirizadas') {
-          selecionado = document.querySelector(`input[name="${id}Opcao"]:checked`);
+          selector = `input[name="${id}Opcao"]:checked`;
+          selecionado = document.querySelector(selector);
         } else if (item.tipo === 'status') {
-          selecionado = document.querySelector(`input[name="${id}Status"]:checked`);
+          selector = `input[name="${id}Status"]:checked`;
+          selecionado = document.querySelector(selector);
         }
 
+        console.log('🔍 Procurando:', selector, 'encontrou:', selecionado ? 'SIM' : 'NÃO');
+
         if (!selecionado) {
+          console.log('❌ Erro de validação para:', item.titulo);
           erros.push(item.titulo);
           const errorMsg = document.getElementById('error_' + id);
           if (errorMsg) errorMsg.classList.add('show');
         }
       });
 
+      console.log('🔍 Resultado validação:', erros.length === 0 ? 'PASSOU' : 'FALHOU', 'erros:', erros);
       return { valid: erros.length === 0, erros };
     }
 
@@ -5879,8 +5890,22 @@
       }
     }
 
-    // Salvar página de subcontratados
+    // Salvar página de subcontratados COM VALIDAÇÃO
     function salvarPaginaSub(pageNum) {
+      // VALIDAÇÃO obrigatória antes de salvar
+      const validacao = validarPaginaSub(pageNum);
+
+      if (!validacao.valid) {
+        console.log('❌ Validação falhou:', validacao.erros); // Debug
+        showToast('❌ Preencha todos os campos obrigatórios antes de salvar', 'error');
+        // Scroll para o primeiro erro
+        const primeiroErro = document.querySelector('.error-message.show');
+        if (primeiroErro) {
+          primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return; // Não salva se não passou na validação
+      }
+
       const items = subcontratados['page' + pageNum];
       if (!items) return;
 
