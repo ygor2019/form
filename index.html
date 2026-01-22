@@ -6585,10 +6585,8 @@
         }
       }
 
-      // Salvar dados da página atual usando a função completa (incluindo validação de terceirizadas)
-      salvarPaginaSub(pageNum);
-
-      // Avançar para próxima página
+      // Apenas avançar - SEM validação, SEM popup
+      // Validação só acontece no botão SALVAR
       if (pageNum < totalPages) {
         showPage(pageNum + 1);
       }
