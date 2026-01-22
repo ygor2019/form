@@ -4644,30 +4644,36 @@
 
       switch(pageNum) {
         case 1:
-          // OBRIGATÓRIO: Bairro, Cidade, CEP
+          // OBRIGATÓRIO: Local da Obra, Bairro, Cidade, CEP
+          const localObra = document.getElementById('localObra').value.trim();
           const bairro = document.getElementById('bairro').value.trim();
           const cidade = document.getElementById('cidade').value.trim();
           const cep = document.getElementById('cep').value.trim();
 
+          if (!localObra) {
+            erros.push('Campo obrigatório');
+            document.getElementById('localObra').classList.add('error');
+            document.getElementById('errorLocalObra').classList.add('show');
+          }
           if (!bairro) {
-            erros.push('Bairro é obrigatório');
+            erros.push('Campo obrigatório');
             document.getElementById('bairro').classList.add('error');
             document.getElementById('errorBairro').classList.add('show');
           }
           if (!cidade) {
-            erros.push('Cidade é obrigatória');
+            erros.push('Campo obrigatório');
             document.getElementById('cidade').classList.add('error');
             document.getElementById('errorCidade').classList.add('show');
           }
           if (!cep) {
-            erros.push('CEP é obrigatório');
+            erros.push('Campo obrigatório');
             document.getElementById('cep').classList.add('error');
             document.getElementById('errorCep').classList.add('show');
           } else {
             // Validar formato CEP se preenchido
             const resultadoCep = validarCepSaoPaulo(cep, cidade);
             if (!resultadoCep.valid) {
-              erros.push('CEP: ' + resultadoCep.message);
+              erros.push('CEP inválido');
               document.getElementById('cep').classList.add('error');
               document.getElementById('errorCep').classList.add('show');
             }
@@ -4873,7 +4879,7 @@
       
       if (!validacaoFormato.valid) {
         // Formato inválido - mostrar erro e não salvar
-        showToast('❌ ' + validacaoFormato.erros[0], 'error');
+        showToast('❌ Há pelo menos um campo obrigatório não preenchido', 'error');
         return;
       }
 
@@ -5154,7 +5160,7 @@
       
       if (!validacaoFormato.valid) {
         // Formato inválido - mostrar erro e não finalizar
-        showToast('❌ ' + validacaoFormato.erros[0], 'error');
+        showToast('❌ Há pelo menos um campo obrigatório não preenchido', 'error');
         return;
       }
 
