@@ -5236,9 +5236,13 @@
       // PÁGINA 10 - Estrutura e Segurança
       // ═══════════════════════════════════════════════════════════════
       page10: [
-        { id: 'calculoEstrutural', num: '6', titulo: 'Cálculo Estrutural', tipo: 'simNao' },
-        { id: 'concretoUsinado', num: '7', titulo: 'Concreto Usinado', tipo: 'simNao' },
-        { id: 'controleTecConcreto', num: '8', titulo: 'Controle Tecnológico de Concreto', tipo: 'simNao' },
+        { id: 'calculoEstrutural', num: '6', titulo: 'Cálculo Estrutural', tipo: 'simNao', temExecucao: true },
+        { id: 'calculoEstruturalExec', num: '6.1', titulo: 'Cálculo Estrutural - Execução', tipo: 'status', depende: 'calculoEstrutural' },
+        { id: 'concretoUsinado', num: '7', titulo: 'Concreto Usinado', tipo: 'simNao', temExecucao: true },
+        { id: 'concretoUsinadoExec', num: '7.1', titulo: 'Concreto Usinado - Execução', tipo: 'status', depende: 'concretoUsinado' },
+
+        { id: 'controleTecConcreto', num: '8', titulo: 'Controle Tecnológico de Concreto', tipo: 'simNao', temExecucao: true },
+        { id: 'controleTecConcretoExec', num: '8.1', titulo: 'Controle Tecnológico de Concreto - Execução', tipo: 'status', depende: 'controleTecConcreto' },
         { id: 'premoldados', num: '9', titulo: 'Premoldados', tipo: 'simNao' },
         { id: 'formasCimbramento', num: '10', titulo: 'Formas OU Cimbramento', tipo: 'simNao' },
         { id: 'andaimesPlataformas', num: '11', titulo: 'Andaimes e Plataformas', tipo: 'simNao' },
@@ -5249,8 +5253,11 @@
       // PÁGINA 11 - Equipamentos
       // ═══════════════════════════════════════════════════════════════
       page11: [
-        { id: 'gruas', num: '13', titulo: 'Montagem/Desmontagem Gruas', tipo: 'simNao' },
-        { id: 'guindaste', num: '14', titulo: 'Montagem/Desmontagem Guindaste', tipo: 'simNao' },
+        { id: 'gruas', num: '13', titulo: 'Montagem/Desmontagem Gruas', tipo: 'simNao', temExecucao: true },
+        { id: 'gruasExec', num: '13.1', titulo: 'Montagem/Desmontagem Gruas - Execução', tipo: 'status', depende: 'gruas' },
+
+        { id: 'guindaste', num: '14', titulo: 'Montagem/Desmontagem Guindaste', tipo: 'simNao', temExecucao: true },
+        { id: 'guindasteExec', num: '14.1', titulo: 'Montagem/Desmontagem Guindaste - Execução', tipo: 'status', depende: 'guindaste' },
         { id: 'geradores', num: '15', titulo: 'Instalação/Manutenção Geradores', tipo: 'simNao' },
         { id: 'compressores', num: '16', titulo: 'Manutenção Compressores', tipo: 'simNao' },
         { id: 'residuosSolidos', num: '17', titulo: 'Coleta, transporte, destinação resíduos sólidos', tipo: 'simNao' }
@@ -5825,45 +5832,34 @@
       if (!items) return { valid: true, erros: [] };
 
       const erros = [];
-      console.log('🔍 Validando página', pageNum, 'com', items.length, 'itens');
 
       items.forEach(item => {
         const id = item.id;
-        console.log('🔍 Validando item:', item.titulo, 'tipo:', item.tipo, 'depende:', item.depende);
 
         // Se o item depende de outro, só valida se a seção estiver visível
         if (item.depende) {
           const secao = document.getElementById('section_' + id);
-          console.log('🔍 Seção', id, 'display:', secao ? secao.style.display : 'não encontrada');
           if (secao && secao.style.display === 'none') {
-            console.log('🔍 Item', item.titulo, 'dependente não visível - pulando validação');
             // Seção escondida (projeto = NÃO), não precisa validar
             return;
           }
         }
 
         let selecionado = false;
-        let selector = '';
 
         if (item.tipo === 'simNao' || item.tipo === 'terceirizadas') {
-          selector = `input[name="${id}Opcao"]:checked`;
-          selecionado = document.querySelector(selector);
+          selecionado = document.querySelector(`input[name="${id}Opcao"]:checked`);
         } else if (item.tipo === 'status') {
-          selector = `input[name="${id}Status"]:checked`;
-          selecionado = document.querySelector(selector);
+          selecionado = document.querySelector(`input[name="${id}Status"]:checked`);
         }
 
-        console.log('🔍 Procurando:', selector, 'encontrou:', selecionado ? 'SIM' : 'NÃO');
-
         if (!selecionado) {
-          console.log('❌ Erro de validação para:', item.titulo);
           erros.push(item.titulo);
           const errorMsg = document.getElementById('error_' + id);
           if (errorMsg) errorMsg.classList.add('show');
         }
       });
 
-      console.log('🔍 Resultado validação:', erros.length === 0 ? 'PASSOU' : 'FALHOU', 'erros:', erros);
       return { valid: erros.length === 0, erros };
     }
 
@@ -5896,7 +5892,6 @@
       const validacao = validarPaginaSub(pageNum);
 
       if (!validacao.valid) {
-        console.log('❌ Validação falhou:', validacao.erros); // Debug
         showToast('❌ Preencha todos os campos obrigatórios antes de salvar', 'error');
         // Scroll para o primeiro erro
         const primeiroErro = document.querySelector('.error-message.show');
