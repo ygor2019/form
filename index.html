@@ -6269,6 +6269,22 @@
                 cnpj.classList.add('error');
               }
             }
+            
+            // Verificar campos vazios quando SIM ou status selecionado
+            const verificarCamposVazios = (item.tipo === 'simNao' && opcaoSelecionada === 'Sim') || 
+                                          (item.tipo === 'status' && opcaoSelecionada);
+            
+            if (verificarCamposVazios) {
+              const prof = document.getElementById('prof_' + id);
+              const cpfCampo = document.getElementById('cpf_' + id);
+              const tipoReg = document.querySelector(`input[name="reg_${id}"]:checked`);
+              const tipoArt = document.querySelector(`input[name="tipoArt_${id}"]:checked`);
+              
+              if (prof && !prof.value.trim()) avisos.push(`${item.titulo} - Profissional`);
+              if (cpfCampo && !cpfCampo.value.trim()) avisos.push(`${item.titulo} - CPF`);
+              if (!tipoReg) avisos.push(`${item.titulo} - CREA/Outros`);
+              if (!tipoArt) avisos.push(`${item.titulo} - ART/Outros`);
+            }
           }
         }
 
