@@ -6307,32 +6307,10 @@
       };
     }
 
-    // Avançar página de subcontratados COM VALIDAÇÃO
+    // Avançar página de subcontratados - SEM verificação de campos vazios (só salvar tem)
     function avancarSub(pageNum) {
-      const validacao = validarPaginaSub(pageNum);
-      
-      // Se tem ERROS (campos obrigatórios vazios) → NÃO AVANÇA
-      if (!validacao.valid) {
-        const listaErros = validacao.erros.map(erro => `• ${erro}`).join('\n');
-        alert(`❌ CAMPOS OBRIGATÓRIOS NÃO PREENCHIDOS:\n\n${listaErros}\n\nPreencha todos os campos obrigatórios antes de avançar.`);
-        
-        showToast('❌ Preencha todos os campos obrigatórios', 'error');
-        const primeiroErro = document.querySelector('.error-message.show');
-        if (primeiroErro) {
-          primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        return; // NÃO AVANÇA
-      }
-
-      // Se tem AVISOS (campos não obrigatórios vazios) → MOSTRA POPUP mas AVANÇA
-      if (validacao.avisos && validacao.avisos.length > 0) {
-        const listaAvisos = validacao.avisos.map(aviso => `• ${aviso}`).join('\n');
-        const confirmar = confirm(`⚠️ ATENÇÃO - CAMPOS VAZIOS:\n\n${listaAvisos}\n\nEstes campos não são obrigatórios, mas é recomendado preenchê-los.\n\nDeseja avançar mesmo assim?`);
-        
-        if (!confirmar) {
-          return; // Usuário cancelou, não avança
-        }
-      }
+      // NÃO validar - apenas salvar e avançar
+      // A validação de campos vazios só acontece no SALVAR
       
       // Salvar dados (sem chamar salvarPaginaSub para evitar validação duplicada)
       const items = subcontratados['page' + pageNum];
