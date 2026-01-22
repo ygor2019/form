@@ -11,6 +11,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- SheetJS para geração de Excel -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <style>
     :root {
       --primary: #1a365d;
@@ -2501,18 +2503,28 @@
             <h3 style="color: var(--primary); margin-bottom: 16px; border-bottom: 2px solid var(--border); padding-bottom: 8px;">IDENTIFICAÇÃO DO DECLARANTE</h3>
             
             <div class="form-group">
-              <label for="nomeDeclarante">Nome</label>
-              <input type="text" id="nomeDeclarante" placeholder="Nome completo do declarante">
+              <label for="nomeDeclarante">Nome <span style="color: var(--error);">*</span></label>
+              <input type="text" id="nomeDeclarante" placeholder="Nome completo do declarante" required>
+              <p class="error-message" id="error_nomeDeclarante">Campo obrigatório</p>
             </div>
 
             <div class="form-group">
-              <label for="qualificacaoDeclarante">Qualificação e Cargo</label>
-              <input type="text" id="qualificacaoDeclarante" placeholder="Qualificação e cargo">
+              <label for="qualificacaoDeclarante">Qualificação e Cargo <span style="color: var(--error);">*</span></label>
+              <input type="text" id="qualificacaoDeclarante" placeholder="Qualificação e cargo" required>
+              <p class="error-message" id="error_qualificacaoDeclarante">Campo obrigatório</p>
             </div>
 
-            <div class="form-group">
-              <label for="localDataDeclarante">Local e Data</label>
-              <input type="text" id="localDataDeclarante" placeholder="São Paulo, __ de _______ de 20__">
+            <div class="form-row">
+              <div class="form-group" style="flex: 1;">
+                <label for="localDeclarante">Local <span style="color: var(--error);">*</span></label>
+                <input type="text" id="localDeclarante" value="São Paulo" placeholder="Local" required>
+                <p class="error-message" id="error_localDeclarante">Campo obrigatório</p>
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="dataDeclarante">Data <span style="color: var(--error);">*</span></label>
+                <input type="date" id="dataDeclarante" required>
+                <p class="error-message" id="error_dataDeclarante">Campo obrigatório</p>
+              </div>
             </div>
 
             <div class="form-group">
@@ -2525,35 +2537,41 @@
             <h3 style="color: var(--primary); margin: 32px 0 16px; border-bottom: 2px solid var(--border); padding-bottom: 8px;">IDENTIFICAÇÃO DO(S) AGENTE(S) FISCAL(IS)</h3>
 
             <div class="form-group">
-              <label for="agenteFiscal1">Agente Fiscal</label>
-              <input type="text" id="agenteFiscal1" placeholder="Nome do agente fiscal">
+              <label for="agenteFiscal1">Agente Fiscal <span style="color: var(--error);">*</span></label>
+              <input type="text" id="agenteFiscal1" placeholder="Nome do agente fiscal" required>
+              <p class="error-message" id="error_agenteFiscal1">Campo obrigatório</p>
             </div>
 
             <div class="form-group">
-              <label for="registroAgente1">Registro</label>
-              <input type="text" id="registroAgente1" placeholder="Número do registro">
+              <label for="registroAgente1">Registro <span style="color: var(--error);">*</span></label>
+              <input type="text" id="registroAgente1" placeholder="Número do registro" required>
+              <p class="error-message" id="error_registroAgente1">Campo obrigatório</p>
             </div>
 
             <div class="form-group">
-              <label for="dataFiscalizacao">Data da Fiscalização</label>
-              <input type="date" id="dataFiscalizacao">
+              <label for="dataFiscalizacao">Data da Fiscalização <span style="color: var(--error);">*</span></label>
+              <input type="date" id="dataFiscalizacao" required>
+              <p class="error-message" id="error_dataFiscalizacao">Campo obrigatório</p>
             </div>
 
             <h3 style="color: var(--primary); margin: 32px 0 16px; border-bottom: 2px solid var(--border); padding-bottom: 8px;">CONTATO</h3>
 
             <div class="form-group">
-              <label for="enderecoContato">Endereço</label>
-              <input type="text" id="enderecoContato" placeholder="Endereço para contato">
+              <label for="enderecoContato">Endereço <span style="color: var(--error);">*</span></label>
+              <input type="text" id="enderecoContato" placeholder="Endereço para contato" required>
+              <p class="error-message" id="error_enderecoContato">Campo obrigatório</p>
             </div>
 
             <div class="form-group">
-              <label for="emailContato">E-mail</label>
-              <input type="email" id="emailContato" placeholder="email@exemplo.com">
+              <label for="emailContato">E-mail <span style="color: var(--error);">*</span></label>
+              <input type="email" id="emailContato" placeholder="email@exemplo.com" required>
+              <p class="error-message" id="error_emailContato">Campo obrigatório</p>
             </div>
 
             <div class="form-group">
-              <label for="telefonesContato">Telefones</label>
-              <input type="text" id="telefonesContato" placeholder="(11) 99999-9999">
+              <label for="telefonesContato">Telefones <span style="color: var(--error);">*</span></label>
+              <input type="text" id="telefonesContato" placeholder="(11) 99999-9999" required>
+              <p class="error-message" id="error_telefonesContato">Campo obrigatório</p>
             </div>
 
             <div class="button-group">
@@ -2564,7 +2582,7 @@
                 💾 Salvar
               </button>
               <button type="button" class="btn btn-primary" onclick="finalizarFormulario(25)">
-                ✓ Finalizar
+                ✓ Finalizar e Baixar Excel
               </button>
             </div>
           </form>
@@ -2726,7 +2744,8 @@
       page25: {
         nomeDeclarante: '',
         qualificacaoDeclarante: '',
-        localDataDeclarante: '',
+        localDeclarante: '',
+        dataDeclarante: '',
         agenteFiscal1: '',
         registroAgente1: '',
         dataFiscalizacao: '',
@@ -3355,7 +3374,8 @@
       if (formData.page25) {
         document.getElementById('nomeDeclarante').value = formData.page25.nomeDeclarante || '';
         document.getElementById('qualificacaoDeclarante').value = formData.page25.qualificacaoDeclarante || '';
-        document.getElementById('localDataDeclarante').value = formData.page25.localDataDeclarante || '';
+        document.getElementById('localDeclarante').value = formData.page25.localDeclarante || 'São Paulo';
+        document.getElementById('dataDeclarante').value = formData.page25.dataDeclarante || '';
         document.getElementById('agenteFiscal1').value = formData.page25.agenteFiscal1 || '';
         document.getElementById('registroAgente1').value = formData.page25.registroAgente1 || '';
         document.getElementById('dataFiscalizacao').value = formData.page25.dataFiscalizacao || '';
@@ -5202,7 +5222,8 @@
           formData.page25 = {
             nomeDeclarante: document.getElementById('nomeDeclarante').value.trim(),
             qualificacaoDeclarante: document.getElementById('qualificacaoDeclarante').value.trim(),
-            localDataDeclarante: document.getElementById('localDataDeclarante').value.trim(),
+            localDeclarante: document.getElementById('localDeclarante').value.trim(),
+            dataDeclarante: document.getElementById('dataDeclarante').value.trim(),
             agenteFiscal1: document.getElementById('agenteFiscal1').value.trim(),
             registroAgente1: document.getElementById('registroAgente1').value.trim(),
             dataFiscalizacao: document.getElementById('dataFiscalizacao').value.trim(),
@@ -5256,6 +5277,71 @@
 
     // Finalizar formulário - validação em 3 etapas sequenciais
     function finalizarFormulario(pageNum = 8) {
+      // Se for página 25, validação especial (todos campos obrigatórios)
+      if (pageNum === 25) {
+        const camposObrigatorios = [
+          { id: 'nomeDeclarante', nome: 'Nome do Declarante' },
+          { id: 'qualificacaoDeclarante', nome: 'Qualificação e Cargo' },
+          { id: 'localDeclarante', nome: 'Local' },
+          { id: 'dataDeclarante', nome: 'Data do Declarante' },
+          { id: 'agenteFiscal1', nome: 'Agente Fiscal' },
+          { id: 'registroAgente1', nome: 'Registro do Agente' },
+          { id: 'dataFiscalizacao', nome: 'Data da Fiscalização' },
+          { id: 'enderecoContato', nome: 'Endereço' },
+          { id: 'emailContato', nome: 'E-mail' },
+          { id: 'telefonesContato', nome: 'Telefones' }
+        ];
+
+        // Limpar erros anteriores
+        camposObrigatorios.forEach(campo => {
+          const input = document.getElementById(campo.id);
+          const error = document.getElementById('error_' + campo.id);
+          if (input) input.classList.remove('error');
+          if (error) error.classList.remove('show');
+        });
+
+        // Verificar campos vazios
+        const camposVazios = [];
+        camposObrigatorios.forEach(campo => {
+          const input = document.getElementById(campo.id);
+          if (!input || !input.value.trim()) {
+            camposVazios.push(campo.nome);
+            if (input) input.classList.add('error');
+            const error = document.getElementById('error_' + campo.id);
+            if (error) error.classList.add('show');
+          }
+        });
+
+        if (camposVazios.length > 0) {
+          showToast('❌ Preencha todos os campos obrigatórios: ' + camposVazios[0], 'error');
+          // Scroll para o primeiro erro
+          const primeiroErro = document.querySelector('#form25 .error');
+          if (primeiroErro) primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        // Salvar dados da página 25
+        formData.page25 = {
+          nomeDeclarante: document.getElementById('nomeDeclarante').value.trim(),
+          qualificacaoDeclarante: document.getElementById('qualificacaoDeclarante').value.trim(),
+          localDeclarante: document.getElementById('localDeclarante').value.trim(),
+          dataDeclarante: document.getElementById('dataDeclarante').value.trim(),
+          agenteFiscal1: document.getElementById('agenteFiscal1').value.trim(),
+          registroAgente1: document.getElementById('registroAgente1').value.trim(),
+          dataFiscalizacao: document.getElementById('dataFiscalizacao').value.trim(),
+          enderecoContato: document.getElementById('enderecoContato').value.trim(),
+          emailContato: document.getElementById('emailContato').value.trim(),
+          telefonesContato: document.getElementById('telefonesContato').value.trim(),
+          saved: true
+        };
+        saveToCache();
+
+        // Gerar Excel e finalizar
+        gerarExcel();
+        return;
+      }
+
+      // Lógica original para outras páginas
       // Limpar erros anteriores
       limparErrosPagina(pageNum);
 
@@ -5315,6 +5401,259 @@
       setTimeout(() => {
         showToast('📋 Todos os dados foram salvos no cache', 'success');
       }, 2000);
+    }
+
+    // Função auxiliar para formatar data dd/mm/aaaa
+    function formatarData(dataISO) {
+      if (!dataISO) return '';
+      const partes = dataISO.split('-');
+      if (partes.length === 3) {
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      }
+      return dataISO;
+    }
+
+    // Gerar Excel com todos os dados do formulário
+    function gerarExcel() {
+      showToast('📊 Gerando Excel...', 'success');
+
+      // Criar workbook
+      const wb = XLSX.utils.book_new();
+
+      // Criar dados para a planilha principal
+      const dados = [];
+
+      // ===== PÁGINA 1 - LOCAL DA OBRA =====
+      dados.push(['FORMULÁRIO DE OBRAS - MÉDIO E GRANDE PORTE']);
+      dados.push([]);
+      dados.push(['LOCAL DA OBRA']);
+      dados.push(['Local/Endereço', formData.page1?.localObra || '']);
+      dados.push(['Bairro', formData.page1?.bairro || '']);
+      dados.push(['Cidade', formData.page1?.cidade || '']);
+      dados.push(['CEP', formData.page1?.cep || '']);
+      dados.push([]);
+
+      // ===== PÁGINA 2 - NATUREZA DO SERVIÇO =====
+      dados.push(['NATUREZA DO SERVIÇO']);
+      dados.push(['Tipo', formData.page2?.tipoNatureza || '']);
+      dados.push(['Área Total (m²)', formData.page2?.area || '']);
+      dados.push(['Nº de Pavimentos', formData.page2?.pavimentos || '']);
+      dados.push(['Processo nº', formData.page2?.processoNum || '']);
+      dados.push(['Alvará nº', formData.page2?.alvaraNum || '']);
+      dados.push(['Alvará de', formData.page2?.alvaraDe || '']);
+      dados.push(['Proprietário', formData.page2?.proprietario || '']);
+      dados.push(['CPF/CNPJ', formData.page2?.cpfCnpj || '']);
+      dados.push(['Endereço do Proprietário', formData.page2?.enderecoProprietario || '']);
+      dados.push([]);
+
+      // ===== PÁGINA 3 - RESPONSÁVEL TÉCNICO PROJETO =====
+      dados.push(['RESPONSÁVEL TÉCNICO PELO PROJETO']);
+      dados.push(['Placa Afixada', formData.page3?.placaAfixada || '']);
+      dados.push(['Profissional', formData.page3?.profissional || '']);
+      dados.push(['CPF', formData.page3?.cpfProfissional || '']);
+      dados.push(['Tipo Registro', formData.page3?.tipoRegistro || '']);
+      dados.push(['Nº CREA', formData.page3?.numeroCrea || '']);
+      dados.push(['Sigla Conselho', formData.page3?.siglaConselho || '']);
+      dados.push(['Nº Conselho', formData.page3?.numeroConselho || '']);
+      dados.push(['Título', formData.page3?.titulo || '']);
+      dados.push(['Tipo ART/RRT', formData.page3?.tipoArtRrt || '']);
+      dados.push(['Nº ART', formData.page3?.artNumero || '']);
+      dados.push(['Nº RRT', formData.page3?.rrtNumero || '']);
+      dados.push(['Empresa', formData.page3?.empresa || '']);
+      dados.push(['Tipo Registro Empresa', formData.page3?.tipoEmpresaRegistro || '']);
+      dados.push(['Nº Registro Empresa', formData.page3?.empresaRegistro || '']);
+      dados.push([]);
+
+      // ===== PÁGINA 4 - RESPONSÁVEL TÉCNICO EXECUÇÃO =====
+      dados.push(['RESPONSÁVEL TÉCNICO PELA EXECUÇÃO']);
+      dados.push(['Placa Afixada', formData.page4?.placaAfixadaRT || '']);
+      dados.push(['Profissional', formData.page4?.profissionalRT || '']);
+      dados.push(['CPF', formData.page4?.cpfRT || '']);
+      dados.push(['Tipo Registro', formData.page4?.tipoRegistroRT || '']);
+      dados.push(['Nº CREA', formData.page4?.numeroCreaRT || '']);
+      dados.push(['Sigla Conselho', formData.page4?.siglaConselhoRT || '']);
+      dados.push(['Nº Conselho', formData.page4?.numeroConselhoRT || '']);
+      dados.push(['Tipo ART', formData.page4?.tipoArtOutrosRT || '']);
+      dados.push(['Nº ART', formData.page4?.artNumeroRT || '']);
+      dados.push(['Nome Outros ART', formData.page4?.nomeOutrosArtRT || '']);
+      dados.push(['Nº Outros ART', formData.page4?.numeroOutrosArtRT || '']);
+      dados.push(['Empresa', formData.page4?.empresaRT || '']);
+      dados.push(['Tipo Registro Empresa', formData.page4?.tipoEmpresaRegistroRT || '']);
+      dados.push(['Nº Registro Empresa', formData.page4?.empresaRegistroRT || '']);
+      dados.push([]);
+
+      // ===== PÁGINA 5 - DEMOLIÇÃO =====
+      dados.push(['DEMOLIÇÃO']);
+      dados.push(['Houve Demolição', formData.page5?.houveDemolicao || '']);
+      dados.push(['Projeto de Demolição', formData.page5?.projetoDemolicao || '']);
+      dados.push(['Profissional Projeto', formData.page5?.profissionalProjetoDemol || '']);
+      dados.push(['CPF Projeto', formData.page5?.cpfProjetoDemol || '']);
+      dados.push(['Execução de Demolição', formData.page5?.execucaoDemolicao || '']);
+      dados.push(['Profissional Execução', formData.page5?.profissionalExecDemol || '']);
+      dados.push(['CPF Execução', formData.page5?.cpfExecDemol || '']);
+      dados.push(['Empresa Demolição', formData.page5?.empresaDemol || '']);
+      dados.push(['CNPJ Demolição', formData.page5?.cnpjDemol || '']);
+      dados.push([]);
+
+      // ===== PÁGINA 6 - COORDENAÇÃO, ORÇAMENTO, RESIDENTE =====
+      dados.push(['COORDENAÇÃO DO PROJETO']);
+      if (formData.page6?.coordenacao) {
+        dados.push(['Profissional', formData.page6.coordenacao.nome || '']);
+        dados.push(['CPF', formData.page6.coordenacao.cpf || '']);
+        dados.push(['Tipo Registro', formData.page6.coordenacao.reg || '']);
+        dados.push(['Nº CREA', formData.page6.coordenacao.numCrea || '']);
+      }
+      dados.push([]);
+      dados.push(['ORÇAMENTO']);
+      if (formData.page6?.orcamento) {
+        dados.push(['Profissional', formData.page6.orcamento.nome || '']);
+        dados.push(['CPF', formData.page6.orcamento.cpf || '']);
+        dados.push(['Tipo Registro', formData.page6.orcamento.reg || '']);
+        dados.push(['Nº CREA', formData.page6.orcamento.numCrea || '']);
+      }
+      dados.push([]);
+      dados.push(['ENGENHEIRO RESIDENTE']);
+      if (formData.page6?.residente) {
+        dados.push(['Profissional', formData.page6.residente.nome || '']);
+        dados.push(['CPF', formData.page6.residente.cpf || '']);
+        dados.push(['Tipo Registro', formData.page6.residente.reg || '']);
+        dados.push(['Nº CREA', formData.page6.residente.numCrea || '']);
+      }
+      dados.push([]);
+
+      // ===== PÁGINA 7 - LIVRO DE ORDEM =====
+      dados.push(['LIVRO DE ORDEM']);
+      dados.push(['Possui Livro', formData.page7?.livroOrdem || '']);
+      dados.push(['Observações', formData.page7?.observacoes || '']);
+      dados.push([]);
+
+      // ===== PÁGINA 8 - GERENCIAMENTO =====
+      dados.push(['GERENCIAMENTO']);
+      dados.push(['Houve Gerenciamento', formData.page8?.houveGerenciamento || '']);
+      dados.push(['Profissional', formData.page8?.profissionalGerenciamento || '']);
+      dados.push(['CPF', formData.page8?.cpfGerenciamento || '']);
+      dados.push(['Empresa', formData.page8?.empresaGerenciamento || '']);
+      dados.push(['CNPJ', formData.page8?.cnpjGerenciamento || '']);
+      dados.push(['Placa', formData.page8?.placaGerenciamento || '']);
+      dados.push([]);
+
+      // ===== PÁGINAS 9-24 - SUBCONTRATADOS =====
+      dados.push(['SUBCONTRATADOS']);
+      for (let pageNum = 9; pageNum <= 24; pageNum++) {
+        const pageData = formData['page' + pageNum];
+        if (pageData && pageData.saved) {
+          const items = subcontratados['page' + pageNum];
+          if (items) {
+            items.forEach(item => {
+              const itemData = pageData[item.id];
+              if (itemData) {
+                dados.push([`${item.num} ${item.titulo}`, itemData.opcao || '']);
+                if (item.tipo === 'terceirizadas' && itemData.terceirizadas && itemData.terceirizadas.length > 0) {
+                  itemData.terceirizadas.forEach((terc, idx) => {
+                    dados.push([`  Terceirizada ${idx + 1}`, terc.terceirizada || '']);
+                    dados.push([`  ART ${idx + 1}`, terc.art || '']);
+                  });
+                } else if (itemData.profissional) {
+                  dados.push(['  Profissional', itemData.profissional || '']);
+                  dados.push(['  CPF', itemData.cpf || '']);
+                }
+              }
+            });
+          }
+        }
+      }
+      dados.push([]);
+
+      // ===== PÁGINA 25 - IDENTIFICAÇÃO FINAL =====
+      dados.push(['IDENTIFICAÇÃO DO DECLARANTE']);
+      dados.push(['Nome', formData.page25?.nomeDeclarante || '']);
+      dados.push(['Qualificação e Cargo', formData.page25?.qualificacaoDeclarante || '']);
+      dados.push(['Local', formData.page25?.localDeclarante || '']);
+      dados.push(['Data', formatarData(formData.page25?.dataDeclarante) || '']);
+      dados.push([]);
+      dados.push(['IDENTIFICAÇÃO DO AGENTE FISCAL']);
+      dados.push(['Agente Fiscal', formData.page25?.agenteFiscal1 || '']);
+      dados.push(['Registro', formData.page25?.registroAgente1 || '']);
+      dados.push(['Data da Fiscalização', formatarData(formData.page25?.dataFiscalizacao) || '']);
+      dados.push([]);
+      dados.push(['CONTATO']);
+      dados.push(['Endereço', formData.page25?.enderecoContato || '']);
+      dados.push(['E-mail', formData.page25?.emailContato || '']);
+      dados.push(['Telefones', formData.page25?.telefonesContato || '']);
+
+      // Criar worksheet
+      const ws = XLSX.utils.aoa_to_sheet(dados);
+
+      // Ajustar largura das colunas
+      ws['!cols'] = [
+        { wch: 35 }, // Coluna A
+        { wch: 50 }  // Coluna B
+      ];
+
+      // Adicionar worksheet ao workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Formulário');
+
+      // Gerar nome do arquivo com data
+      const agora = new Date();
+      const dataArquivo = `${agora.getDate().toString().padStart(2, '0')}-${(agora.getMonth() + 1).toString().padStart(2, '0')}-${agora.getFullYear()}`;
+      const nomeArquivo = `Formulario_Obra_${dataArquivo}.xlsx`;
+
+      // Download do arquivo
+      XLSX.writeFile(wb, nomeArquivo);
+
+      // Mostrar mensagem de sucesso
+      showToast('✅ Excel gerado com sucesso!', 'success');
+
+      // Limpar cache e resetar formulário
+      setTimeout(() => {
+        limparCacheEResetar();
+      }, 1500);
+    }
+
+    // Limpar cache e resetar para página 1
+    function limparCacheEResetar() {
+      // Limpar localStorage
+      localStorage.removeItem('formDataObra');
+      localStorage.removeItem('profissionaisCadastrados');
+
+      // Resetar formData para valores iniciais
+      formData = {
+        page1: { localObra: '', bairro: '', cidade: 'São Paulo', cep: '', saved: false },
+        page2: { tipoNatureza: '', area: '', pavimentos: '', processoNum: '', alvaraNum: '', alvaraDe: '', proprietario: '', tipoCpfCnpj: 'cpf', cpfCnpj: '', enderecoProprietario: '', saved: false },
+        page3: { placaAfixada: '', profissional: '', tipoRegistro: '', numeroCrea: '', cpfProfissional: '', siglaConselho: '', numeroConselho: '', titulo: '', tipoArtRrt: '', artNumero: '', rrtNumero: '', empresa: '', tipoEmpresaRegistro: '', empresaRegistro: '', saved: false },
+        page4: { placaAfixadaRT: '', profissionalRT: '', cpfRT: '', tipoRegistroRT: '', numeroCreaRT: '', siglaConselhoRT: '', numeroConselhoRT: '', tipoArtOutrosRT: '', artNumeroRT: '', nomeOutrosArtRT: '', numeroOutrosArtRT: '', empresaRT: '', tipoEmpresaRegistroRT: '', empresaRegistroRT: '', saved: false },
+        page5: { houveDemolicao: '', projetoDemolicao: '', profissionalProjetoDemol: '', cpfProjetoDemol: '', tipoRegistroProjetoDemol: '', numeroCreaProjetoDemol: '', siglaConselhoProjetoDemol: '', numeroConselhoProjetoDemol: '', tipoArtProjetoDemol: '', artNumeroProjetoDemol: '', nomeOutrosArtProjetoDemol: '', numeroOutrosArtProjetoDemol: '', execucaoDemolicao: '', profissionalExecDemol: '', cpfExecDemol: '', tipoRegistroExecDemol: '', numeroCreaExecDemol: '', siglaConselhoExecDemol: '', numeroConselhoExecDemol: '', tipoArtExecDemol: '', artNumeroExecDemol: '', nomeOutrosArtExecDemol: '', numeroOutrosArtExecDemol: '', empresaDemol: '', cnpjDemol: '', saved: false },
+        page6: { coordenacao: {}, orcamento: {}, residente: {}, saved: false },
+        page7: { livroOrdem: '', observacoes: '', saved: false },
+        page8: { houveGerenciamento: '', profissionalGerenciamento: '', cpfGerenciamento: '', tipoRegistroGerenciamento: '', numeroCreaGerenciamento: '', siglaConselhoGerenciamento: '', numeroConselhoGerenciamento: '', tipoArtGerenciamento: '', artNumeroGerenciamento: '', nomeOutrosArtGerenciamento: '', numeroOutrosArtGerenciamento: '', empresaGerenciamento: '', cnpjGerenciamento: '', tipoRegistroEmpresaGer: '', numeroCreaEmpresaGer: '', siglaConselhoEmpresaGer: '', numeroConselhoEmpresaGer: '', placaGerenciamento: '', saved: false },
+        page25: { nomeDeclarante: '', qualificacaoDeclarante: '', localDeclarante: '', dataDeclarante: '', agenteFiscal1: '', registroAgente1: '', dataFiscalizacao: '', enderecoContato: '', emailContato: '', telefonesContato: '', saved: false }
+      };
+
+      // Limpar todos os inputs do formulário
+      document.querySelectorAll('input[type="text"], input[type="email"], input[type="date"], textarea').forEach(input => {
+        if (input.id === 'cidade') {
+          input.value = 'São Paulo';
+        } else if (input.id === 'localDeclarante') {
+          input.value = 'São Paulo';
+        } else {
+          input.value = '';
+        }
+      });
+
+      // Limpar todos os radios
+      document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.checked = false;
+      });
+
+      // Limpar erros
+      document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+      document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
+
+      // Mostrar mensagem
+      showToast('🔄 Formulário resetado! Pronto para novo preenchimento.', 'success');
+
+      // Voltar para página 1
+      showPage(1);
     }
 
     // Carregar dados das páginas de subcontratados
