@@ -5214,18 +5214,18 @@
       page9: [
         // TOPOGRAFIA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'topografiaProjeto', num: '2.1', titulo: 'Topografia - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'topografiaExec', num: '2.2', titulo: 'Topografia - Execução e Acompanhamento', tipo: 'status', depende: 'topografiaProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'topografiaExec', num: '2.2', titulo: 'Topografia - Execução e Acompanhamento', tipo: 'status', depende: 'topografiaProjeto' },
 
         // SONDAGEM: só status (não iniciada, em andamento, concluída)
-        { id: 'sondagem', num: '3', titulo: 'Sondagem', tipo: 'status', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'sondagem', num: '3', titulo: 'Sondagem', tipo: 'status' },
 
         // TERRAPLENAGEM: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'terraplenagem', num: '4', titulo: 'Movimento de Terra/Terraplenagem', tipo: 'simNao', temExecucao: true },
-        { id: 'terraExec', num: '4.1', titulo: 'Terraplenagem - Execução', tipo: 'status', depende: 'terraplenagem', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'terraExec', num: '4.1', titulo: 'Terraplenagem - Execução', tipo: 'status', depende: 'terraplenagem' },
 
         // FUNDAÇÕES: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'fundacoesProjeto', num: '5.1', titulo: 'Fundações - Projeto/Assessoria/Consultoria', tipo: 'simNao', temExecucao: true },
-        { id: 'fundacoesExec', num: '5.2', titulo: 'Fundações - Execução', tipo: 'status', depende: 'fundacoesProjeto', mostrarCamposMesmoNaoIniciada: true }
+        { id: 'fundacoesExec', num: '5.2', titulo: 'Fundações - Execução', tipo: 'status', depende: 'fundacoesProjeto' }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5258,11 +5258,11 @@
       page12: [
         // ELÉTRICAS: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'eletricasProjeto', num: '18.1', titulo: 'Instalações Elétricas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'eletricasExec', num: '18.2', titulo: 'Instalações Elétricas - Execução', tipo: 'status', depende: 'eletricasProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'eletricasExec', num: '18.2', titulo: 'Instalações Elétricas - Execução', tipo: 'status', depende: 'eletricasProjeto' },
 
         // HIDRÁULICAS: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'hidraulicasProjeto', num: '19.1', titulo: 'Instalações Hidráulicas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'hidraulicasExec', num: '19.2', titulo: 'Instalações Hidráulicas - Execução', tipo: 'status', depende: 'hidraulicasProjeto', mostrarCamposMesmoNaoIniciada: true }
+        { id: 'hidraulicasExec', num: '19.2', titulo: 'Instalações Hidráulicas - Execução', tipo: 'status', depende: 'hidraulicasProjeto' }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5271,13 +5271,13 @@
       page13: [
         // AR CONDICIONADO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'arCondProjeto', num: '20.1', titulo: 'Ar Condicionado - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'arCondExec', num: '20.2', titulo: 'Ar Condicionado - Execução', tipo: 'status', depende: 'arCondProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'arCondExec', num: '20.2', titulo: 'Ar Condicionado - Execução', tipo: 'status', depende: 'arCondProjeto' },
 
         // ELEVADORES: só SIM/NÃO (projeto e execução juntos)
         { id: 'elevadores', num: '21', titulo: 'Elevadores - Projeto e Execução', tipo: 'simNao' },
 
         // IMPERMEABILIZAÇÃO: só status (não iniciada, em andamento, concluída)
-        { id: 'impermeabilizacao', num: '22', titulo: 'Impermeabilização', tipo: 'status', mostrarCamposMesmoNaoIniciada: true }
+        { id: 'impermeabilizacao', num: '22', titulo: 'Impermeabilização', tipo: 'status' }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5286,19 +5286,19 @@
       page14: [
         // GÁS: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'gasProjeto', num: '23.1', titulo: 'Sistemas de Gás - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'gasExec', num: '23.2', titulo: 'Sistemas de Gás - Execução', tipo: 'status', depende: 'gasProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'gasExec', num: '23.2', titulo: 'Sistemas de Gás - Execução', tipo: 'status', depende: 'gasProjeto' },
 
         // INCÊNDIO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'incendioProjeto', num: '24.1', titulo: 'Prevenção contra Incêndio - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'incendioExec', num: '24.2', titulo: 'Prevenção contra Incêndio - Execução', tipo: 'status', depende: 'incendioProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'incendioExec', num: '24.2', titulo: 'Prevenção contra Incêndio - Execução', tipo: 'status', depende: 'incendioProjeto' },
 
         // SOLAR: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'solarProjeto', num: '25.1', titulo: 'Energia Solar - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'solarExec', num: '25.2', titulo: 'Energia Solar - Execução', tipo: 'status', depende: 'solarProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'solarExec', num: '25.2', titulo: 'Energia Solar - Execução', tipo: 'status', depende: 'solarProjeto' },
 
         // SPDA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'spdaProjeto', num: '26.1', titulo: 'SPDA - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'spdaExec', num: '26.2', titulo: 'SPDA - Execução', tipo: 'status', depende: 'spdaProjeto', mostrarCamposMesmoNaoIniciada: true }
+        { id: 'spdaExec', num: '26.2', titulo: 'SPDA - Execução', tipo: 'status', depende: 'spdaProjeto' }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5307,15 +5307,15 @@
       page15: [
         // TELEFONIA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'telefoniaProjeto', num: '27.1', titulo: 'Telefonia - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'telefoniaExec', num: '27.2', titulo: 'Telefonia - Execução', tipo: 'status', depende: 'telefoniaProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'telefoniaExec', num: '27.2', titulo: 'Telefonia - Execução', tipo: 'status', depende: 'telefoniaProjeto' },
 
         // SEGURANÇA ELETRÔNICA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'segEletronicaProjeto', num: '28.1', titulo: 'Segurança Eletrônica - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'segEletronicaExec', num: '28.2', titulo: 'Segurança Eletrônica - Execução', tipo: 'status', depende: 'segEletronicaProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'segEletronicaExec', num: '28.2', titulo: 'Segurança Eletrônica - Execução', tipo: 'status', depende: 'segEletronicaProjeto' },
 
         // CENTRAL DE CONCRETO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'centralConcretoProjeto', num: '29.1', titulo: 'Central de Concreto - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'centralConcretoExec', num: '29.2', titulo: 'Central de Concreto - Execução', tipo: 'status', depende: 'centralConcretoProjeto', mostrarCamposMesmoNaoIniciada: true }
+        { id: 'centralConcretoExec', num: '29.2', titulo: 'Central de Concreto - Execução', tipo: 'status', depende: 'centralConcretoProjeto' }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5324,15 +5324,15 @@
       page16: [
         // ELEVADORES DE CARGA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'elevCargaProjeto', num: '30.1', titulo: 'Elevadores de Carga/Cremalheira - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'elevCargaExec', num: '30.2', titulo: 'Elevadores de Carga - Instalação/Montagem', tipo: 'status', depende: 'elevCargaProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'elevCargaExec', num: '30.2', titulo: 'Elevadores de Carga - Instalação/Montagem', tipo: 'status', depende: 'elevCargaProjeto' },
 
         // PISCINAS: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'piscinasProjeto', num: '31.1', titulo: 'Piscinas/Saunas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'piscinasExec', num: '31.2', titulo: 'Piscinas/Saunas - Execução', tipo: 'status', depende: 'piscinasProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'piscinasExec', num: '31.2', titulo: 'Piscinas/Saunas - Execução', tipo: 'status', depende: 'piscinasProjeto' },
 
         // CAPTAÇÃO DE ÁGUA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'captacaoAguaProjeto', num: '32.1', titulo: 'Captação e Reuso de Água - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'captacaoAguaExec', num: '32.2', titulo: 'Captação e Reuso de Água - Execução', tipo: 'status', depende: 'captacaoAguaProjeto', mostrarCamposMesmoNaoIniciada: true }
+        { id: 'captacaoAguaExec', num: '32.2', titulo: 'Captação e Reuso de Água - Execução', tipo: 'status', depende: 'captacaoAguaProjeto' }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5344,30 +5344,40 @@
 
         // ESQUADRIAS: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'esquadriasProjeto', num: '34.1', titulo: 'Esquadrias Metálicas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'esquadriasExec', num: '34.2', titulo: 'Esquadrias Metálicas - Execução', tipo: 'status', depende: 'esquadriasProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'esquadriasExec', num: '34.2', titulo: 'Esquadrias Metálicas - Execução', tipo: 'status', depende: 'esquadriasProjeto' },
 
         // POÇO ARTESIANO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'pocoProjeto', num: '35.1', titulo: 'Poço Artesiano - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'pocoExec', num: '35.2', titulo: 'Poço Artesiano - Execução', tipo: 'status', depende: 'pocoProjeto', mostrarCamposMesmoNaoIniciada: true }
+        { id: 'pocoExec', num: '35.2', titulo: 'Poço Artesiano - Execução', tipo: 'status', depende: 'pocoProjeto' }
       ],
       
       // ═══════════════════════════════════════════════════════════════
       // PÁGINA 18 - Alvenaria, Revestimentos, Jardinagem
       // ═══════════════════════════════════════════════════════════════
       page18: [
+        // ALVENARIA: só SIM/NÃO
         { id: 'alvenaria', num: '36', titulo: 'Execução Alvenaria', tipo: 'simNao' },
+
+        // REVESTIMENTOS: só status (não iniciada, em andamento, concluída)
         { id: 'revestimentos', num: '37', titulo: 'Execução Revestimentos', tipo: 'status' },
-        { id: 'jardinagemProjeto', num: '38.1', titulo: 'Jardinagem e Paisagismo - Projeto', tipo: 'simNao' },
-        { id: 'jardinagemExec', num: '38.2', titulo: 'Jardinagem e Paisagismo - Execução', tipo: 'status' }
+
+        // JARDINAGEM: projeto SIM/NÃO + execução com 3 opções se SIM
+        { id: 'jardinagemProjeto', num: '38.1', titulo: 'Jardinagem e Paisagismo - Projeto', tipo: 'simNao', temExecucao: true },
+        { id: 'jardinagemExec', num: '38.2', titulo: 'Jardinagem e Paisagismo - Execução', tipo: 'status', depende: 'jardinagemProjeto' }
       ],
       
       // ═══════════════════════════════════════════════════════════════
       // PÁGINA 19 - PGR, PCMAT, LTCAT
       // ═══════════════════════════════════════════════════════════════
       page19: [
-        { id: 'pgrProjeto', num: '38.1', titulo: 'PGR - Projeto/Elaboração', tipo: 'simNao' },
-        { id: 'pgrImpl', num: '38.2', titulo: 'PGR - Implementação', tipo: 'status' },
+        // PGR: projeto SIM/NÃO + implementação com 3 opções se SIM
+        { id: 'pgrProjeto', num: '38.1', titulo: 'PGR - Projeto/Elaboração', tipo: 'simNao', temExecucao: true },
+        { id: 'pgrImpl', num: '38.2', titulo: 'PGR - Implementação', tipo: 'status', depende: 'pgrProjeto' },
+
+        // PGR TERCEIRIZADAS: só SIM/NÃO
         { id: 'pgrTerceirizadas', num: '39', titulo: 'PGR das Empresas Terceirizadas', tipo: 'terceirizadas' },
+
+        // PCMAT e LTCAT: só SIM/NÃO
         { id: 'pcmat', num: '40', titulo: 'PCMAT', tipo: 'simNao' },
         { id: 'ltcat', num: '41', titulo: 'LTCAT', tipo: 'simNao' }
       ],
@@ -5378,13 +5388,13 @@
       page20: [
         // DRENAGEM: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'drenagemProjeto', num: '42.1', titulo: 'Drenagem - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'drenagemExec', num: '42.2', titulo: 'Drenagem - Execução', tipo: 'status', depende: 'drenagemProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'drenagemExec', num: '42.2', titulo: 'Drenagem - Execução', tipo: 'status', depende: 'drenagemProjeto' },
 
         // EXTINTORES: só status (não iniciada, em andamento, concluída)
-        { id: 'extintores', num: '43.1', titulo: 'Extintores - Recarga/Teste', tipo: 'status', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'extintores', num: '43.1', titulo: 'Extintores - Recarga/Teste', tipo: 'status' },
 
         // PINTURA: só status (não iniciada, em andamento, concluída)
-        { id: 'pintura', num: '44', titulo: 'Execução Pintura', tipo: 'status', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'pintura', num: '44', titulo: 'Execução Pintura', tipo: 'status' },
 
         // INSTALAÇÕES GERAIS: só SIM/NÃO
         { id: 'instalacoesGerais', num: '45', titulo: 'Instalações gerais (vasos, pias, torneiras, portas)', tipo: 'simNao' }
@@ -5396,7 +5406,7 @@
       page21: [
         // PAVIMENTAÇÃO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'pavimentacaoProjeto', num: '46.1', titulo: 'Pavimentação - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'pavimentacaoExec', num: '46.2', titulo: 'Pavimentação - Execução', tipo: 'status', depende: 'pavimentacaoProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'pavimentacaoExec', num: '46.2', titulo: 'Pavimentação - Execução', tipo: 'status', depende: 'pavimentacaoProjeto' },
 
         // EIA, RIMA, EIV: só SIM/NÃO
         { id: 'eia', num: '47', titulo: 'EIA - Estudo de Impacto Ambiental', tipo: 'simNao' },
@@ -5410,11 +5420,11 @@
       page22: [
         // REDE ELÉTRICA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'redeEletricaProjeto', num: '50.1', titulo: 'Rede Elétrica - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'redeEletricaExec', num: '50.2', titulo: 'Rede Elétrica - Execução', tipo: 'status', depende: 'redeEletricaProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'redeEletricaExec', num: '50.2', titulo: 'Rede Elétrica - Execução', tipo: 'status', depende: 'redeEletricaProjeto' },
 
         // CANTEIRO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'canteiroProjeto', num: '51.1', titulo: 'Canteiro de obras/Alojamento - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'canteiroExec', num: '51.2', titulo: 'Canteiro de obras/Alojamento - Execução', tipo: 'status', depende: 'canteiroProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'canteiroExec', num: '51.2', titulo: 'Canteiro de obras/Alojamento - Execução', tipo: 'status', depende: 'canteiroProjeto' },
 
         // VIABILIDADE: só SIM/NÃO
         { id: 'viabilidade', num: '52', titulo: 'Estudo de Viabilidade', tipo: 'simNao' }
@@ -5426,11 +5436,11 @@
       page23: [
         // SINALIZAÇÃO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'sinalizacaoProjeto', num: '53.1', titulo: 'Sinalização - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'sinalizacaoExec', num: '53.2', titulo: 'Sinalização - Execução', tipo: 'status', depende: 'sinalizacaoProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'sinalizacaoExec', num: '53.2', titulo: 'Sinalização - Execução', tipo: 'status', depende: 'sinalizacaoProjeto' },
 
         // TRÁFEGO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'trafegoProjeto', num: '54.1', titulo: 'Projeto de Tráfego - Elaboração', tipo: 'simNao', temExecucao: true },
-        { id: 'trafegoExec', num: '54.2', titulo: 'Projeto de Tráfego - Execução', tipo: 'status', depende: 'trafegoProjeto', mostrarCamposMesmoNaoIniciada: true },
+        { id: 'trafegoExec', num: '54.2', titulo: 'Projeto de Tráfego - Execução', tipo: 'status', depende: 'trafegoProjeto' },
 
         // CONTROLE TECNOLÓGICO: só SIM/NÃO
         { id: 'controleTecnologico', num: '55', titulo: 'Controle Tecnológico (Aço, Argamassa, blocos)', tipo: 'simNao' }
@@ -5451,7 +5461,39 @@
     // Template para gerar campos de subcontratado
     function gerarCamposSubcontratado(item) {
       const id = item.id;
-      
+
+      // Item que depende de outro (execução) - seção inteira escondida até projeto = SIM
+      if (item.depende) {
+        return `<div class="subcontratado-section" id="section_${id}" style="display: none;">
+          <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+            ${item.num ? `<span style="background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${item.num}</span>` : ''}
+            ${item.titulo}
+            <span style="color: var(--error); font-size: 12px;">*</span>
+          </h3>
+          <div class="form-group">
+            <div class="radio-group" style="flex-wrap: wrap;">
+              <div class="radio-option">
+                <input type="radio" id="${id}NaoIniciada" name="${id}Status" value="nao_iniciada" onchange="toggleCamposExecucao('${id}')">
+                <label for="${id}NaoIniciada"><span class="radio-dot"></span>Não iniciada</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="${id}EmAndamento" name="${id}Status" value="em_andamento" onchange="toggleCamposExecucao('${id}')">
+                <label for="${id}EmAndamento"><span class="radio-dot"></span>Em andamento</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="${id}Concluida" name="${id}Status" value="concluida" onchange="toggleCamposExecucao('${id}')">
+                <label for="${id}Concluida"><span class="radio-dot"></span>Concluída</label>
+              </div>
+            </div>
+            <p class="error-message" id="error_${id}">Selecione o status</p>
+          </div>
+          <div id="campos_${id}">
+            ${gerarCamposProfissional(id)}
+          </div>
+        </div>
+        <hr class="separador_${id}" style="border: none; border-top: 1px solid var(--border); margin: 20px 0; display: none;">`;
+      }
+
       let headerHtml = `<div class="subcontratado-section" id="section_${id}">
         <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 16px; display: flex; align-items: center; gap: 8px;">
           ${item.num ? `<span style="background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px;">${item.num}</span>` : ''}
@@ -5459,45 +5501,45 @@
           <span style="color: var(--error); font-size: 12px;">*</span>
         </h3>`;
 
-      // SIM/NÃO - campos só aparecem se SIM
+      // SIM/NÃO - campos VISÍVEIS de início, some se NÃO
       if (item.tipo === 'simNao') {
         headerHtml += `
         <div class="form-group">
           <div class="radio-group">
             <div class="radio-option">
-              <input type="radio" id="${id}Sim" name="${id}Opcao" value="Sim" onchange="toggleSubcontratado('${id}', 'sim')">
+              <input type="radio" id="${id}Sim" name="${id}Opcao" value="Sim" onchange="toggleSimNao('${id}', true)">
               <label for="${id}Sim"><span class="radio-dot"></span>SIM</label>
             </div>
             <div class="radio-option">
-              <input type="radio" id="${id}Nao" name="${id}Opcao" value="Não" onchange="toggleSubcontratado('${id}', 'nao')">
+              <input type="radio" id="${id}Nao" name="${id}Opcao" value="Não" onchange="toggleSimNao('${id}', false)">
               <label for="${id}Nao"><span class="radio-dot"></span>NÃO</label>
             </div>
           </div>
           <p class="error-message" id="error_${id}">Selecione SIM ou NÃO</p>
         </div>`;
-      } 
-      // STATUS - campos só aparecem se "em andamento" ou "concluída"
+      }
+      // STATUS - campos VISÍVEIS de início
       else if (item.tipo === 'status') {
         headerHtml += `
         <div class="form-group">
           <div class="radio-group" style="flex-wrap: wrap;">
             <div class="radio-option">
-              <input type="radio" id="${id}NaoIniciada" name="${id}Status" value="nao_iniciada" onchange="toggleSubcontratado('${id}', 'nao_iniciada')">
+              <input type="radio" id="${id}NaoIniciada" name="${id}Status" value="nao_iniciada" onchange="limparErro('${id}')">
               <label for="${id}NaoIniciada"><span class="radio-dot"></span>Não iniciada</label>
             </div>
             <div class="radio-option">
-              <input type="radio" id="${id}EmAndamento" name="${id}Status" value="em_andamento" onchange="toggleSubcontratado('${id}', 'em_andamento')">
+              <input type="radio" id="${id}EmAndamento" name="${id}Status" value="em_andamento" onchange="limparErro('${id}')">
               <label for="${id}EmAndamento"><span class="radio-dot"></span>Em andamento</label>
             </div>
             <div class="radio-option">
-              <input type="radio" id="${id}Concluida" name="${id}Status" value="concluida" onchange="toggleSubcontratado('${id}', 'concluida')">
+              <input type="radio" id="${id}Concluida" name="${id}Status" value="concluida" onchange="limparErro('${id}')">
               <label for="${id}Concluida"><span class="radio-dot"></span>Concluída</label>
             </div>
           </div>
           <p class="error-message" id="error_${id}">Selecione o status</p>
         </div>`;
-      } 
-      // TERCEIRIZADAS - campos só aparecem se SIM
+      }
+      // TERCEIRIZADAS
       else if (item.tipo === 'terceirizadas') {
         return `<div class="subcontratado-section" id="section_${id}">
           <h3 style="color: var(--primary); margin-bottom: 12px; font-size: 16px;">
@@ -5507,17 +5549,17 @@
           <div class="form-group">
             <div class="radio-group">
               <div class="radio-option">
-                <input type="radio" id="${id}Sim" name="${id}Opcao" value="Sim" onchange="toggleSubcontratado('${id}', 'sim')">
+                <input type="radio" id="${id}Sim" name="${id}Opcao" value="Sim" onchange="toggleSimNao('${id}', true)">
                 <label for="${id}Sim"><span class="radio-dot"></span>SIM</label>
               </div>
               <div class="radio-option">
-                <input type="radio" id="${id}Nao" name="${id}Opcao" value="Não" onchange="toggleSubcontratado('${id}', 'nao')">
+                <input type="radio" id="${id}Nao" name="${id}Opcao" value="Não" onchange="toggleSimNao('${id}', false)">
                 <label for="${id}Nao"><span class="radio-dot"></span>NÃO</label>
               </div>
             </div>
             <p class="error-message" id="error_${id}">Selecione SIM ou NÃO</p>
           </div>
-          <div id="campos_${id}" style="display: none;">
+          <div id="campos_${id}">
             ${[1,2,3,4,5,6,7,8,9,10].map(n => `
             <div class="form-row" style="margin-bottom: 8px;">
               <div class="form-group" style="flex: 2; margin-bottom: 0;">
@@ -5532,155 +5574,19 @@
         <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">`;
       }
 
-      // Só gerar campos se NÃO depende de outro item (itens que têm execução própria)
-      // Itens que dependem de outros serão gerados dinamicamente pela função toggle
-      if (!item.depende) {
-        // Campos do profissional (escondidos inicialmente)
-        headerHtml += `
-          <div id="campos_${id}" style="display: none;">
-            <div class="form-group" style="position: relative;">
-              <label>Profissional</label>
-              <input type="text" id="prof_${id}" placeholder="Nome do profissional" autocomplete="off">
-            </div>
-            <div class="form-group">
-              <label>CPF</label>
-              <input type="text" id="cpf_${id}" placeholder="000.000.000-00" maxlength="14" class="cpf-mask">
-            </div>
-            <div class="form-group">
-              <label>CREA / Outros</label>
-              <div class="radio-group">
-                <div class="radio-option">
-                  <input type="radio" id="crea_${id}" name="reg_${id}" value="CREA" onchange="mostrarRegSub('${id}', 'crea')">
-                  <label for="crea_${id}"><span class="radio-dot"></span>CREA</label>
-                </div>
-                <div class="radio-option">
-                  <input type="radio" id="outros_${id}" name="reg_${id}" value="Outros" onchange="mostrarRegSub('${id}', 'outros')">
-                  <label for="outros_${id}"><span class="radio-dot"></span>Outros</label>
-                </div>
-              </div>
-              <div class="campo-condicional" id="campoCrea_${id}">
-                <input type="text" id="numCrea_${id}" placeholder="Número do CREA">
-              </div>
-              <div class="campo-condicional" id="campoOutros_${id}">
-                <div class="form-row">
-                  <input type="text" id="sigla_${id}" placeholder="Sigla" style="flex:1">
-                  <input type="text" id="numOutros_${id}" placeholder="Número" style="flex:1">
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>ART / Outros</label>
-              <div class="radio-group">
-                <div class="radio-option">
-                  <input type="radio" id="art_${id}" name="tipoArt_${id}" value="ART" onchange="mostrarArtSub('${id}', 'art')">
-                  <label for="art_${id}"><span class="radio-dot"></span>ART</label>
-                </div>
-                <div class="radio-option">
-                  <input type="radio" id="outrosArt_${id}" name="tipoArt_${id}" value="Outros" onchange="mostrarArtSub('${id}', 'outros')">
-                  <label for="outrosArt_${id}"><span class="radio-dot"></span>Outros</label>
-                </div>
-              </div>
-              <div class="campo-condicional" id="campoArt_${id}">
-                <input type="text" id="numArt_${id}" placeholder="Número da ART">
-              </div>
-              <div class="campo-condicional" id="campoOutrosArt_${id}">
-                <div class="form-row">
-                  <input type="text" id="nomeArt_${id}" placeholder="Nome (ex: RRT)" style="flex:1">
-                  <input type="text" id="valArt_${id}" placeholder="Número" style="flex:1">
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Empresa</label>
-              <input type="text" id="empresa_${id}" placeholder="Nome da empresa">
-            </div>
-            <div class="form-group">
-              <label>CNPJ</label>
-              <input type="text" id="cnpj_${id}" placeholder="00.000.000/0000-00" maxlength="18" class="cnpj-mask">
-            </div>
-            <div class="form-group">
-              <label>Registro CREA/Outros da Empresa</label>
-              <input type="text" id="regEmpresa_${id}" placeholder="Número do registro">
-            </div>
-            <div class="form-group">
-              <label>Placa</label>
-              <div class="radio-group">
-                <div class="radio-option">
-                  <input type="radio" id="placaSim_${id}" name="placa_${id}" value="Sim">
-                  <label for="placaSim_${id}"><span class="radio-dot"></span>SIM</label>
-                </div>
-                <div class="radio-option">
-                  <input type="radio" id="placaNao_${id}" name="placa_${id}" value="Não">
-                  <label for="placaNao_${id}"><span class="radio-dot"></span>NÃO</label>
-                </div>
-              </div>
-            </div>
-          </div>`;
-      } else {
-        // Para itens que dependem de outros, criar container vazio
-        // Os campos serão inseridos dinamicamente pela função toggle
-        headerHtml += `<div id="campos_${id}" style="display: none;"></div>`;
-      }
-
-      headerHtml += `</div>
+      // Campos VISÍVEIS de início (não escondidos!)
+      headerHtml += `
+        <div id="campos_${id}">
+          ${gerarCamposProfissional(id)}
+        </div>
+      </div>
       <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">`;
 
       return headerHtml;
     }
 
-    // Toggle campos baseado na seleção
-    // SIM ou em_andamento/concluida = mostra campos
-    // NÃO ou nao_iniciada = esconde campos
-    function toggleSubcontratado(id, valor) {
-      const campos = document.getElementById('campos_' + id);
-      const errorMsg = document.getElementById('error_' + id);
-
-      // Esconder mensagem de erro ao selecionar
-      if (errorMsg) errorMsg.classList.remove('show');
-
-      if (!campos) return;
-
-      // Lógica de dependências: verificar se o item depende de outro
-      const itemConfig = encontrarItemPorId(id);
-      if (!itemConfig) return;
-
-      // Se o item depende de outro, só mostra se o dependente foi marcado como SIM
-      if (itemConfig.depende) {
-        const dependenteSelecionado = document.querySelector(`input[name="${itemConfig.depende}Opcao"]:checked`);
-        if (!dependenteSelecionado || dependenteSelecionado.value !== 'Sim') {
-          campos.style.display = 'none';
-          campos.innerHTML = ''; // Limpar campos se dependente não foi selecionado
-          return;
-        }
-
-        // Se depende e dependente está SIM, gerar campos dinamicamente se ainda não existem
-        if (campos.innerHTML.trim() === '') {
-          campos.innerHTML = gerarCamposDinamicos(itemConfig);
-          // Aplicar máscaras aos novos campos dinâmicos
-          setTimeout(() => aplicarMascarasSubcontratados(), 10);
-        }
-      }
-
-      // Para itens SIM/NÃO: mostrar campos só se SIM
-      if (itemConfig.tipo === 'simNao') {
-        campos.style.display = (valor === 'sim') ? 'block' : 'none';
-      }
-      // Para itens de status: mostrar campos se em_andamento OU concluida
-      // OU se tem a flag mostrarCamposMesmoNaoIniciada (para mostrar campos mesmo "não iniciada")
-      else if (itemConfig.tipo === 'status') {
-        const mostrar = (valor === 'em_andamento' || valor === 'concluida' ||
-                        (itemConfig.mostrarCamposMesmoNaoIniciada && valor === 'nao_iniciada'));
-        campos.style.display = mostrar ? 'block' : 'none';
-      }
-      // Para terceirizadas: mostrar campos só se SIM
-      else if (itemConfig.tipo === 'terceirizadas') {
-        campos.style.display = (valor === 'sim') ? 'block' : 'none';
-      }
-    }
-
-    // Função para gerar campos dinamicamente para itens dependentes
-    function gerarCamposDinamicos(item) {
-      const id = item.id;
+    // Gera os campos de profissional (reutilizável)
+    function gerarCamposProfissional(id) {
       return `
         <div class="form-group" style="position: relative;">
           <label>Profissional</label>
@@ -5759,6 +5665,61 @@
             </div>
           </div>
         </div>`;
+    }
+
+    // Toggle campos baseado na seleção
+    // SIM ou em_andamento/concluida = mostra campos
+    // NÃO ou nao_iniciada = esconde campos
+    // Toggle para itens SIM/NÃO
+    // SIM = mostra campos, NÃO = esconde campos
+    // Se tem execução (temExecucao), também mostra/esconde a seção de execução
+    function toggleSimNao(id, mostrar) {
+      const campos = document.getElementById('campos_' + id);
+      const errorMsg = document.getElementById('error_' + id);
+
+      // Limpar erro
+      if (errorMsg) errorMsg.classList.remove('show');
+
+      // Mostrar/esconder campos
+      if (campos) {
+        campos.style.display = mostrar ? 'block' : 'none';
+      }
+
+      // Verificar se tem item de execução dependente
+      const itemConfig = encontrarItemPorId(id);
+      if (itemConfig && itemConfig.temExecucao) {
+        // Encontrar item de execução que depende deste
+        for (let pageNum = 9; pageNum <= 24; pageNum++) {
+          const pageItems = subcontratados['page' + pageNum];
+          if (pageItems) {
+            pageItems.forEach(item => {
+              if (item.depende === id) {
+                const secaoExec = document.getElementById('section_' + item.id);
+                const separadorExec = document.querySelector('.separador_' + item.id);
+                if (secaoExec) {
+                  secaoExec.style.display = mostrar ? 'block' : 'none';
+                }
+                if (separadorExec) {
+                  separadorExec.style.display = mostrar ? 'block' : 'none';
+                }
+              }
+            });
+          }
+        }
+      }
+    }
+
+    // Toggle para campos de execução (quando seleciona status)
+    function toggleCamposExecucao(id) {
+      const errorMsg = document.getElementById('error_' + id);
+      if (errorMsg) errorMsg.classList.remove('show');
+      // Campos já estão visíveis, não precisa fazer nada
+    }
+
+    // Limpar erro
+    function limparErro(id) {
+      const errorMsg = document.getElementById('error_' + id);
+      if (errorMsg) errorMsg.classList.remove('show');
     }
 
     // Função auxiliar para encontrar configuração de item por ID
@@ -5860,17 +5821,27 @@
       if (!items) return { valid: true, erros: [] };
 
       const erros = [];
-      
+
       items.forEach(item => {
         const id = item.id;
+
+        // Se o item depende de outro, só valida se a seção estiver visível
+        if (item.depende) {
+          const secao = document.getElementById('section_' + id);
+          if (secao && secao.style.display === 'none') {
+            // Seção escondida (projeto = NÃO), não precisa validar
+            return;
+          }
+        }
+
         let selecionado = false;
-        
+
         if (item.tipo === 'simNao' || item.tipo === 'terceirizadas') {
           selecionado = document.querySelector(`input[name="${id}Opcao"]:checked`);
         } else if (item.tipo === 'status') {
           selecionado = document.querySelector(`input[name="${id}Status"]:checked`);
         }
-        
+
         if (!selecionado) {
           erros.push(item.titulo);
           const errorMsg = document.getElementById('error_' + id);
