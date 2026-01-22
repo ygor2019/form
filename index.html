@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <title>Formulário de Obra</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#1a365d" />
+  <meta name="description" content="Formulário para cadastro de obras" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -4467,6 +4471,17 @@
     // =============================================
 
     document.addEventListener('DOMContentLoaded', function() {
+      // Registrar Service Worker para PWA
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => {
+            console.log('Service Worker registrado com sucesso:', registration);
+          })
+          .catch(error => {
+            console.log('Erro ao registrar Service Worker:', error);
+          });
+      }
+
       loadFromCache();
       updateProgress();
       carregarProfissionaisDoCache();
