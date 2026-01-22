@@ -6572,38 +6572,22 @@
 
     // Avançar página de subcontratados - SEM verificação de campos vazios (só salvar tem)
     function avancarSub(pageNum) {
-      // NÃO validar - apenas salvar e avançar
-      // A validação de campos vazios só acontece no SALVAR
-      
-      // Salvar dados (sem chamar salvarPaginaSub para evitar validação duplicada)
-      const items = subcontratados['page' + pageNum];
-      if (items) {
-        const dados = {};
-        items.forEach(item => {
-          const id = item.id;
-          dados[id] = {
-            opcao: document.querySelector(`input[name="${id}Opcao"]:checked`)?.value || 
-                   document.querySelector(`input[name="${id}Status"]:checked`)?.value || '',
-            profissional: document.getElementById('prof_' + id)?.value || '',
-            cpf: document.getElementById('cpf_' + id)?.value || '',
-            tipoReg: document.querySelector(`input[name="reg_${id}"]:checked`)?.value || '',
-            numCrea: document.getElementById('numCrea_' + id)?.value || '',
-            sigla: document.getElementById('sigla_' + id)?.value || '',
-            numOutros: document.getElementById('numOutros_' + id)?.value || '',
-            tipoArt: document.querySelector(`input[name="tipoArt_${id}"]:checked`)?.value || '',
-            numArt: document.getElementById('numArt_' + id)?.value || '',
-            nomeArt: document.getElementById('nomeArt_' + id)?.value || '',
-            valArt: document.getElementById('valArt_' + id)?.value || '',
-            empresa: document.getElementById('empresa_' + id)?.value || '',
-            cnpj: document.getElementById('cnpj_' + id)?.value || '',
-            regEmpresa: document.getElementById('regEmpresa_' + id)?.value || '',
-            placa: document.querySelector(`input[name="placa_${id}"]:checked`)?.value || ''
-          };
-        });
-        formData['page' + pageNum] = { ...dados, saved: true };
-        saveToCache();
+      const nextPageNum = pageNum + 1;
+      const nextPageKey = `page${nextPageNum}`;
+      const currentPageKey = `page${pageNum}`;
+
+      // Regra: Se a PRÓXIMA página nunca foi salva (é uma página nova),
+      // o usuário é OBRIGADO a salvar a página atual para prosseguir.
+      if (nextPageNum <= totalPages && !formData[nextPageKey]?.saved) {
+        if (!formData[currentPageKey]?.saved) {
+          showToast('⚠️ Salve os dados antes de avançar para uma nova página!', 'error');
+          return;
+        }
       }
-      
+
+      // Salvar dados da página atual usando a função completa (incluindo validação de terceirizadas)
+      salvarPaginaSub(pageNum);
+
       // Avançar para próxima página
       if (pageNum < totalPages) {
         showPage(pageNum + 1);
