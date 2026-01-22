@@ -4644,10 +4644,27 @@
 
       switch(pageNum) {
         case 1:
-          // CEP - só valida se preencheu algo
+          // OBRIGATÓRIO: Bairro, Cidade, CEP
+          const bairro = document.getElementById('bairro').value.trim();
+          const cidade = document.getElementById('cidade').value.trim();
           const cep = document.getElementById('cep').value.trim();
-          if (cep) {
-            const cidade = document.getElementById('cidade').value.trim();
+
+          if (!bairro) {
+            erros.push('Bairro é obrigatório');
+            document.getElementById('bairro').classList.add('error');
+            document.getElementById('errorBairro').classList.add('show');
+          }
+          if (!cidade) {
+            erros.push('Cidade é obrigatória');
+            document.getElementById('cidade').classList.add('error');
+            document.getElementById('errorCidade').classList.add('show');
+          }
+          if (!cep) {
+            erros.push('CEP é obrigatório');
+            document.getElementById('cep').classList.add('error');
+            document.getElementById('errorCep').classList.add('show');
+          } else {
+            // Validar formato CEP se preenchido
             const resultadoCep = validarCepSaoPaulo(cep, cidade);
             if (!resultadoCep.valid) {
               erros.push('CEP: ' + resultadoCep.message);
