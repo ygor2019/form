@@ -275,6 +275,35 @@
       transform: none !important;
     }
 
+    .btn-add-terceirizada {
+      background: none;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 8px;
+    }
+
+    .btn-add-terceirizada:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--primary);
+    }
+
+    .btn-add-terceirizada:hover:not(:disabled) span {
+      color: white;
+    }
+
+    .btn-add-terceirizada:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      border-color: var(--border);
+    }
+
     /* Toast notification */
     .toast {
       position: fixed;
@@ -5288,11 +5317,112 @@
       }, 2000);
     }
 
+    // Carregar dados das páginas de subcontratados
+    function carregarDadosSubcontratados(pageNum) {
+      if (pageNum < 9 || pageNum > 24 || !formData['page' + pageNum]) return;
+
+      const pageData = formData['page' + pageNum];
+      const items = subcontratados['page' + pageNum];
+
+      if (!items) return;
+
+      items.forEach(item => {
+        const id = item.id;
+        const itemData = pageData[id];
+
+        if (!itemData) return;
+
+        // Restaurar opção SIM/NÃO ou status
+        if (itemData.opcao) {
+          const radio = document.querySelector(`input[name="${id}Opcao"][value="${itemData.opcao}"]`) ||
+                       document.querySelector(`input[name="${id}Status"][value="${itemData.opcao}"]`);
+          if (radio) {
+            radio.checked = true;
+
+            // Se for terceirizadas e SIM, recriar os campos dinâmicos
+            if (item.tipo === 'terceirizadas' && itemData.opcao === 'Sim' && itemData.terceirizadas) {
+              // Aguardar um pouco para garantir que toggleSimNao já foi chamado
+              setTimeout(() => {
+                const container = document.getElementById('campos_' + id);
+                if (container) {
+                  // Limpar campos existentes (exceto o primeiro)
+                  const rows = container.querySelectorAll('.form-row');
+                  for (let i = 1; i < rows.length; i++) {
+                    rows[i].remove();
+                  }
+
+                  // Recriar campos baseados nos dados salvos
+                  itemData.terceirizadas.forEach((terc, index) => {
+                    if (index === 0) {
+                      // Primeiro campo já existe
+                      document.getElementById(`${id}Terceirizada1`).value = terc.terceirizada || '';
+                      document.getElementById(`${id}Art1`).value = terc.art || '';
+                    } else {
+                      // Adicionar novos campos
+                      adicionarCampoTerceirizada(id);
+                      // Preencher com dados
+                      setTimeout(() => {
+                        const rowNum = index + 1;
+                        const tercInput = document.getElementById(`${id}Terceirizada${rowNum}`);
+                        const artInput = document.getElementById(`${id}Art${rowNum}`);
+                        if (tercInput) tercInput.value = terc.terceirizada || '';
+                        if (artInput) artInput.value = terc.art || '';
+                      }, 50);
+                    }
+                  });
+
+                  // Atualizar contador
+                  container.setAttribute('data-contador', itemData.terceirizadas.length);
+
+                  // Trigger validation para habilitar/desabilitar botões
+                  setTimeout(() => {
+                    itemData.terceirizadas.forEach((_, index) => {
+                      validarCampoTerceirizada(id, index + 1);
+                    });
+                  }, 100);
+                }
+              }, 50);
+            } else if (itemData.opcao === 'Sim' || itemData.opcao === 'em_andamento' || itemData.opcao === 'concluida') {
+              // Para outros tipos, chamar toggle para mostrar campos
+              toggleSimNao(id, true);
+            }
+          }
+        }
+
+        // Restaurar campos normais (para tipos não terceirizadas)
+        if (item.tipo !== 'terceirizadas') {
+          if (itemData.profissional) document.getElementById('prof_' + id).value = itemData.profissional;
+          if (itemData.cpf) document.getElementById('cpf_' + id).value = itemData.cpf;
+          if (itemData.tipoReg) {
+            const radio = document.querySelector(`input[name="reg_${id}"][value="${itemData.tipoReg}"]`);
+            if (radio) radio.checked = true;
+          }
+          if (itemData.numCrea) document.getElementById('numCrea_' + id).value = itemData.numCrea;
+          if (itemData.sigla) document.getElementById('sigla_' + id).value = itemData.sigla;
+          if (itemData.numOutros) document.getElementById('numOutros_' + id).value = itemData.numOutros;
+          if (itemData.tipoArt) {
+            const radio = document.querySelector(`input[name="tipoArt_${id}"][value="${itemData.tipoArt}"]`);
+            if (radio) radio.checked = true;
+          }
+          if (itemData.numArt) document.getElementById('numArt_' + id).value = itemData.numArt;
+          if (itemData.nomeArt) document.getElementById('nomeArt_' + id).value = itemData.nomeArt;
+          if (itemData.valArt) document.getElementById('valArt_' + id).value = itemData.valArt;
+          if (itemData.empresa) document.getElementById('empresa_' + id).value = itemData.empresa;
+          if (itemData.cnpj) document.getElementById('cnpj_' + id).value = itemData.cnpj;
+          if (itemData.regEmpresa) document.getElementById('regEmpresa_' + id).value = itemData.regEmpresa;
+          if (itemData.placa) {
+            const radio = document.querySelector(`input[name="placa_${id}"][value="${itemData.placa}"]`);
+            if (radio) radio.checked = true;
+          }
+        }
+      });
+    }
+
     // Mostrar página específica
     function showPage(pageNum) {
       // Limpar toasts ao mudar de página
       limparToast();
-      
+
       // Esconder todas as páginas
       document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
@@ -5304,6 +5434,11 @@
         targetPage.classList.add('active');
         currentPage = pageNum;
         updateProgress();
+
+        // Carregar dados salvos para páginas de subcontratados
+        if (pageNum >= 9 && pageNum <= 24) {
+          setTimeout(() => carregarDadosSubcontratados(pageNum), 100);
+        }
       }
     }
 
@@ -5924,16 +6059,20 @@
             </div>
             <p class="error-message" id="error_${id}">Selecione SIM ou NÃO</p>
           </div>
-          <div id="campos_${id}">
-            ${[1,2,3,4,5,6,7,8,9,10].map(n => `
-            <div class="form-row" style="margin-bottom: 8px;">
+          <div id="campos_${id}" data-contador="1">
+            <div class="form-row" style="margin-bottom: 8px;" data-row="1">
               <div class="form-group" style="flex: 2; margin-bottom: 0;">
-                <input type="text" id="${id}Terceirizada${n}" placeholder="Terceirizada ${n}">
+                <input type="text" id="${id}Terceirizada1" placeholder="Terceirizada 1" oninput="validarCampoTerceirizada('${id}', 1)">
               </div>
               <div class="form-group" style="flex: 1; margin-bottom: 0;">
-                <input type="text" id="${id}Art${n}" placeholder="ART nº">
+                <input type="text" id="${id}Art1" placeholder="ART nº" oninput="validarCampoTerceirizada('${id}', 1)">
               </div>
-            </div>`).join('')}
+              <div class="form-group" style="width: 40px; margin-bottom: 0;">
+                <button type="button" class="btn-add-terceirizada" id="btnAdd_${id}_1" onclick="adicionarCampoTerceirizada('${id}')" title="Adicionar outra terceirizada" disabled>
+                  <span style="font-size: 18px; color: var(--text-muted);">+</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">`;
@@ -6035,6 +6174,62 @@
         </div>`;
     }
 
+    // Funções para campos terceirizadas dinâmicos
+    function validarCampoTerceirizada(id, rowNum) {
+      const terceirizada = document.getElementById(`${id}Terceirizada${rowNum}`);
+      const art = document.getElementById(`${id}Art${rowNum}`);
+      const btnAdd = document.getElementById(`btnAdd_${id}_${rowNum}`);
+
+      // Verificar se ambos os campos estão preenchidos
+      const terceirizadaPreenchida = terceirizada && terceirizada.value.trim() !== '';
+      const artPreenchida = art && art.value.trim() !== '';
+
+      // Habilitar/desabilitar botão de adicionar
+      if (btnAdd) {
+        btnAdd.disabled = !(terceirizadaPreenchida && artPreenchida);
+        btnAdd.style.opacity = btnAdd.disabled ? '0.3' : '1';
+      }
+    }
+
+    function adicionarCampoTerceirizada(id) {
+      const container = document.getElementById('campos_' + id);
+      if (!container) return;
+
+      const contadorAtual = parseInt(container.getAttribute('data-contador') || '1');
+      const novoContador = contadorAtual + 1;
+
+      // Criar novo campo
+      const novoCampo = document.createElement('div');
+      novoCampo.className = 'form-row';
+      novoCampo.style.marginBottom = '8px';
+      novoCampo.setAttribute('data-row', novoContador);
+      novoCampo.innerHTML = `
+        <div class="form-group" style="flex: 2; margin-bottom: 0;">
+          <input type="text" id="${id}Terceirizada${novoContador}" placeholder="Terceirizada ${novoContador}" oninput="validarCampoTerceirizada('${id}', ${novoContador})">
+        </div>
+        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+          <input type="text" id="${id}Art${novoContador}" placeholder="ART nº" oninput="validarCampoTerceirizada('${id}', ${novoContador})">
+        </div>
+        <div class="form-group" style="width: 40px; margin-bottom: 0;">
+          <button type="button" class="btn-add-terceirizada" id="btnAdd_${id}_${novoContador}" onclick="adicionarCampoTerceirizada('${id}')" title="Adicionar outra terceirizada" disabled>
+            <span style="font-size: 18px; color: var(--text-muted);">+</span>
+          </button>
+        </div>
+      `;
+
+      // Adicionar ao container
+      container.appendChild(novoCampo);
+
+      // Atualizar contador
+      container.setAttribute('data-contador', novoContador);
+
+      // Focar no primeiro campo do novo row
+      setTimeout(() => {
+        const primeiroInput = novoCampo.querySelector('input');
+        if (primeiroInput) primeiroInput.focus();
+      }, 100);
+    }
+
     // Toggle campos baseado na seleção
     // SIM ou em_andamento/concluida = mostra campos
     // NÃO ou nao_iniciada = esconde campos
@@ -6110,6 +6305,23 @@
               }
             });
           }
+        }
+      }
+
+      // Tratamento especial para campos terceirizadas dinâmicos
+      if (itemConfig && itemConfig.tipo === 'terceirizadas') {
+        if (mostrar) {
+          // Quando SIM, inicializar com 1 campo e contador
+          campos.setAttribute('data-contador', '1');
+          // Remover campos extras se existirem (caso tenha voltado de NÃO)
+          const rows = campos.querySelectorAll('.form-row');
+          if (rows.length > 1) {
+            for (let i = 1; i < rows.length; i++) {
+              rows[i].remove();
+            }
+          }
+          // Validar o primeiro campo
+          setTimeout(() => validarCampoTerceirizada(id, 1), 100);
         }
       }
     }
@@ -6293,19 +6505,48 @@
 
         // 3. TERCEIRO: Verificar campos NÃO OBRIGATÓRIOS vazios (avisos)
         if (selecionado && camposDiv && camposDiv.style.display !== 'none') {
-          const verificarCamposVazios = (item.tipo === 'simNao' && opcaoSelecionada === 'Sim') || 
-                                        (item.tipo === 'status' && opcaoSelecionada);
-          
+          const verificarCamposVazios = (item.tipo === 'simNao' && opcaoSelecionada === 'Sim') ||
+                                        (item.tipo === 'status' && opcaoSelecionada) ||
+                                        (item.tipo === 'terceirizadas' && opcaoSelecionada === 'Sim');
+
           if (verificarCamposVazios) {
-            const prof = document.getElementById('prof_' + id);
-            const cpfCampo = document.getElementById('cpf_' + id);
-            const tipoReg = document.querySelector(`input[name="reg_${id}"]:checked`);
-            const tipoArt = document.querySelector(`input[name="tipoArt_${id}"]:checked`);
-            
-            if (prof && !prof.value.trim()) avisos.push(`${item.titulo} - Profissional`);
-            if (cpfCampo && !cpfCampo.value.trim()) avisos.push(`${item.titulo} - CPF`);
-            if (!tipoReg) avisos.push(`${item.titulo} - CREA/Outros`);
-            if (!tipoArt) avisos.push(`${item.titulo} - ART/Outros`);
+            if (item.tipo === 'terceirizadas') {
+              // Validação especial para campos terceirizados dinâmicos
+              const contador = parseInt(camposDiv.getAttribute('data-contador') || '1');
+              let temAlgumCampoPreenchido = false;
+              let temCampoIncompleto = false;
+
+              for (let i = 1; i <= contador; i++) {
+                const terceirizada = document.getElementById(`${id}Terceirizada${i}`);
+                const art = document.getElementById(`${id}Art${i}`);
+
+                const tercPreenchida = terceirizada && terceirizada.value.trim();
+                const artPreenchida = art && art.value.trim();
+
+                if (tercPreenchida || artPreenchida) {
+                  temAlgumCampoPreenchido = true;
+                  // Se um campo está preenchido, o outro também deve estar
+                  if ((tercPreenchida && !artPreenchida) || (!tercPreenchida && artPreenchida)) {
+                    temCampoIncompleto = true;
+                  }
+                }
+              }
+
+              if (temAlgumCampoPreenchido && temCampoIncompleto) {
+                avisos.push(`${item.titulo} - Campos terceirizadas incompletos`);
+              }
+            } else {
+              // Validação normal para outros tipos
+              const prof = document.getElementById('prof_' + id);
+              const cpfCampo = document.getElementById('cpf_' + id);
+              const tipoReg = document.querySelector(`input[name="reg_${id}"]:checked`);
+              const tipoArt = document.querySelector(`input[name="tipoArt_${id}"]:checked`);
+
+              if (prof && !prof.value.trim()) avisos.push(`${item.titulo} - Profissional`);
+              if (cpfCampo && !cpfCampo.value.trim()) avisos.push(`${item.titulo} - CPF`);
+              if (!tipoReg) avisos.push(`${item.titulo} - CREA/Outros`);
+              if (!tipoArt) avisos.push(`${item.titulo} - ART/Outros`);
+            }
           }
         }
 
@@ -6410,24 +6651,52 @@
       const dados = {};
       items.forEach(item => {
         const id = item.id;
-        dados[id] = {
-          opcao: document.querySelector(`input[name="${id}Opcao"]:checked`)?.value || 
-                 document.querySelector(`input[name="${id}Status"]:checked`)?.value || '',
-          profissional: document.getElementById('prof_' + id)?.value || '',
-          cpf: document.getElementById('cpf_' + id)?.value || '',
-          tipoReg: document.querySelector(`input[name="reg_${id}"]:checked`)?.value || '',
-          numCrea: document.getElementById('numCrea_' + id)?.value || '',
-          sigla: document.getElementById('sigla_' + id)?.value || '',
-          numOutros: document.getElementById('numOutros_' + id)?.value || '',
-          tipoArt: document.querySelector(`input[name="tipoArt_${id}"]:checked`)?.value || '',
-          numArt: document.getElementById('numArt_' + id)?.value || '',
-          nomeArt: document.getElementById('nomeArt_' + id)?.value || '',
-          valArt: document.getElementById('valArt_' + id)?.value || '',
-          empresa: document.getElementById('empresa_' + id)?.value || '',
-          cnpj: document.getElementById('cnpj_' + id)?.value || '',
-          regEmpresa: document.getElementById('regEmpresa_' + id)?.value || '',
-          placa: document.querySelector(`input[name="placa_${id}"]:checked`)?.value || ''
-        };
+
+        if (item.tipo === 'terceirizadas') {
+          // Salvar dados especiais para terceirizadas dinâmicos
+          const opcao = document.querySelector(`input[name="${id}Opcao"]:checked`)?.value || '';
+          const terceirizadas = [];
+
+          if (opcao === 'Sim') {
+            const contador = parseInt(document.getElementById('campos_' + id)?.getAttribute('data-contador') || '1');
+            for (let i = 1; i <= contador; i++) {
+              const terceirizada = document.getElementById(`${id}Terceirizada${i}`)?.value.trim() || '';
+              const art = document.getElementById(`${id}Art${i}`)?.value.trim() || '';
+
+              if (terceirizada || art) {
+                terceirizadas.push({
+                  terceirizada: terceirizada,
+                  art: art
+                });
+              }
+            }
+          }
+
+          dados[id] = {
+            opcao: opcao,
+            terceirizadas: terceirizadas
+          };
+        } else {
+          // Salvar dados normais para outros tipos
+          dados[id] = {
+            opcao: document.querySelector(`input[name="${id}Opcao"]:checked`)?.value ||
+                   document.querySelector(`input[name="${id}Status"]:checked`)?.value || '',
+            profissional: document.getElementById('prof_' + id)?.value || '',
+            cpf: document.getElementById('cpf_' + id)?.value || '',
+            tipoReg: document.querySelector(`input[name="reg_${id}"]:checked`)?.value || '',
+            numCrea: document.getElementById('numCrea_' + id)?.value || '',
+            sigla: document.getElementById('sigla_' + id)?.value || '',
+            numOutros: document.getElementById('numOutros_' + id)?.value || '',
+            tipoArt: document.querySelector(`input[name="tipoArt_${id}"]:checked`)?.value || '',
+            numArt: document.getElementById('numArt_' + id)?.value || '',
+            nomeArt: document.getElementById('nomeArt_' + id)?.value || '',
+            valArt: document.getElementById('valArt_' + id)?.value || '',
+            empresa: document.getElementById('empresa_' + id)?.value || '',
+            cnpj: document.getElementById('cnpj_' + id)?.value || '',
+            regEmpresa: document.getElementById('regEmpresa_' + id)?.value || '',
+            placa: document.querySelector(`input[name="placa_${id}"]:checked`)?.value || ''
+          };
+        }
       });
 
       formData['page' + pageNum] = { ...dados, saved: true };
