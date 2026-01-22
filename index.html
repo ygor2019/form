@@ -545,6 +545,139 @@
       font-size: 12px;
       margin-top: 2px;
     }
+
+    /* Modal de confirmação */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-header-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #f6ad55, #ed8936);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    .modal-body {
+      padding: 20px 24px;
+    }
+
+    .modal-body p {
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      font-size: 15px;
+    }
+
+    .campos-faltantes {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+
+    .campos-faltantes-titulo {
+      font-weight: 600;
+      color: #92400e;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .campos-faltantes-lista {
+      color: #b45309;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .modal-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .modal-btn-cancelar {
+      background: var(--border);
+      color: var(--text-dark);
+    }
+
+    .modal-btn-cancelar:hover {
+      background: #cbd5e0;
+    }
+
+    .modal-btn-confirmar {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      color: white;
+    }
+
+    .modal-btn-confirmar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(237, 137, 54, 0.4);
+    }
   </style>
 </head>
 <body>
@@ -575,7 +708,7 @@
         <div class="card-body">
           <form id="form1" novalidate>
             <div class="form-group">
-              <label for="localObra">Local da Obra <span class="required">*</span></label>
+              <label for="localObra">Local da Obra</label>
               <input 
                 type="text" 
                 id="localObra" 
@@ -587,7 +720,7 @@
             </div>
 
             <div class="form-group">
-              <label for="bairro">Bairro <span class="required">*</span></label>
+              <label for="bairro">Bairro</label>
               <input 
                 type="text" 
                 id="bairro" 
@@ -600,7 +733,7 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label for="cidade">Cidade <span class="required">*</span></label>
+                <label for="cidade">Cidade</label>
                 <input 
                   type="text" 
                   id="cidade" 
@@ -612,7 +745,7 @@
               </div>
 
               <div class="form-group">
-                <label for="cep">CEP <span class="required">*</span></label>
+                <label for="cep">CEP</label>
                 <input 
                   type="text" 
                   id="cep" 
@@ -626,7 +759,6 @@
               </div>
             </div>
 
-            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
 
             <div class="button-group">
               <button type="button" class="btn btn-save" onclick="salvarPagina(1)">
@@ -652,7 +784,7 @@
           <form id="form2" novalidate>
             <!-- Tipo/Natureza -->
             <div class="form-group">
-              <label>Tipo/Natureza <span class="required">*</span></label>
+              <label>Tipo/Natureza</label>
               <div class="radio-group" id="tipoNatureza">
                 <div class="radio-option">
                   <input type="radio" id="tipoResid" name="tipoNatureza" value="Residencial">
@@ -689,7 +821,7 @@
             <!-- Área e Pavimentos -->
             <div class="form-row">
               <div class="form-group">
-                <label for="area">Área (m²) <span class="required">*</span></label>
+                <label for="area">Área (m²)</label>
                 <input 
                   type="text" 
                   id="area" 
@@ -701,7 +833,7 @@
               </div>
 
               <div class="form-group">
-                <label for="pavimentos">Nº Pavimentos <span class="required">*</span></label>
+                <label for="pavimentos">Nº Pavimentos</label>
                 <input 
                   type="number" 
                   id="pavimentos" 
@@ -752,7 +884,7 @@
 
             <!-- Proprietário -->
             <div class="form-group">
-              <label for="proprietario">Proprietário <span class="required">*</span></label>
+              <label for="proprietario">Proprietário</label>
               <input 
                 type="text" 
                 id="proprietario" 
@@ -764,7 +896,7 @@
 
             <!-- CPF ou CNPJ -->
             <div class="form-group">
-              <label>CPF ou CNPJ <span class="required">*</span></label>
+              <label>CPF ou CNPJ</label>
               <div class="toggle-group">
                 <button type="button" class="toggle-btn active" id="btnCpf" onclick="toggleCpfCnpj('cpf')">CPF</button>
                 <button type="button" class="toggle-btn" id="btnCnpj" onclick="toggleCpfCnpj('cnpj')">CNPJ</button>
@@ -782,7 +914,7 @@
 
             <!-- Endereço -->
             <div class="form-group">
-              <label for="enderecoProprietario">Endereço <span class="required">*</span></label>
+              <label for="enderecoProprietario">Endereço</label>
               <input 
                 type="text" 
                 id="enderecoProprietario" 
@@ -792,7 +924,6 @@
               <p class="error-message" id="errorEnderecoProprietario">Informe o endereço</p>
             </div>
 
-            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
 
             <div class="button-group">
               <button type="button" class="btn btn-secondary" onclick="retornar(2)">
@@ -821,7 +952,7 @@
           <form id="form3" novalidate>
             <!-- Placa afixada -->
             <div class="form-group">
-              <label>Placa afixada? <span class="required">*</span></label>
+              <label>Placa afixada?</label>
               <div class="radio-group">
                 <div class="radio-option">
                   <input type="radio" id="placaSim" name="placaAfixada" value="Sim">
@@ -843,7 +974,7 @@
 
             <!-- Profissional -->
             <div class="form-group" style="position: relative;">
-              <label for="profissional">Profissional <span class="required">*</span></label>
+              <label for="profissional">Profissional</label>
               <input 
                 type="text" 
                 id="profissional" 
@@ -860,7 +991,7 @@
 
             <!-- Tipo de Registro -->
             <div class="form-group">
-              <label>Registro <span class="required">*</span></label>
+              <label>Registro</label>
               <div class="radio-group">
                 <div class="radio-option">
                   <input type="radio" id="regCrea" name="tipoRegistro" value="CREA" onchange="mostrarCampoRegistro('crea')">
@@ -1023,7 +1154,6 @@
               <p class="error-message" id="errorEmpresaRegistro">CNPJ inválido</p>
             </div>
 
-            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
 
             <div class="button-group">
               <button type="button" class="btn btn-secondary" onclick="retornar(3)">
@@ -1052,7 +1182,7 @@
           <form id="form4" novalidate>
             <!-- Placa afixada -->
             <div class="form-group">
-              <label>Placa afixada? <span class="required">*</span></label>
+              <label>Placa afixada?</label>
               <div class="radio-group">
                 <div class="radio-option">
                   <input type="radio" id="placaSimRT" name="placaAfixadaRT" value="Sim">
@@ -1074,7 +1204,7 @@
 
             <!-- Profissional -->
             <div class="form-group" style="position: relative;">
-              <label for="profissionalRT">Profissional <span class="required">*</span></label>
+              <label for="profissionalRT">Profissional</label>
               <input 
                 type="text" 
                 id="profissionalRT" 
@@ -1091,7 +1221,7 @@
 
             <!-- CPF -->
             <div class="form-group">
-              <label for="cpfRT">CPF <span class="required">*</span></label>
+              <label for="cpfRT">CPF</label>
               <input 
                 type="text" 
                 id="cpfRT" 
@@ -1239,7 +1369,6 @@
               <p class="error-message" id="errorEmpresaRegistroRT">CNPJ inválido</p>
             </div>
 
-            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
 
             <div class="button-group">
               <button type="button" class="btn btn-secondary" onclick="retornar(4)">
@@ -1268,7 +1397,7 @@
           <form id="form5" novalidate>
             <!-- Houve Demolição -->
             <div class="form-group">
-              <label>Houve Demolição? <span class="required">*</span></label>
+              <label>Houve Demolição?</label>
               <div class="radio-group">
                 <div class="radio-option">
                   <input type="radio" id="demolicaoSim" name="houveDemolicao" value="Sim" onchange="toggleDemolicao()">
@@ -1315,7 +1444,7 @@
               <!-- Profissional do Projeto -->
               <fieldset id="fieldsetProjetoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
                 <div class="form-group" style="position: relative;">
-                  <label for="profissionalProjetoDemol">Profissional <span class="required">*</span></label>
+                  <label for="profissionalProjetoDemol">Profissional</label>
                   <input 
                     type="text" 
                     id="profissionalProjetoDemol" 
@@ -1331,7 +1460,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="cpfProjetoDemol">CPF <span class="required">*</span></label>
+                  <label for="cpfProjetoDemol">CPF</label>
                   <input 
                     type="text" 
                     id="cpfProjetoDemol" 
@@ -1442,7 +1571,7 @@
               <!-- Profissional da Execução -->
               <fieldset id="fieldsetExecucaoDemolicao" disabled style="border: none; padding: 0; margin: 0;">
                 <div class="form-group" style="position: relative;">
-                  <label for="profissionalExecDemol">Profissional <span class="required">*</span></label>
+                  <label for="profissionalExecDemol">Profissional</label>
                   <input 
                     type="text" 
                     id="profissionalExecDemol" 
@@ -1458,7 +1587,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="cpfExecDemol">CPF <span class="required">*</span></label>
+                  <label for="cpfExecDemol">CPF</label>
                   <input 
                     type="text" 
                     id="cpfExecDemol" 
@@ -1570,7 +1699,6 @@
 
             </div>
 
-            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
 
             <div class="button-group">
               <button type="button" class="btn btn-secondary" onclick="retornar(5)">
@@ -1604,14 +1732,14 @@
             </div>
             
             <div class="form-group" style="position: relative;">
-              <label for="profCoordenacao">Profissional <span class="required">*</span></label>
+              <label for="profCoordenacao">Profissional</label>
               <input type="text" id="profCoordenacao" name="profCoordenacao" placeholder="Nome do Coordenador" autocomplete="new-password">
               <div class="autocomplete-list" id="autocompleteCoordenacao"></div>
               <p class="error-message" id="errorProfCoordenacao">Informe o profissional</p>
             </div>
 
             <div class="form-group">
-              <label for="cpfCoordenacao">CPF <span class="required">*</span></label>
+              <label for="cpfCoordenacao">CPF</label>
               <input type="text" id="cpfCoordenacao" name="cpfCoordenacao" placeholder="000.000.000-00" maxlength="14">
               <p class="error-message" id="errorCpfCoordenacao">CPF inválido</p>
             </div>
@@ -1668,14 +1796,14 @@
             </div>
             
             <div class="form-group" style="position: relative;">
-              <label for="profOrcamento">Profissional <span class="required">*</span></label>
+              <label for="profOrcamento">Profissional</label>
               <input type="text" id="profOrcamento" name="profOrcamento" placeholder="Nome do Responsável pelo Orçamento" autocomplete="new-password">
               <div class="autocomplete-list" id="autocompleteOrcamento"></div>
               <p class="error-message" id="errorProfOrcamento">Informe o profissional</p>
             </div>
 
             <div class="form-group">
-              <label for="cpfOrcamento">CPF <span class="required">*</span></label>
+              <label for="cpfOrcamento">CPF</label>
               <input type="text" id="cpfOrcamento" name="cpfOrcamento" placeholder="000.000.000-00" maxlength="14">
               <p class="error-message" id="errorCpfOrcamento">CPF inválido</p>
             </div>
@@ -1732,14 +1860,14 @@
             </div>
             
             <div class="form-group" style="position: relative;">
-              <label for="profResidente">Profissional <span class="required">*</span></label>
+              <label for="profResidente">Profissional</label>
               <input type="text" id="profResidente" name="profResidente" placeholder="Nome do Engenheiro Residente" autocomplete="new-password">
               <div class="autocomplete-list" id="autocompleteResidente"></div>
               <p class="error-message" id="errorProfResidente">Informe o profissional</p>
             </div>
 
             <div class="form-group">
-              <label for="cpfResidente">CPF <span class="required">*</span></label>
+              <label for="cpfResidente">CPF</label>
               <input type="text" id="cpfResidente" name="cpfResidente" placeholder="000.000.000-00" maxlength="14">
               <p class="error-message" id="errorCpfResidente">CPF inválido</p>
             </div>
@@ -1788,7 +1916,6 @@
               </div>
             </div>
 
-            <p class="form-legend"><span class="required">*</span> Campos obrigatórios</p>
 
             <div class="button-group">
               <button type="button" class="btn btn-secondary" onclick="retornar(6)">
@@ -1816,7 +1943,7 @@
         <div class="card-body">
           <form id="form7" novalidate>
             <div class="form-group">
-              <label>Livro de Ordem <span class="required">*</span></label>
+              <label>Livro de Ordem</label>
               <div class="radio-group">
                 <div class="radio-option">
                   <input type="radio" id="livroSim" name="livroOrdem" value="Sim">
@@ -1862,6 +1989,28 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- Modal de confirmação -->
+  <div class="modal-overlay" id="modalConfirmacao">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-header-icon">⚠️</div>
+        <h3>Campos não preenchidos</h3>
+      </div>
+      <div class="modal-body">
+        <p>Você não preencheu alguns campos:</p>
+        <div class="campos-faltantes">
+          <div class="campos-faltantes-titulo">Campos vazios:</div>
+          <div class="campos-faltantes-lista" id="listaCamposFaltantes"></div>
+        </div>
+        <p>Deseja salvar assim mesmo?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="modal-btn modal-btn-cancelar" onclick="fecharModal()">Não</button>
+        <button type="button" class="modal-btn modal-btn-confirmar" onclick="confirmarSalvamento()">Sim, salvar</button>
+      </div>
+    </div>
   </div>
 
   <!-- Toast notification -->
@@ -3650,273 +3799,235 @@
     // =============================================
 
     // Salvar página
+    // Salvar página - verifica campos vazios e mostra modal se necessário
     function salvarPagina(pageNum) {
-      let isValid = false;
-      let avisos = [];
+      const camposVazios = verificarCamposVazios(pageNum);
       
+      if (camposVazios.length > 0) {
+        // Tem campos vazios - mostrar modal de confirmação
+        abrirModal(camposVazios, pageNum);
+      } else {
+        // Todos os campos preenchidos - salvar diretamente
+        salvarPaginaForcado(pageNum);
+      }
+    }
+
+    // Salvar página sem validação (usado quando usuário confirma no modal)
+    function salvarPaginaForcado(pageNum) {
       switch(pageNum) {
         case 1:
-          isValid = validarPagina1();
-          if (isValid) {
-            formData.page1 = {
-              localObra: document.getElementById('localObra').value.trim(),
-              bairro: document.getElementById('bairro').value.trim(),
-              cidade: document.getElementById('cidade').value.trim(),
-              cep: document.getElementById('cep').value.trim(),
-              saved: true
-            };
-          }
+          formData.page1 = {
+            localObra: document.getElementById('localObra').value.trim(),
+            bairro: document.getElementById('bairro').value.trim(),
+            cidade: document.getElementById('cidade').value.trim(),
+            cep: document.getElementById('cep').value.trim(),
+            saved: true
+          };
           break;
           
         case 2:
-          const resultado2 = validarPagina2();
-          isValid = resultado2.isValid;
-          avisos = resultado2.avisos;
-          
-          if (isValid) {
-            const tipoSelecionado = document.querySelector('input[name="tipoNatureza"]:checked');
-            formData.page2 = {
-              tipoNatureza: tipoSelecionado ? tipoSelecionado.value : '',
-              area: document.getElementById('area').value.trim(),
-              pavimentos: document.getElementById('pavimentos').value.trim(),
-              processoNum: document.getElementById('processoNum').value.trim(),
-              alvaraNum: document.getElementById('alvaraNum').value.trim(),
-              alvaraDe: document.getElementById('alvaraDe').value.trim(),
-              proprietario: document.getElementById('proprietario').value.trim(),
-              tipoCpfCnpj: tipoDocumento,
-              cpfCnpj: document.getElementById('cpfCnpj').value.trim(),
-              enderecoProprietario: document.getElementById('enderecoProprietario').value.trim(),
-              saved: true
-            };
-          }
+          const tipoSelecionado = document.querySelector('input[name="tipoNatureza"]:checked');
+          formData.page2 = {
+            tipoNatureza: tipoSelecionado ? tipoSelecionado.value : '',
+            area: document.getElementById('area').value.trim(),
+            pavimentos: document.getElementById('pavimentos').value.trim(),
+            processoNum: document.getElementById('processoNum').value.trim(),
+            alvaraNum: document.getElementById('alvaraNum').value.trim(),
+            alvaraDe: document.getElementById('alvaraDe').value.trim(),
+            proprietario: document.getElementById('proprietario').value.trim(),
+            tipoCpfCnpj: tipoDocumento,
+            cpfCnpj: document.getElementById('cpfCnpj').value.trim(),
+            enderecoProprietario: document.getElementById('enderecoProprietario').value.trim(),
+            saved: true
+          };
           break;
           
         case 3:
-          const resultado3 = validarPagina3();
-          isValid = resultado3.isValid;
-          avisos = resultado3.avisos;
+          const placaSelecionada = document.querySelector('input[name="placaAfixada"]:checked');
+          const tipoRegistroSelecionado = document.querySelector('input[name="tipoRegistro"]:checked');
+          const tipoArtRrtSelecionado = document.querySelector('input[name="tipoArtRrt"]:checked');
           
-          if (isValid) {
-            const placaSelecionada = document.querySelector('input[name="placaAfixada"]:checked');
-            const tipoRegistroSelecionado = document.querySelector('input[name="tipoRegistro"]:checked');
-            const tipoArtRrtSelecionado = document.querySelector('input[name="tipoArtRrt"]:checked');
-            
-            formData.page3 = {
-              placaAfixada: placaSelecionada ? placaSelecionada.value : '',
-              profissional: document.getElementById('profissional').value.trim(),
-              tipoRegistro: tipoRegistroSelecionado ? tipoRegistroSelecionado.value : '',
-              numeroCrea: document.getElementById('numeroCrea').value.trim(),
-              cpfProfissional: document.getElementById('cpfProfissional').value.trim(),
-              siglaConselho: document.getElementById('siglaConselho').value.trim(),
-              numeroConselho: document.getElementById('numeroConselho').value.trim(),
-              titulo: document.getElementById('titulo').value.trim(),
-              tipoArtRrt: tipoArtRrtSelecionado ? tipoArtRrtSelecionado.value : '',
-              artNumero: document.getElementById('artNumero').value.trim(),
-              rrtNumero: document.getElementById('rrtNumero').value.trim(),
-              empresa: document.getElementById('empresa').value.trim(),
-              tipoEmpresaRegistro: tipoEmpresaRegistro,
-              empresaRegistro: document.getElementById('empresaRegistro').value.trim(),
-              saved: true
-            };
-            
-            // Adicionar profissional à lista de autocomplete
-            const nomeProfissional = document.getElementById('profissional').value.trim();
-            const cpfProf = tipoRegistroSelecionado?.value === 'CPF' ? document.getElementById('cpfProfissional').value.trim() : '';
-            const creaProf = tipoRegistroSelecionado?.value === 'CREA' ? document.getElementById('numeroCrea').value.trim() : '';
-            adicionarProfissional(nomeProfissional, cpfProf, creaProf);
-          }
+          formData.page3 = {
+            placaAfixada: placaSelecionada ? placaSelecionada.value : '',
+            profissional: document.getElementById('profissional').value.trim(),
+            tipoRegistro: tipoRegistroSelecionado ? tipoRegistroSelecionado.value : '',
+            numeroCrea: document.getElementById('numeroCrea').value.trim(),
+            cpfProfissional: document.getElementById('cpfProfissional').value.trim(),
+            siglaConselho: document.getElementById('siglaConselho').value.trim(),
+            numeroConselho: document.getElementById('numeroConselho').value.trim(),
+            titulo: document.getElementById('titulo').value.trim(),
+            tipoArtRrt: tipoArtRrtSelecionado ? tipoArtRrtSelecionado.value : '',
+            artNumero: document.getElementById('artNumero').value.trim(),
+            rrtNumero: document.getElementById('rrtNumero').value.trim(),
+            empresa: document.getElementById('empresa').value.trim(),
+            tipoEmpresaRegistro: tipoEmpresaRegistro,
+            empresaRegistro: document.getElementById('empresaRegistro').value.trim(),
+            saved: true
+          };
+          
+          // Adicionar profissional à lista de autocomplete
+          const nomeProfissional = document.getElementById('profissional').value.trim();
+          const cpfProf = tipoRegistroSelecionado?.value === 'CPF' ? document.getElementById('cpfProfissional').value.trim() : '';
+          const creaProf = tipoRegistroSelecionado?.value === 'CREA' ? document.getElementById('numeroCrea').value.trim() : '';
+          adicionarProfissional(nomeProfissional, cpfProf, creaProf);
           break;
           
         case 4:
-          const resultado4 = validarPagina4();
-          isValid = resultado4.isValid;
-          avisos = resultado4.avisos;
+          const placaSelecionadaRT = document.querySelector('input[name="placaAfixadaRT"]:checked');
+          const tipoRegistroSelecionadoRT = document.querySelector('input[name="tipoRegistroRT"]:checked');
+          const tipoArtOutrosSelecionadoRT = document.querySelector('input[name="tipoArtOutrosRT"]:checked');
           
-          if (isValid) {
-            const placaSelecionadaRT = document.querySelector('input[name="placaAfixadaRT"]:checked');
-            const tipoRegistroSelecionadoRT = document.querySelector('input[name="tipoRegistroRT"]:checked');
-            const tipoArtOutrosSelecionadoRT = document.querySelector('input[name="tipoArtOutrosRT"]:checked');
-            
-            formData.page4 = {
-              placaAfixadaRT: placaSelecionadaRT ? placaSelecionadaRT.value : '',
-              profissionalRT: document.getElementById('profissionalRT').value.trim(),
-              cpfRT: document.getElementById('cpfRT').value.trim(),
-              tipoRegistroRT: tipoRegistroSelecionadoRT ? tipoRegistroSelecionadoRT.value : '',
-              numeroCreaRT: document.getElementById('numeroCreaRT').value.trim(),
-              siglaConselhoRT: document.getElementById('siglaConselhoRT').value.trim(),
-              numeroConselhoRT: document.getElementById('numeroConselhoRT').value.trim(),
-              tipoArtOutrosRT: tipoArtOutrosSelecionadoRT ? tipoArtOutrosSelecionadoRT.value : '',
-              artNumeroRT: document.getElementById('artNumeroRT').value.trim(),
-              nomeOutrosArtRT: document.getElementById('nomeOutrosArtRT').value.trim(),
-              numeroOutrosArtRT: document.getElementById('numeroOutrosArtRT').value.trim(),
-              empresaRT: document.getElementById('empresaRT').value.trim(),
-              tipoEmpresaRegistroRT: tipoEmpresaRegistroRT,
-              empresaRegistroRT: document.getElementById('empresaRegistroRT').value.trim(),
-              saved: true
-            };
-            
-            // Adicionar profissional à lista de autocomplete
-            const nomeProfissionalRT = document.getElementById('profissionalRT').value.trim();
-            const cpfRT = document.getElementById('cpfRT').value.trim();
-            const creaRT = tipoRegistroSelecionadoRT?.value === 'CREA' ? document.getElementById('numeroCreaRT').value.trim() : '';
-            adicionarProfissional(nomeProfissionalRT, cpfRT, creaRT);
-          }
+          formData.page4 = {
+            placaAfixadaRT: placaSelecionadaRT ? placaSelecionadaRT.value : '',
+            profissionalRT: document.getElementById('profissionalRT').value.trim(),
+            cpfRT: document.getElementById('cpfRT').value.trim(),
+            tipoRegistroRT: tipoRegistroSelecionadoRT ? tipoRegistroSelecionadoRT.value : '',
+            numeroCreaRT: document.getElementById('numeroCreaRT').value.trim(),
+            siglaConselhoRT: document.getElementById('siglaConselhoRT').value.trim(),
+            numeroConselhoRT: document.getElementById('numeroConselhoRT').value.trim(),
+            tipoArtOutrosRT: tipoArtOutrosSelecionadoRT ? tipoArtOutrosSelecionadoRT.value : '',
+            artNumeroRT: document.getElementById('artNumeroRT').value.trim(),
+            nomeOutrosArtRT: document.getElementById('nomeOutrosArtRT').value.trim(),
+            numeroOutrosArtRT: document.getElementById('numeroOutrosArtRT').value.trim(),
+            empresaRT: document.getElementById('empresaRT').value.trim(),
+            tipoEmpresaRegistroRT: tipoEmpresaRegistroRT,
+            empresaRegistroRT: document.getElementById('empresaRegistroRT').value.trim(),
+            saved: true
+          };
+          
+          // Adicionar profissional à lista de autocomplete
+          const nomeProfissionalRT = document.getElementById('profissionalRT').value.trim();
+          const cpfRT = document.getElementById('cpfRT').value.trim();
+          const creaRT = tipoRegistroSelecionadoRT?.value === 'CREA' ? document.getElementById('numeroCreaRT').value.trim() : '';
+          adicionarProfissional(nomeProfissionalRT, cpfRT, creaRT);
           break;
           
         case 5:
-          const resultado5 = validarPagina5();
-          isValid = resultado5.isValid;
-          avisos = resultado5.avisos;
+          const houveDemolicao = document.querySelector('input[name="houveDemolicao"]:checked');
+          const projetoDemolicao = document.querySelector('input[name="projetoDemolicao"]:checked');
+          const tipoRegistroProjetoDemol = document.querySelector('input[name="tipoRegistroProjetoDemol"]:checked');
+          const tipoArtProjetoDemol = document.querySelector('input[name="tipoArtProjetoDemol"]:checked');
+          const execucaoDemolicao = document.querySelector('input[name="execucaoDemolicao"]:checked');
+          const tipoRegistroExecDemol = document.querySelector('input[name="tipoRegistroExecDemol"]:checked');
+          const tipoArtExecDemol = document.querySelector('input[name="tipoArtExecDemol"]:checked');
           
-          if (isValid) {
-            const houveDemolicao = document.querySelector('input[name="houveDemolicao"]:checked');
-            const projetoDemolicao = document.querySelector('input[name="projetoDemolicao"]:checked');
-            const tipoRegistroProjetoDemol = document.querySelector('input[name="tipoRegistroProjetoDemol"]:checked');
-            const tipoArtProjetoDemol = document.querySelector('input[name="tipoArtProjetoDemol"]:checked');
-            const execucaoDemolicao = document.querySelector('input[name="execucaoDemolicao"]:checked');
-            const tipoRegistroExecDemol = document.querySelector('input[name="tipoRegistroExecDemol"]:checked');
-            const tipoArtExecDemol = document.querySelector('input[name="tipoArtExecDemol"]:checked');
-            
-            formData.page5 = {
-              houveDemolicao: houveDemolicao ? houveDemolicao.value : '',
-              projetoDemolicao: projetoDemolicao ? projetoDemolicao.value : '',
-              profissionalProjetoDemol: document.getElementById('profissionalProjetoDemol').value.trim(),
-              cpfProjetoDemol: document.getElementById('cpfProjetoDemol').value.trim(),
-              tipoRegistroProjetoDemol: tipoRegistroProjetoDemol ? tipoRegistroProjetoDemol.value : '',
-              numeroCreaProjetoDemol: document.getElementById('numeroCreaProjetoDemol').value.trim(),
-              siglaConselhoProjetoDemol: document.getElementById('siglaConselhoProjetoDemol').value.trim(),
-              numeroConselhoProjetoDemol: document.getElementById('numeroConselhoProjetoDemol').value.trim(),
-              tipoArtProjetoDemol: tipoArtProjetoDemol ? tipoArtProjetoDemol.value : '',
-              artNumeroProjetoDemol: document.getElementById('artNumeroProjetoDemol').value.trim(),
-              nomeOutrosArtProjetoDemol: document.getElementById('nomeOutrosArtProjetoDemol').value.trim(),
-              numeroOutrosArtProjetoDemol: document.getElementById('numeroOutrosArtProjetoDemol').value.trim(),
-              execucaoDemolicao: execucaoDemolicao ? execucaoDemolicao.value : '',
-              profissionalExecDemol: document.getElementById('profissionalExecDemol').value.trim(),
-              cpfExecDemol: document.getElementById('cpfExecDemol').value.trim(),
-              tipoRegistroExecDemol: tipoRegistroExecDemol ? tipoRegistroExecDemol.value : '',
-              numeroCreaExecDemol: document.getElementById('numeroCreaExecDemol').value.trim(),
-              siglaConselhoExecDemol: document.getElementById('siglaConselhoExecDemol').value.trim(),
-              numeroConselhoExecDemol: document.getElementById('numeroConselhoExecDemol').value.trim(),
-              tipoArtExecDemol: tipoArtExecDemol ? tipoArtExecDemol.value : '',
-              artNumeroExecDemol: document.getElementById('artNumeroExecDemol').value.trim(),
-              nomeOutrosArtExecDemol: document.getElementById('nomeOutrosArtExecDemol').value.trim(),
-              numeroOutrosArtExecDemol: document.getElementById('numeroOutrosArtExecDemol').value.trim(),
-              empresaDemol: document.getElementById('empresaDemol').value.trim(),
-              cnpjDemol: document.getElementById('cnpjDemol').value.trim(),
-              saved: true
-            };
-            
-            // Adicionar profissionais à lista de autocomplete
-            if (projetoDemolicao && projetoDemolicao.value === 'Sim') {
-              const nomeProjeto = document.getElementById('profissionalProjetoDemol').value.trim();
-              const cpfProjeto = document.getElementById('cpfProjetoDemol').value.trim();
-              const creaProjeto = tipoRegistroProjetoDemol?.value === 'CREA' ? document.getElementById('numeroCreaProjetoDemol').value.trim() : '';
-              adicionarProfissional(nomeProjeto, cpfProjeto, creaProjeto);
-            }
-            
-            if (execucaoDemolicao && execucaoDemolicao.value === 'Sim') {
-              const nomeExec = document.getElementById('profissionalExecDemol').value.trim();
-              const cpfExec = document.getElementById('cpfExecDemol').value.trim();
-              const creaExec = tipoRegistroExecDemol?.value === 'CREA' ? document.getElementById('numeroCreaExecDemol').value.trim() : '';
-              adicionarProfissional(nomeExec, cpfExec, creaExec);
-            }
+          formData.page5 = {
+            houveDemolicao: houveDemolicao ? houveDemolicao.value : '',
+            projetoDemolicao: projetoDemolicao ? projetoDemolicao.value : '',
+            profissionalProjetoDemol: document.getElementById('profissionalProjetoDemol').value.trim(),
+            cpfProjetoDemol: document.getElementById('cpfProjetoDemol').value.trim(),
+            tipoRegistroProjetoDemol: tipoRegistroProjetoDemol ? tipoRegistroProjetoDemol.value : '',
+            numeroCreaProjetoDemol: document.getElementById('numeroCreaProjetoDemol').value.trim(),
+            siglaConselhoProjetoDemol: document.getElementById('siglaConselhoProjetoDemol').value.trim(),
+            numeroConselhoProjetoDemol: document.getElementById('numeroConselhoProjetoDemol').value.trim(),
+            tipoArtProjetoDemol: tipoArtProjetoDemol ? tipoArtProjetoDemol.value : '',
+            artNumeroProjetoDemol: document.getElementById('artNumeroProjetoDemol').value.trim(),
+            nomeOutrosArtProjetoDemol: document.getElementById('nomeOutrosArtProjetoDemol').value.trim(),
+            numeroOutrosArtProjetoDemol: document.getElementById('numeroOutrosArtProjetoDemol').value.trim(),
+            execucaoDemolicao: execucaoDemolicao ? execucaoDemolicao.value : '',
+            profissionalExecDemol: document.getElementById('profissionalExecDemol').value.trim(),
+            cpfExecDemol: document.getElementById('cpfExecDemol').value.trim(),
+            tipoRegistroExecDemol: tipoRegistroExecDemol ? tipoRegistroExecDemol.value : '',
+            numeroCreaExecDemol: document.getElementById('numeroCreaExecDemol').value.trim(),
+            siglaConselhoExecDemol: document.getElementById('siglaConselhoExecDemol').value.trim(),
+            numeroConselhoExecDemol: document.getElementById('numeroConselhoExecDemol').value.trim(),
+            tipoArtExecDemol: tipoArtExecDemol ? tipoArtExecDemol.value : '',
+            artNumeroExecDemol: document.getElementById('artNumeroExecDemol').value.trim(),
+            nomeOutrosArtExecDemol: document.getElementById('nomeOutrosArtExecDemol').value.trim(),
+            numeroOutrosArtExecDemol: document.getElementById('numeroOutrosArtExecDemol').value.trim(),
+            empresaDemol: document.getElementById('empresaDemol').value.trim(),
+            cnpjDemol: document.getElementById('cnpjDemol').value.trim(),
+            saved: true
+          };
+          
+          // Adicionar profissionais à lista de autocomplete
+          if (projetoDemolicao && projetoDemolicao.value === 'Sim') {
+            const nomeProjeto = document.getElementById('profissionalProjetoDemol').value.trim();
+            const cpfProjeto = document.getElementById('cpfProjetoDemol').value.trim();
+            const creaProjeto = tipoRegistroProjetoDemol?.value === 'CREA' ? document.getElementById('numeroCreaProjetoDemol').value.trim() : '';
+            adicionarProfissional(nomeProjeto, cpfProjeto, creaProjeto);
+          }
+          
+          if (execucaoDemolicao && execucaoDemolicao.value === 'Sim') {
+            const nomeExec = document.getElementById('profissionalExecDemol').value.trim();
+            const cpfExec = document.getElementById('cpfExecDemol').value.trim();
+            const creaExec = tipoRegistroExecDemol?.value === 'CREA' ? document.getElementById('numeroCreaExecDemol').value.trim() : '';
+            adicionarProfissional(nomeExec, cpfExec, creaExec);
           }
           break;
 
         case 6:
-          const resultado6 = validarPagina6();
-          isValid = resultado6.isValid;
-          avisos = resultado6.avisos;
-          
-          if (isValid) {
-            const getRadioVal = (name) => {
-              const el = document.querySelector(`input[name="${name}"]:checked`);
-              return el ? el.value : '';
-            };
+          const getRadioVal = (name) => {
+            const el = document.querySelector(`input[name="${name}"]:checked`);
+            return el ? el.value : '';
+          };
 
-            formData.page6 = {
-              coordenacao: {
-                nome: document.getElementById('profCoordenacao').value.trim(),
-                cpf: document.getElementById('cpfCoordenacao').value.trim(),
-                reg: getRadioVal('regCoord'),
-                numCrea: document.getElementById('numCreaCoord').value.trim(),
-                sigla: document.getElementById('siglaCoord').value.trim(),
-                numOutros: document.getElementById('numOutrosCoord').value.trim(),
-                tipoArt: getRadioVal('tipoArtCoord'),
-                numArt: document.getElementById('numArtCoord').value.trim(),
-                nomeArtOutros: document.getElementById('nomeArtCoord').value.trim(),
-                numArtOutros: document.getElementById('valArtCoord').value.trim()
-              },
-              orcamento: {
-                nome: document.getElementById('profOrcamento').value.trim(),
-                cpf: document.getElementById('cpfOrcamento').value.trim(),
-                reg: getRadioVal('regOrc'),
-                numCrea: document.getElementById('numCreaOrc').value.trim(),
-                sigla: document.getElementById('siglaOrc').value.trim(),
-                numOutros: document.getElementById('numOutrosOrc').value.trim(),
-                tipoArt: getRadioVal('tipoArtOrc'),
-                numArt: document.getElementById('numArtOrc').value.trim(),
-                nomeArtOutros: document.getElementById('nomeArtOrc').value.trim(),
-                numArtOutros: document.getElementById('valArtOrc').value.trim()
-              },
-              residente: {
-                nome: document.getElementById('profResidente').value.trim(),
-                cpf: document.getElementById('cpfResidente').value.trim(),
-                reg: getRadioVal('regRes'),
-                numCrea: document.getElementById('numCreaRes').value.trim(),
-                sigla: document.getElementById('siglaRes').value.trim(),
-                numOutros: document.getElementById('numOutrosRes').value.trim(),
-                tipoArt: getRadioVal('tipoArtRes'),
-                numArt: document.getElementById('numArtRes').value.trim(),
-                nomeArtOutros: document.getElementById('nomeArtRes').value.trim(),
-                numArtOutros: document.getElementById('valArtRes').value.trim()
-              },
-              saved: true
-            };
+          formData.page6 = {
+            coordenacao: {
+              nome: document.getElementById('profCoordenacao').value.trim(),
+              cpf: document.getElementById('cpfCoordenacao').value.trim(),
+              reg: getRadioVal('regCoord'),
+              numCrea: document.getElementById('numCreaCoord').value.trim(),
+              sigla: document.getElementById('siglaCoord').value.trim(),
+              numOutros: document.getElementById('numOutrosCoord').value.trim(),
+              tipoArt: getRadioVal('tipoArtCoord'),
+              numArt: document.getElementById('numArtCoord').value.trim(),
+              nomeArtOutros: document.getElementById('nomeArtCoord').value.trim(),
+              numArtOutros: document.getElementById('valArtCoord').value.trim()
+            },
+            orcamento: {
+              nome: document.getElementById('profOrcamento').value.trim(),
+              cpf: document.getElementById('cpfOrcamento').value.trim(),
+              reg: getRadioVal('regOrc'),
+              numCrea: document.getElementById('numCreaOrc').value.trim(),
+              sigla: document.getElementById('siglaOrc').value.trim(),
+              numOutros: document.getElementById('numOutrosOrc').value.trim(),
+              tipoArt: getRadioVal('tipoArtOrc'),
+              numArt: document.getElementById('numArtOrc').value.trim(),
+              nomeArtOutros: document.getElementById('nomeArtOrc').value.trim(),
+              numArtOutros: document.getElementById('valArtOrc').value.trim()
+            },
+            residente: {
+              nome: document.getElementById('profResidente').value.trim(),
+              cpf: document.getElementById('cpfResidente').value.trim(),
+              reg: getRadioVal('regRes'),
+              numCrea: document.getElementById('numCreaRes').value.trim(),
+              sigla: document.getElementById('siglaRes').value.trim(),
+              numOutros: document.getElementById('numOutrosRes').value.trim(),
+              tipoArt: getRadioVal('tipoArtRes'),
+              numArt: document.getElementById('numArtRes').value.trim(),
+              nomeArtOutros: document.getElementById('nomeArtRes').value.trim(),
+              numArtOutros: document.getElementById('valArtRes').value.trim()
+            },
+            saved: true
+          };
 
-            // Alimentar autocomplete
-            ['coordenacao', 'orcamento', 'residente'].forEach(key => {
-              const p = formData.page6[key];
-              const creaNum = p.reg === 'CREA' ? p.numCrea : '';
-              adicionarProfissional(p.nome, p.cpf, creaNum);
-            });
-          }
+          // Alimentar autocomplete
+          ['coordenacao', 'orcamento', 'residente'].forEach(key => {
+            const p = formData.page6[key];
+            const creaNum = p.reg === 'CREA' ? p.numCrea : '';
+            adicionarProfissional(p.nome, p.cpf, creaNum);
+          });
           break;
 
         case 7:
-          const resultado7 = validarPagina7();
-          isValid = resultado7.isValid;
-          avisos = resultado7.avisos;
-
-          if (isValid) {
-            const livroSelecionado = document.querySelector('input[name="livroOrdem"]:checked');
-            formData.page7 = {
-              livroOrdem: livroSelecionado ? livroSelecionado.value : '',
-              observacoes: document.getElementById('observacoes').value.trim(),
-              saved: true
-            };
-          }
+          const livroSelecionado = document.querySelector('input[name="livroOrdem"]:checked');
+          formData.page7 = {
+            livroOrdem: livroSelecionado ? livroSelecionado.value : '',
+            observacoes: document.getElementById('observacoes').value.trim(),
+            saved: true
+          };
           break;
       }
 
-      if (isValid) {
-        if (saveToCache()) {
-          showToast('✓ Dados salvos com sucesso!', 'success');
-        } else {
-          showToast('Dados salvos na memória (cache indisponível)', 'success');
-        }
-        
-        // Mostrar avisos sobre campos opcionais não preenchidos
-        if (avisos.length > 0) {
-          setTimeout(() => {
-            showToast(`⚠️ Campos não preenchidos: ${avisos.join(', ')}`, 'warning');
-          }, 1800);
-        }
+      // Salvar no cache
+      if (saveToCache()) {
+        showToast('✓ Dados salvos com sucesso!', 'success');
       } else {
-        showToast('Por favor, corrija os erros antes de salvar', 'error');
+        showToast('Dados salvos na memória (cache indisponível)', 'success');
       }
 
-      return isValid;
+      return true;
     }
 
     // Avançar página
@@ -3949,15 +4060,40 @@
 
     // Finalizar formulário
     function finalizarFormulario() {
-      // Validar página atual antes de finalizar
-      const resultado7 = validarPagina7();
-      if (!resultado7.isValid) {
-        showToast('Por favor, corrija os erros antes de finalizar', 'error');
-        return;
+      // Verificar campos vazios da página 7
+      const camposVazios = verificarCamposVazios(7);
+      
+      if (camposVazios.length > 0) {
+        // Tem campos vazios - mostrar modal de confirmação
+        // Modificamos temporariamente o comportamento para finalizar ao invés de só salvar
+        paginaParaSalvar = 7;
+        const lista = document.getElementById('listaCamposFaltantes');
+        lista.textContent = camposVazios.join(', ');
+        
+        // Trocar o botão de confirmar para finalizar
+        document.querySelector('.modal-btn-confirmar').onclick = function() {
+          fecharModal();
+          finalizarFormularioForcado();
+          // Restaurar comportamento normal do botão
+          document.querySelector('.modal-btn-confirmar').onclick = confirmarSalvamento;
+        };
+        
+        document.getElementById('modalConfirmacao').classList.add('show');
+      } else {
+        // Todos os campos preenchidos - finalizar diretamente
+        finalizarFormularioForcado();
       }
+    }
 
-      // Salvar dados da página 7
-      salvarPagina(7);
+    function finalizarFormularioForcado() {
+      // Salvar dados da página 7 diretamente
+      const livroSelecionado = document.querySelector('input[name="livroOrdem"]:checked');
+      formData.page7 = {
+        livroOrdem: livroSelecionado ? livroSelecionado.value : '',
+        observacoes: document.getElementById('observacoes').value.trim(),
+        saved: true
+      };
+      saveToCache();
 
       // Mostrar mensagem de sucesso
       showToast('✅ Formulário finalizado com sucesso!', 'success');
@@ -3996,6 +4132,97 @@
       const percentage = (currentPage / totalPages) * 100;
       progressFill.style.width = `${percentage}%`;
       progressStep.textContent = `Página ${currentPage} de ${totalPages}`;
+    }
+
+    // =============================================
+    // MODAL DE CONFIRMAÇÃO
+    // =============================================
+
+    let paginaParaSalvar = null;
+
+    function abrirModal(camposFaltantes, pageNum) {
+      paginaParaSalvar = pageNum;
+      const lista = document.getElementById('listaCamposFaltantes');
+      lista.textContent = camposFaltantes.join(', ');
+      document.getElementById('modalConfirmacao').classList.add('show');
+    }
+
+    function fecharModal() {
+      document.getElementById('modalConfirmacao').classList.remove('show');
+      paginaParaSalvar = null;
+    }
+
+    function confirmarSalvamento() {
+      fecharModal();
+      if (paginaParaSalvar !== null) {
+        salvarPaginaForcado(paginaParaSalvar);
+      }
+    }
+
+    // Verificar campos vazios de cada página (retorna lista de campos não preenchidos)
+    function verificarCamposVazios(pageNum) {
+      let camposVazios = [];
+
+      switch(pageNum) {
+        case 1:
+          if (!document.getElementById('localObra').value.trim()) camposVazios.push('Local da Obra');
+          if (!document.getElementById('bairro').value.trim()) camposVazios.push('Bairro');
+          if (!document.getElementById('cidade').value.trim()) camposVazios.push('Cidade');
+          if (!document.getElementById('cep').value.trim()) camposVazios.push('CEP');
+          break;
+
+        case 2:
+          if (!document.querySelector('input[name="tipoNatureza"]:checked')) camposVazios.push('Tipo/Natureza');
+          if (!document.getElementById('area').value.trim()) camposVazios.push('Área');
+          if (!document.getElementById('pavimentos').value.trim()) camposVazios.push('Pavimentos');
+          if (!document.getElementById('processoNum').value.trim()) camposVazios.push('Nº Processo');
+          if (!document.getElementById('alvaraNum').value.trim()) camposVazios.push('Nº Alvará');
+          if (!document.getElementById('alvaraDe').value.trim()) camposVazios.push('Alvará de');
+          if (!document.getElementById('proprietario').value.trim()) camposVazios.push('Proprietário');
+          if (!document.getElementById('cpfCnpj').value.trim()) camposVazios.push('CPF/CNPJ');
+          if (!document.getElementById('enderecoProprietario').value.trim()) camposVazios.push('Endereço');
+          break;
+
+        case 3:
+          if (!document.querySelector('input[name="placaAfixada"]:checked')) camposVazios.push('Placa Afixada');
+          if (!document.getElementById('profissional').value.trim()) camposVazios.push('Profissional');
+          if (!document.querySelector('input[name="tipoRegistro"]:checked')) camposVazios.push('Tipo de Registro');
+          if (!document.getElementById('titulo').value.trim()) camposVazios.push('Título');
+          if (!document.querySelector('input[name="tipoArtRrt"]:checked')) camposVazios.push('ART/RRT');
+          break;
+
+        case 4:
+          if (!document.querySelector('input[name="placaAfixadaRT"]:checked')) camposVazios.push('Placa Afixada');
+          if (!document.getElementById('profissionalRT').value.trim()) camposVazios.push('Profissional');
+          if (!document.getElementById('cpfRT').value.trim()) camposVazios.push('CPF');
+          if (!document.querySelector('input[name="tipoRegistroRT"]:checked')) camposVazios.push('Tipo de Registro');
+          if (!document.querySelector('input[name="tipoArtOutrosRT"]:checked')) camposVazios.push('ART/Outros');
+          break;
+
+        case 5:
+          if (!document.querySelector('input[name="houveDemolicao"]:checked')) camposVazios.push('Houve Demolição');
+          const houveDemolicao = document.querySelector('input[name="houveDemolicao"]:checked');
+          if (houveDemolicao && houveDemolicao.value === 'Sim') {
+            if (!document.querySelector('input[name="projetoDemolicao"]:checked')) camposVazios.push('Projeto de Demolição');
+            if (!document.querySelector('input[name="execucaoDemolicao"]:checked')) camposVazios.push('Execução de Demolição');
+          }
+          break;
+
+        case 6:
+          if (!document.getElementById('profCoordenacao').value.trim()) camposVazios.push('Profissional Coordenação');
+          if (!document.getElementById('cpfCoordenacao').value.trim()) camposVazios.push('CPF Coordenação');
+          if (!document.getElementById('profOrcamento').value.trim()) camposVazios.push('Profissional Orçamento');
+          if (!document.getElementById('cpfOrcamento').value.trim()) camposVazios.push('CPF Orçamento');
+          if (!document.getElementById('profResidente').value.trim()) camposVazios.push('Profissional Residente');
+          if (!document.getElementById('cpfResidente').value.trim()) camposVazios.push('CPF Residente');
+          break;
+
+        case 7:
+          if (!document.querySelector('input[name="livroOrdem"]:checked')) camposVazios.push('Livro de Ordem');
+          break;
+      }
+
+      return camposVazios;
     }
 
     // =============================================
