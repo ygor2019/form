@@ -5869,12 +5869,13 @@
       e.target.value = v;
     }
 
-    // VALIDAR página de subcontratados - OBRIGATÓRIO selecionar opção
+    // VALIDAR página de subcontratados - OBRIGATÓRIO selecionar opção (radios)
     function validarPaginaSub(pageNum) {
       const items = subcontratados['page' + pageNum];
-      if (!items) return { valid: true, erros: [] };
+      if (!items) return { valid: true, erros: [], avisos: [] };
 
-      const erros = [];
+      const erros = []; // Campos OBRIGATÓRIOS (radios)
+      const avisos = []; // Campos NÃO OBRIGATÓRIOS (texto) vazios
 
       function validarItem(item) {
         const id = item.id;
@@ -5889,17 +5890,41 @@
         }
 
         let selecionado = false;
+        let opcaoSelecionada = null;
 
         if (item.tipo === 'simNao' || item.tipo === 'terceirizadas') {
-          selecionado = document.querySelector(`input[name="${id}Opcao"]:checked`);
+          const radio = document.querySelector(`input[name="${id}Opcao"]:checked`);
+          selecionado = !!radio;
+          opcaoSelecionada = radio?.value;
         } else if (item.tipo === 'status' || item.tipo === 'statusComSubitens') {
-          selecionado = document.querySelector(`input[name="${id}Status"]:checked`);
+          const radio = document.querySelector(`input[name="${id}Status"]:checked`);
+          selecionado = !!radio;
+          opcaoSelecionada = radio?.value;
         }
 
+        // OBRIGATÓRIO: radios SIM/NÃO ou status
         if (!selecionado) {
           erros.push(item.titulo);
           const errorMsg = document.getElementById('error_' + id);
           if (errorMsg) errorMsg.classList.add('show');
+        } else {
+          // NÃO OBRIGATÓRIO: campos de texto (só avisa se vazios)
+          const camposDiv = document.getElementById('campos_' + id);
+          if (camposDiv && camposDiv.style.display !== 'none' && (opcaoSelecionada === 'Sim' || opcaoSelecionada === 'nao_iniciada' || opcaoSelecionada === 'em_andamento' || opcaoSelecionada === 'concluida')) {
+            const profissional = document.getElementById('prof_' + id);
+            const cpf = document.getElementById('cpf_' + id);
+            const empresa = document.getElementById('empresa_' + id);
+            
+            if (profissional && !profissional.value.trim()) {
+              avisos.push(`${item.titulo} - Profissional`);
+            }
+            if (cpf && !cpf.value.trim()) {
+              avisos.push(`${item.titulo} - CPF`);
+            }
+            if (empresa && !empresa.value.trim()) {
+              avisos.push(`${item.titulo} - Empresa`);
+            }
+          }
         }
 
         // Se tem subitens, validar cada um
@@ -5914,25 +5939,68 @@
         validarItem(item);
       });
 
-      return { valid: erros.length === 0, erros };
+      return { 
+        valid: erros.length === 0, 
+        erros: erros, // OBRIGATÓRIOS não preenchidos
+        avisos: avisos // NÃO OBRIGATÓRIOS vazios
+      };
     }
 
     // Avançar página de subcontratados COM VALIDAÇÃO
     function avancarSub(pageNum) {
       const validacao = validarPaginaSub(pageNum);
       
+      // Se tem ERROS (campos obrigatórios vazios) → NÃO AVANÇA
       if (!validacao.valid) {
+        const listaErros = validacao.erros.map(erro => `• ${erro}`).join('\n');
+        alert(`❌ CAMPOS OBRIGATÓRIOS NÃO PREENCHIDOS:\n\n${listaErros}\n\nPreencha todos os campos obrigatórios antes de avançar.`);
+        
         showToast('❌ Preencha todos os campos obrigatórios', 'error');
-        // Scroll para o primeiro erro
         const primeiroErro = document.querySelector('.error-message.show');
         if (primeiroErro) {
           primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        return;
+        return; // NÃO AVANÇA
+      }
+
+      // Se tem AVISOS (campos não obrigatórios vazios) → MOSTRA POPUP mas AVANÇA
+      if (validacao.avisos && validacao.avisos.length > 0) {
+        const listaAvisos = validacao.avisos.map(aviso => `• ${aviso}`).join('\n');
+        const confirmar = confirm(`⚠️ ATENÇÃO - CAMPOS VAZIOS:\n\n${listaAvisos}\n\nEstes campos não são obrigatórios, mas é recomendado preenchê-los.\n\nDeseja avançar mesmo assim?`);
+        
+        if (!confirmar) {
+          return; // Usuário cancelou, não avança
+        }
       }
       
-      // Salvar antes de avançar
-      salvarPaginaSub(pageNum);
+      // Salvar dados (sem chamar salvarPaginaSub para evitar validação duplicada)
+      const items = subcontratados['page' + pageNum];
+      if (items) {
+        const dados = {};
+        items.forEach(item => {
+          const id = item.id;
+          dados[id] = {
+            opcao: document.querySelector(`input[name="${id}Opcao"]:checked`)?.value || 
+                   document.querySelector(`input[name="${id}Status"]:checked`)?.value || '',
+            profissional: document.getElementById('prof_' + id)?.value || '',
+            cpf: document.getElementById('cpf_' + id)?.value || '',
+            tipoReg: document.querySelector(`input[name="reg_${id}"]:checked`)?.value || '',
+            numCrea: document.getElementById('numCrea_' + id)?.value || '',
+            sigla: document.getElementById('sigla_' + id)?.value || '',
+            numOutros: document.getElementById('numOutros_' + id)?.value || '',
+            tipoArt: document.querySelector(`input[name="tipoArt_${id}"]:checked`)?.value || '',
+            numArt: document.getElementById('numArt_' + id)?.value || '',
+            nomeArt: document.getElementById('nomeArt_' + id)?.value || '',
+            valArt: document.getElementById('valArt_' + id)?.value || '',
+            empresa: document.getElementById('empresa_' + id)?.value || '',
+            cnpj: document.getElementById('cnpj_' + id)?.value || '',
+            regEmpresa: document.getElementById('regEmpresa_' + id)?.value || '',
+            placa: document.querySelector(`input[name="placa_${id}"]:checked`)?.value || ''
+          };
+        });
+        formData['page' + pageNum] = { ...dados, saved: true };
+        saveToCache();
+      }
       
       // Avançar para próxima página
       if (pageNum < totalPages) {
@@ -5945,14 +6013,27 @@
       // VALIDAÇÃO obrigatória antes de salvar
       const validacao = validarPaginaSub(pageNum);
 
+      // Se tem ERROS (campos obrigatórios vazios) → NÃO SALVA
       if (!validacao.valid) {
-        showToast('❌ Preencha todos os campos obrigatórios antes de salvar', 'error');
-        // Scroll para o primeiro erro
+        const listaErros = validacao.erros.map(erro => `• ${erro}`).join('\n');
+        alert(`❌ CAMPOS OBRIGATÓRIOS NÃO PREENCHIDOS:\n\n${listaErros}\n\nPreencha todos os campos obrigatórios antes de salvar.`);
+        
+        showToast('❌ Preencha todos os campos obrigatórios', 'error');
         const primeiroErro = document.querySelector('.error-message.show');
         if (primeiroErro) {
           primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        return; // Não salva se não passou na validação
+        return; // NÃO SALVA
+      }
+
+      // Se tem AVISOS (campos não obrigatórios vazios) → MOSTRA POPUP mas SALVA
+      if (validacao.avisos && validacao.avisos.length > 0) {
+        const listaAvisos = validacao.avisos.map(aviso => `• ${aviso}`).join('\n');
+        const confirmar = confirm(`⚠️ ATENÇÃO - CAMPOS VAZIOS:\n\n${listaAvisos}\n\nEstes campos não são obrigatórios, mas é recomendado preenchê-los.\n\nDeseja salvar mesmo assim?`);
+        
+        if (!confirmar) {
+          return; // Usuário cancelou, não salva
+        }
       }
 
       const items = subcontratados['page' + pageNum];
