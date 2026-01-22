@@ -3353,7 +3353,7 @@
       document.getElementById('errorCep').classList.remove('show');
     });
 
-    // Validar CEP de São Paulo
+    // Validar CEP brasileiro
     function validarCepSaoPaulo(cep, cidade) {
       // Remover hífen para validação
       const cepNumeros = cep.replace(/\D/g, '');
@@ -3363,10 +3363,19 @@
         return { valid: false, message: 'CEP deve ter 8 dígitos' };
       }
 
+      // Verificar se começa com 0 seguido de 0 (00xxx não existe no Brasil)
+      if (cepNumeros.startsWith('00')) {
+        return { valid: false, message: 'CEP inválido' };
+      }
+
+      // CEPs brasileiros válidos: começam de 01 a 99
+      const prefixo = parseInt(cepNumeros.substring(0, 2));
+      if (prefixo < 1 || prefixo > 99) {
+        return { valid: false, message: 'CEP inválido' };
+      }
+
       // Se a cidade for São Paulo, validar range de CEP
-      if (cidade.toLowerCase().includes('são paulo') || cidade.toLowerCase().includes('sao paulo')) {
-        const prefixo = parseInt(cepNumeros.substring(0, 2));
-        
+      if (cidade && (cidade.toLowerCase().includes('são paulo') || cidade.toLowerCase().includes('sao paulo'))) {
         // CEPs de São Paulo capital: 01000-000 a 05999-999 e 08000-000 a 08499-999
         const isSaoPauloCapital = (prefixo >= 1 && prefixo <= 5) || (prefixo === 8);
         
@@ -4669,51 +4678,53 @@
 
       switch(pageNum) {
         case 1:
-          const localObra = document.getElementById('localObra').value.trim();
-          const bairro = document.getElementById('bairro').value.trim();
-          const cidade = document.getElementById('cidade').value.trim();
-          const cep = document.getElementById('cep').value.trim();
-          
-          // 1. PRIMEIRO: Validar FORMATO de campos PREENCHIDOS (CEP inválido)
-          if (cep) {
-            const resultadoCep = validarCepSaoPaulo(cep, cidade);
-            if (!resultadoCep.valid) {
-              erros.push('CEP inválido');
-              document.getElementById('cep').classList.add('error');
-              document.getElementById('errorCep').classList.add('show');
-              break; // Para aqui, não verifica campos vazios
+          {
+            const localObra = document.getElementById('localObra').value.trim();
+            const bairro = document.getElementById('bairro').value.trim();
+            const cidade = document.getElementById('cidade').value.trim();
+            const cep = document.getElementById('cep').value.trim();
+            
+            let temErroFormato = false;
+            let temErroObrigatorio = false;
+            
+            // ETAPA 1: Verificar FORMATO INVÁLIDO (só se campo preenchido)
+            if (cep) {
+              const resultadoCep = validarCepSaoPaulo(cep, cidade);
+              if (!resultadoCep.valid) {
+                erros.push('CEP inválido: ' + resultadoCep.message);
+                document.getElementById('cep').classList.add('error');
+                document.getElementById('errorCep').classList.add('show');
+                temErroFormato = true;
+              }
             }
-          }
-          
-          // 2. SEGUNDO: Verificar se campos OBRIGATÓRIOS estão vazios (só chega aqui se não tiver erro de formato)
-          if (!localObra) {
-            erros.push('Há pelo menos um campo obrigatório não preenchido');
-            document.getElementById('localObra').classList.add('error');
-            document.getElementById('errorLocalObra').classList.add('show');
-          }
-          if (!bairro && erros.length === 0) {
-            erros.push('Há pelo menos um campo obrigatório não preenchido');
-            document.getElementById('bairro').classList.add('error');
-            document.getElementById('errorBairro').classList.add('show');
-          } else if (!bairro) {
-            document.getElementById('bairro').classList.add('error');
-            document.getElementById('errorBairro').classList.add('show');
-          }
-          if (!cidade && erros.length === 0) {
-            erros.push('Há pelo menos um campo obrigatório não preenchido');
-            document.getElementById('cidade').classList.add('error');
-            document.getElementById('errorCidade').classList.add('show');
-          } else if (!cidade) {
-            document.getElementById('cidade').classList.add('error');
-            document.getElementById('errorCidade').classList.add('show');
-          }
-          if (!cep && erros.length === 0) {
-            erros.push('Há pelo menos um campo obrigatório não preenchido');
-            document.getElementById('cep').classList.add('error');
-            document.getElementById('errorCep').classList.add('show');
-          } else if (!cep) {
-            document.getElementById('cep').classList.add('error');
-            document.getElementById('errorCep').classList.add('show');
+            
+            // ETAPA 2: Verificar CAMPOS OBRIGATÓRIOS vazios (só se não tiver erro de formato)
+            if (!temErroFormato) {
+              if (!localObra) {
+                document.getElementById('localObra').classList.add('error');
+                document.getElementById('errorLocalObra').classList.add('show');
+                temErroObrigatorio = true;
+              }
+              if (!bairro) {
+                document.getElementById('bairro').classList.add('error');
+                document.getElementById('errorBairro').classList.add('show');
+                temErroObrigatorio = true;
+              }
+              if (!cidade) {
+                document.getElementById('cidade').classList.add('error');
+                document.getElementById('errorCidade').classList.add('show');
+                temErroObrigatorio = true;
+              }
+              if (!cep) {
+                document.getElementById('cep').classList.add('error');
+                document.getElementById('errorCep').classList.add('show');
+                temErroObrigatorio = true;
+              }
+              
+              if (temErroObrigatorio) {
+                erros.push('Há pelo menos um campo obrigatório não preenchido');
+              }
+            }
           }
           break;
 
