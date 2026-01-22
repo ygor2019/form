@@ -4669,33 +4669,12 @@
 
       switch(pageNum) {
         case 1:
-          // OBRIGATÓRIO: Local da Obra, Bairro, Cidade, CEP
-          const localObra = document.getElementById('localObra').value.trim();
-          const bairro = document.getElementById('bairro').value.trim();
-          const cidade = document.getElementById('cidade').value.trim();
+          // Validar APENAS FORMATO de campos PREENCHIDOS (não verifica se estão vazios)
           const cep = document.getElementById('cep').value.trim();
-
-          if (!localObra) {
-            erros.push('Campo obrigatório');
-            document.getElementById('localObra').classList.add('error');
-            document.getElementById('errorLocalObra').classList.add('show');
-          }
-          if (!bairro) {
-            erros.push('Campo obrigatório');
-            document.getElementById('bairro').classList.add('error');
-            document.getElementById('errorBairro').classList.add('show');
-          }
-          if (!cidade) {
-            erros.push('Campo obrigatório');
-            document.getElementById('cidade').classList.add('error');
-            document.getElementById('errorCidade').classList.add('show');
-          }
-          if (!cep) {
-            erros.push('Campo obrigatório');
-            document.getElementById('cep').classList.add('error');
-            document.getElementById('errorCep').classList.add('show');
-          } else {
-            // Validar formato CEP se preenchido
+          const cidade = document.getElementById('cidade').value.trim();
+          
+          // CEP: validar formato se preenchido
+          if (cep) {
             const resultadoCep = validarCepSaoPaulo(cep, cidade);
             if (!resultadoCep.valid) {
               erros.push('CEP inválido');
@@ -4906,25 +4885,25 @@
       }
     }
 
-    // Salvar página - primeiro valida formato, depois verifica campos vazios
+    // Salvar página - validação em 3 etapas sequenciais
     function salvarPagina(pageNum) {
       // Limpar erros anteriores
       limparErrosPagina(pageNum);
 
-      // 1. Primeiro validar o FORMATO dos campos preenchidos
+      // 1. PRIMEIRO: Verificar FORMATO INVÁLIDO (CPF/CNPJ/CEP errado)
       const validacaoFormato = validarFormatoPagina(pageNum);
       
       if (!validacaoFormato.valid) {
-        // Formato inválido - mostrar erro e não salvar
-        showToast('❌ Há pelo menos um campo obrigatório não preenchido', 'error');
+        // Formato inválido - mostrar erro específico e não salvar
+        showToast('❌ ' + validacaoFormato.erros[0], 'error');
         return;
       }
 
-      // 2. Formato OK - agora verificar campos vazios
+      // 2. SEGUNDO: Verificar CAMPOS OBRIGATÓRIOS vazios
       const camposVazios = verificarCamposVazios(pageNum);
       
       if (camposVazios.length > 0) {
-        // Tem campos vazios - mostrar modal de confirmação
+        // 3. TERCEIRO: Tem campos vazios - mostrar modal de confirmação
         abrirModal(camposVazios, pageNum);
       } else {
         // Todos os campos preenchidos e válidos - salvar diretamente
@@ -5202,21 +5181,21 @@
       }
     }
 
-    // Finalizar formulário
+    // Finalizar formulário - validação em 3 etapas sequenciais
     function finalizarFormulario(pageNum = 8) {
       // Limpar erros anteriores
       limparErrosPagina(pageNum);
 
-      // 1. Primeiro validar o FORMATO dos campos preenchidos
+      // 1. PRIMEIRO: Verificar FORMATO INVÁLIDO (CPF/CNPJ/CEP errado)
       const validacaoFormato = validarFormatoPagina(pageNum);
       
       if (!validacaoFormato.valid) {
-        // Formato inválido - mostrar erro e não finalizar
-        showToast('❌ Há pelo menos um campo obrigatório não preenchido', 'error');
+        // Formato inválido - mostrar erro específico e não finalizar
+        showToast('❌ ' + validacaoFormato.erros[0], 'error');
         return;
       }
 
-      // 2. Verificar campos vazios da página atual
+      // 2. SEGUNDO: Verificar CAMPOS OBRIGATÓRIOS vazios
       const camposVazios = verificarCamposVazios(pageNum);
       
       if (camposVazios.length > 0) {
@@ -5566,11 +5545,11 @@
       page12: [
         // INSTALAÇÕES ELÉTRICAS: MODELO B - Projeto → Execução (como Topografia)
         { id: 'eletricasProjeto', num: '18.1', titulo: 'Instalações Elétricas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'eletricasExec', num: '18.2', titulo: 'Instalações Elétricas - Execução', tipo: 'status', depende: 'eletricasProjeto' },
+        { id: 'eletricasExec', num: '18.2', titulo: 'Instalações Elétricas - Execução', tipo: 'status', depende: 'eletricasProjeto', temCampos: true },
 
         // INSTALAÇÕES HIDRÁULICAS: MODELO B - Projeto → Execução (como Topografia)
         { id: 'hidraulicasProjeto', num: '19.1', titulo: 'Instalações Hidráulicas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'hidraulicasExec', num: '19.2', titulo: 'Instalações Hidráulicas - Execução', tipo: 'status', depende: 'hidraulicasProjeto' }
+        { id: 'hidraulicasExec', num: '19.2', titulo: 'Instalações Hidráulicas - Execução', tipo: 'status', depende: 'hidraulicasProjeto', temCampos: true }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5579,7 +5558,7 @@
       page13: [
         // AR CONDICIONADO: MODELO B - Projeto → Execução (como Topografia)
         { id: 'arCondProjeto', num: '20.1', titulo: 'Ar Condicionado - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'arCondExec', num: '20.2', titulo: 'Ar Condicionado - Execução', tipo: 'status', depende: 'arCondProjeto' },
+        { id: 'arCondExec', num: '20.2', titulo: 'Ar Condicionado - Execução', tipo: 'status', depende: 'arCondProjeto', temCampos: true },
 
         // ELEVADORES: só SIM/NÃO (projeto e execução juntos)
         { id: 'elevadores', num: '21', titulo: 'Elevadores - Projeto e Execução', tipo: 'simNao' },
@@ -5594,19 +5573,19 @@
       page14: [
         // GÁS: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'gasProjeto', num: '23.1', titulo: 'Sistemas de Gás - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'gasExec', num: '23.2', titulo: 'Sistemas de Gás - Execução', tipo: 'status', depende: 'gasProjeto' },
+        { id: 'gasExec', num: '23.2', titulo: 'Sistemas de Gás - Execução', tipo: 'status', depende: 'gasProjeto', temCampos: true },
 
         // INCÊNDIO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'incendioProjeto', num: '24.1', titulo: 'Prevenção contra Incêndio - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'incendioExec', num: '24.2', titulo: 'Prevenção contra Incêndio - Execução', tipo: 'status', depende: 'incendioProjeto' },
+        { id: 'incendioExec', num: '24.2', titulo: 'Prevenção contra Incêndio - Execução', tipo: 'status', depende: 'incendioProjeto', temCampos: true },
 
         // SOLAR: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'solarProjeto', num: '25.1', titulo: 'Energia Solar - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'solarExec', num: '25.2', titulo: 'Energia Solar - Execução', tipo: 'status', depende: 'solarProjeto' },
+        { id: 'solarExec', num: '25.2', titulo: 'Energia Solar - Execução', tipo: 'status', depende: 'solarProjeto', temCampos: true },
 
         // SPDA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'spdaProjeto', num: '26.1', titulo: 'SPDA - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'spdaExec', num: '26.2', titulo: 'SPDA - Execução', tipo: 'status', depende: 'spdaProjeto' }
+        { id: 'spdaExec', num: '26.2', titulo: 'SPDA - Execução', tipo: 'status', depende: 'spdaProjeto', temCampos: true }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5615,15 +5594,15 @@
       page15: [
         // TELEFONIA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'telefoniaProjeto', num: '27.1', titulo: 'Telefonia - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'telefoniaExec', num: '27.2', titulo: 'Telefonia - Execução', tipo: 'status', depende: 'telefoniaProjeto' },
+        { id: 'telefoniaExec', num: '27.2', titulo: 'Telefonia - Execução', tipo: 'status', depende: 'telefoniaProjeto', temCampos: true },
 
         // SEGURANÇA ELETRÔNICA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'segEletronicaProjeto', num: '28.1', titulo: 'Segurança Eletrônica - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'segEletronicaExec', num: '28.2', titulo: 'Segurança Eletrônica - Execução', tipo: 'status', depende: 'segEletronicaProjeto' },
+        { id: 'segEletronicaExec', num: '28.2', titulo: 'Segurança Eletrônica - Execução', tipo: 'status', depende: 'segEletronicaProjeto', temCampos: true },
 
         // CENTRAL DE CONCRETO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'centralConcretoProjeto', num: '29.1', titulo: 'Central de Concreto - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'centralConcretoExec', num: '29.2', titulo: 'Central de Concreto - Execução', tipo: 'status', depende: 'centralConcretoProjeto' }
+        { id: 'centralConcretoExec', num: '29.2', titulo: 'Central de Concreto - Execução', tipo: 'status', depende: 'centralConcretoProjeto', temCampos: true }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5632,15 +5611,15 @@
       page16: [
         // ELEVADORES DE CARGA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'elevCargaProjeto', num: '30.1', titulo: 'Elevadores de Carga/Cremalheira - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'elevCargaExec', num: '30.2', titulo: 'Elevadores de Carga - Instalação/Montagem', tipo: 'status', depende: 'elevCargaProjeto' },
+        { id: 'elevCargaExec', num: '30.2', titulo: 'Elevadores de Carga - Instalação/Montagem', tipo: 'status', depende: 'elevCargaProjeto', temCampos: true },
 
         // PISCINAS: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'piscinasProjeto', num: '31.1', titulo: 'Piscinas/Saunas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'piscinasExec', num: '31.2', titulo: 'Piscinas/Saunas - Execução', tipo: 'status', depende: 'piscinasProjeto' },
+        { id: 'piscinasExec', num: '31.2', titulo: 'Piscinas/Saunas - Execução', tipo: 'status', depende: 'piscinasProjeto', temCampos: true },
 
         // CAPTAÇÃO DE ÁGUA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'captacaoAguaProjeto', num: '32.1', titulo: 'Captação e Reuso de Água - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'captacaoAguaExec', num: '32.2', titulo: 'Captação e Reuso de Água - Execução', tipo: 'status', depende: 'captacaoAguaProjeto' }
+        { id: 'captacaoAguaExec', num: '32.2', titulo: 'Captação e Reuso de Água - Execução', tipo: 'status', depende: 'captacaoAguaProjeto', temCampos: true }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5652,11 +5631,11 @@
 
         // ESQUADRIAS: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'esquadriasProjeto', num: '34.1', titulo: 'Esquadrias Metálicas - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'esquadriasExec', num: '34.2', titulo: 'Esquadrias Metálicas - Execução', tipo: 'status', depende: 'esquadriasProjeto' },
+        { id: 'esquadriasExec', num: '34.2', titulo: 'Esquadrias Metálicas - Execução', tipo: 'status', depende: 'esquadriasProjeto', temCampos: true },
 
         // POÇO ARTESIANO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'pocoProjeto', num: '35.1', titulo: 'Poço Artesiano - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'pocoExec', num: '35.2', titulo: 'Poço Artesiano - Execução', tipo: 'status', depende: 'pocoProjeto' }
+        { id: 'pocoExec', num: '35.2', titulo: 'Poço Artesiano - Execução', tipo: 'status', depende: 'pocoProjeto', temCampos: true }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5671,7 +5650,7 @@
 
         // JARDINAGEM: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'jardinagemProjeto', num: '38.1', titulo: 'Jardinagem e Paisagismo - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'jardinagemExec', num: '38.2', titulo: 'Jardinagem e Paisagismo - Execução', tipo: 'status', depende: 'jardinagemProjeto' }
+        { id: 'jardinagemExec', num: '38.2', titulo: 'Jardinagem e Paisagismo - Execução', tipo: 'status', depende: 'jardinagemProjeto', temCampos: true }
       ],
       
       // ═══════════════════════════════════════════════════════════════
@@ -5680,7 +5659,7 @@
       page19: [
         // PGR: projeto SIM/NÃO + implementação com 3 opções se SIM
         { id: 'pgrProjeto', num: '38.1', titulo: 'PGR - Projeto/Elaboração', tipo: 'simNao', temExecucao: true },
-        { id: 'pgrImpl', num: '38.2', titulo: 'PGR - Implementação', tipo: 'status', depende: 'pgrProjeto' },
+        { id: 'pgrImpl', num: '38.2', titulo: 'PGR - Implementação', tipo: 'status', depende: 'pgrProjeto', temCampos: true },
 
         // PGR TERCEIRIZADAS: só SIM/NÃO
         { id: 'pgrTerceirizadas', num: '39', titulo: 'PGR das Empresas Terceirizadas', tipo: 'terceirizadas' },
@@ -5696,7 +5675,7 @@
       page20: [
         // DRENAGEM: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'drenagemProjeto', num: '42.1', titulo: 'Drenagem - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'drenagemExec', num: '42.2', titulo: 'Drenagem - Execução', tipo: 'status', depende: 'drenagemProjeto' },
+        { id: 'drenagemExec', num: '42.2', titulo: 'Drenagem - Execução', tipo: 'status', depende: 'drenagemProjeto', temCampos: true },
 
         // EXTINTORES: só status (não iniciada, em andamento, concluída)
         { id: 'extintores', num: '43.1', titulo: 'Extintores - Recarga/Teste', tipo: 'status' },
@@ -5714,7 +5693,7 @@
       page21: [
         // PAVIMENTAÇÃO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'pavimentacaoProjeto', num: '46.1', titulo: 'Pavimentação - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'pavimentacaoExec', num: '46.2', titulo: 'Pavimentação - Execução', tipo: 'status', depende: 'pavimentacaoProjeto' },
+        { id: 'pavimentacaoExec', num: '46.2', titulo: 'Pavimentação - Execução', tipo: 'status', depende: 'pavimentacaoProjeto', temCampos: true },
 
         // EIA, RIMA, EIV: só SIM/NÃO
         { id: 'eia', num: '47', titulo: 'EIA - Estudo de Impacto Ambiental', tipo: 'simNao' },
@@ -5728,11 +5707,11 @@
       page22: [
         // REDE ELÉTRICA: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'redeEletricaProjeto', num: '50.1', titulo: 'Rede Elétrica - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'redeEletricaExec', num: '50.2', titulo: 'Rede Elétrica - Execução', tipo: 'status', depende: 'redeEletricaProjeto' },
+        { id: 'redeEletricaExec', num: '50.2', titulo: 'Rede Elétrica - Execução', tipo: 'status', depende: 'redeEletricaProjeto', temCampos: true },
 
         // CANTEIRO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'canteiroProjeto', num: '51.1', titulo: 'Canteiro de obras/Alojamento - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'canteiroExec', num: '51.2', titulo: 'Canteiro de obras/Alojamento - Execução', tipo: 'status', depende: 'canteiroProjeto' },
+        { id: 'canteiroExec', num: '51.2', titulo: 'Canteiro de obras/Alojamento - Execução', tipo: 'status', depende: 'canteiroProjeto', temCampos: true },
 
         // VIABILIDADE: só SIM/NÃO
         { id: 'viabilidade', num: '52', titulo: 'Estudo de Viabilidade', tipo: 'simNao' }
@@ -5744,11 +5723,11 @@
       page23: [
         // SINALIZAÇÃO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'sinalizacaoProjeto', num: '53.1', titulo: 'Sinalização - Projeto', tipo: 'simNao', temExecucao: true },
-        { id: 'sinalizacaoExec', num: '53.2', titulo: 'Sinalização - Execução', tipo: 'status', depende: 'sinalizacaoProjeto' },
+        { id: 'sinalizacaoExec', num: '53.2', titulo: 'Sinalização - Execução', tipo: 'status', depende: 'sinalizacaoProjeto', temCampos: true },
 
         // TRÁFEGO: projeto SIM/NÃO + execução com 3 opções se SIM
         { id: 'trafegoProjeto', num: '54.1', titulo: 'Projeto de Tráfego - Elaboração', tipo: 'simNao', temExecucao: true },
-        { id: 'trafegoExec', num: '54.2', titulo: 'Projeto de Tráfego - Execução', tipo: 'status', depende: 'trafegoProjeto' },
+        { id: 'trafegoExec', num: '54.2', titulo: 'Projeto de Tráfego - Execução', tipo: 'status', depende: 'trafegoProjeto', temCampos: true },
 
         // CONTROLE TECNOLÓGICO: só SIM/NÃO
         { id: 'controleTecnologico', num: '55', titulo: 'Controle Tecnológico (Aço, Argamassa, blocos)', tipo: 'simNao' }
@@ -6210,9 +6189,10 @@
     // NÃO OBRIGATÓRIO: CPF, CNPJ, Profissional, Empresa, CREA, ART (mas validar formato se preenchido)
     function validarPaginaSub(pageNum) {
       const items = subcontratados['page' + pageNum];
-      if (!items) return { valid: true, erros: [], avisos: [] };
+      if (!items) return { valid: true, errosFormato: [], errosObrigatorios: [], avisos: [] };
 
-      const erros = []; // Campos OBRIGATÓRIOS não preenchidos OU formato inválido
+      const errosFormato = []; // Campos INVÁLIDOS (CPF/CNPJ com formato errado)
+      const errosObrigatorios = []; // Campos OBRIGATÓRIOS não preenchidos
       const avisos = []; // Campos NÃO OBRIGATÓRIOS vazios (para popup de confirmação)
 
       function validarItem(item) {
@@ -6222,7 +6202,6 @@
         if (item.depende) {
           const secao = document.getElementById('section_' + id);
           if (secao && secao.style.display === 'none') {
-            // Seção escondida (projeto = NÃO), não precisa validar
             return;
           }
         }
@@ -6240,51 +6219,51 @@
           opcaoSelecionada = radio?.value;
         }
 
-        // OBRIGATÓRIO: radios SIM/NÃO ou status
+        // 1. PRIMEIRO: Validar FORMATO de campos preenchidos
+        const camposDiv = document.getElementById('campos_' + id);
+        if (camposDiv && camposDiv.style.display !== 'none') {
+          const cpf = document.getElementById('cpf_' + id);
+          const cnpj = document.getElementById('cnpj_' + id);
+          
+          if (cpf && cpf.value.trim()) {
+            const cpfNumeros = cpf.value.replace(/\D/g, '');
+            if (cpfNumeros.length > 0 && !validarCPF(cpfNumeros)) {
+              errosFormato.push(`${item.titulo} - CPF inválido`);
+              cpf.classList.add('error');
+            }
+          }
+          
+          if (cnpj && cnpj.value.trim()) {
+            const cnpjNumeros = cnpj.value.replace(/\D/g, '');
+            if (cnpjNumeros.length > 0 && !validarCNPJ(cnpjNumeros)) {
+              errosFormato.push(`${item.titulo} - CNPJ inválido`);
+              cnpj.classList.add('error');
+            }
+          }
+        }
+
+        // 2. SEGUNDO: Validar campos OBRIGATÓRIOS (radios)
         if (!selecionado) {
-          erros.push(item.titulo);
+          errosObrigatorios.push(item.titulo);
           const errorMsg = document.getElementById('error_' + id);
           if (errorMsg) errorMsg.classList.add('show');
-        } else {
-          // Validar FORMATO de campos preenchidos (CPF, CNPJ)
-          const camposDiv = document.getElementById('campos_' + id);
-          if (camposDiv && camposDiv.style.display !== 'none') {
-            const cpf = document.getElementById('cpf_' + id);
-            const cnpj = document.getElementById('cnpj_' + id);
+        }
+
+        // 3. TERCEIRO: Verificar campos NÃO OBRIGATÓRIOS vazios (avisos)
+        if (selecionado && camposDiv && camposDiv.style.display !== 'none') {
+          const verificarCamposVazios = (item.tipo === 'simNao' && opcaoSelecionada === 'Sim') || 
+                                        (item.tipo === 'status' && opcaoSelecionada);
+          
+          if (verificarCamposVazios) {
+            const prof = document.getElementById('prof_' + id);
+            const cpfCampo = document.getElementById('cpf_' + id);
+            const tipoReg = document.querySelector(`input[name="reg_${id}"]:checked`);
+            const tipoArt = document.querySelector(`input[name="tipoArt_${id}"]:checked`);
             
-            // CPF preenchido → validar formato
-            if (cpf && cpf.value.trim()) {
-              const cpfNumeros = cpf.value.replace(/\D/g, '');
-              if (cpfNumeros.length > 0 && !validarCPF(cpfNumeros)) {
-                erros.push(`${item.titulo} - CPF inválido`);
-                cpf.classList.add('error');
-              }
-            }
-            
-            // CNPJ preenchido → validar formato
-            if (cnpj && cnpj.value.trim()) {
-              const cnpjNumeros = cnpj.value.replace(/\D/g, '');
-              if (cnpjNumeros.length > 0 && !validarCNPJ(cnpjNumeros)) {
-                erros.push(`${item.titulo} - CNPJ inválido`);
-                cnpj.classList.add('error');
-              }
-            }
-            
-            // Verificar campos vazios quando SIM ou status selecionado
-            const verificarCamposVazios = (item.tipo === 'simNao' && opcaoSelecionada === 'Sim') || 
-                                          (item.tipo === 'status' && opcaoSelecionada);
-            
-            if (verificarCamposVazios) {
-              const prof = document.getElementById('prof_' + id);
-              const cpfCampo = document.getElementById('cpf_' + id);
-              const tipoReg = document.querySelector(`input[name="reg_${id}"]:checked`);
-              const tipoArt = document.querySelector(`input[name="tipoArt_${id}"]:checked`);
-              
-              if (prof && !prof.value.trim()) avisos.push(`${item.titulo} - Profissional`);
-              if (cpfCampo && !cpfCampo.value.trim()) avisos.push(`${item.titulo} - CPF`);
-              if (!tipoReg) avisos.push(`${item.titulo} - CREA/Outros`);
-              if (!tipoArt) avisos.push(`${item.titulo} - ART/Outros`);
-            }
+            if (prof && !prof.value.trim()) avisos.push(`${item.titulo} - Profissional`);
+            if (cpfCampo && !cpfCampo.value.trim()) avisos.push(`${item.titulo} - CPF`);
+            if (!tipoReg) avisos.push(`${item.titulo} - CREA/Outros`);
+            if (!tipoArt) avisos.push(`${item.titulo} - ART/Outros`);
           }
         }
 
@@ -6301,9 +6280,10 @@
       });
 
       return { 
-        valid: erros.length === 0, 
-        erros: erros, // OBRIGATÓRIOS não preenchidos OU formato inválido
-        avisos: avisos // Vazio - campos de texto NÃO são cobrados
+        valid: errosFormato.length === 0 && errosObrigatorios.length === 0,
+        errosFormato: errosFormato,
+        errosObrigatorios: errosObrigatorios,
+        avisos: avisos
       };
     }
 
@@ -6349,15 +6329,22 @@
 
     // Salvar página de subcontratados COM VALIDAÇÃO
     function salvarPaginaSub(pageNum) {
-      // VALIDAÇÃO obrigatória antes de salvar
+      // VALIDAÇÃO em 3 etapas sequenciais
       const validacao = validarPaginaSub(pageNum);
 
-      // Se tem ERROS (campos obrigatórios vazios) → NÃO SALVA
-      if (!validacao.valid) {
-        const listaErros = validacao.erros.map(erro => `• ${erro}`).join('\n');
-        alert(`❌ CAMPOS OBRIGATÓRIOS NÃO PREENCHIDOS:\n\n${listaErros}\n\nPreencha todos os campos obrigatórios antes de salvar.`);
-        
-        showToast('❌ Preencha todos os campos obrigatórios', 'error');
+      // 1. PRIMEIRO: Verificar FORMATO INVÁLIDO (CPF/CNPJ errado)
+      if (validacao.errosFormato && validacao.errosFormato.length > 0) {
+        showToast('❌ ' + validacao.errosFormato[0], 'error');
+        const campoErro = document.querySelector('.error');
+        if (campoErro) {
+          campoErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return; // NÃO SALVA
+      }
+
+      // 2. SEGUNDO: Verificar CAMPOS OBRIGATÓRIOS vazios
+      if (validacao.errosObrigatorios && validacao.errosObrigatorios.length > 0) {
+        showToast('❌ Há pelo menos um campo obrigatório não preenchido', 'error');
         const primeiroErro = document.querySelector('.error-message.show');
         if (primeiroErro) {
           primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -6365,7 +6352,7 @@
         return; // NÃO SALVA
       }
 
-      // Se tem AVISOS (campos não obrigatórios vazios) → MOSTRA POPUP mas SALVA
+      // 3. TERCEIRO: Verificar CAMPOS NÃO OBRIGATÓRIOS vazios (popup de confirmação)
       if (validacao.avisos && validacao.avisos.length > 0) {
         const listaAvisos = validacao.avisos.map(aviso => `• ${aviso}`).join('\n');
         const confirmar = confirm(`⚠️ ATENÇÃO - CAMPOS VAZIOS:\n\n${listaAvisos}\n\nEstes campos não são obrigatórios, mas é recomendado preenchê-los.\n\nDeseja salvar mesmo assim?`);
