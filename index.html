@@ -1993,6 +1993,243 @@
       </div>
     </div>
 
+    <!-- Page 8: Gerenciamento -->
+    <div class="page" id="page8">
+      <div class="card">
+        <div class="card-header">
+          <h1>🏢 Gerenciamento</h1>
+          <p>Informações sobre gerenciamento da obra</p>
+        </div>
+        <div class="card-body">
+          <form id="form8" novalidate>
+            <!-- Houve Gerenciamento -->
+            <div class="form-group">
+              <label>Gerenciamento?</label>
+              <div class="radio-group">
+                <div class="radio-option">
+                  <input type="radio" id="gerenciamentoSim" name="houveGerenciamento" value="Sim" onchange="toggleGerenciamento()">
+                  <label for="gerenciamentoSim">
+                    <span class="radio-dot"></span>
+                    SIM
+                  </label>
+                </div>
+                <div class="radio-option">
+                  <input type="radio" id="gerenciamentoNao" name="houveGerenciamento" value="Não" onchange="toggleGerenciamento()">
+                  <label for="gerenciamentoNao">
+                    <span class="radio-dot"></span>
+                    NÃO
+                  </label>
+                </div>
+              </div>
+              <p class="error-message" id="errorHouveGerenciamento">Selecione uma opção</p>
+            </div>
+
+            <!-- Campos de Gerenciamento (aparecem se Sim) -->
+            <div id="camposGerenciamento" style="display: none;">
+
+              <!-- Profissional -->
+              <div class="form-group" style="position: relative;">
+                <label for="profissionalGerenciamento">Profissional</label>
+                <input
+                  type="text"
+                  id="profissionalGerenciamento"
+                  name="profissionalGerenciamento"
+                  placeholder="Nome completo do profissional"
+                  autocomplete="new-password"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                >
+                <div class="autocomplete-list" id="autocompleteProfissionalGerenciamento"></div>
+                <p class="error-message" id="errorProfissionalGerenciamento">Informe o profissional</p>
+              </div>
+
+              <div class="form-group">
+                <label for="cpfGerenciamento">CPF</label>
+                <input
+                  type="text"
+                  id="cpfGerenciamento"
+                  name="cpfGerenciamento"
+                  placeholder="000.000.000-00"
+                  maxlength="14"
+                >
+                <p class="hint">Formato: 000.000.000-00</p>
+                <p class="error-message" id="errorCpfGerenciamento">CPF inválido</p>
+              </div>
+
+              <!-- CREA/Outros -->
+              <div class="form-group">
+                <label>CREA / Outros</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="regCreaGerenciamento" name="tipoRegistroGerenciamento" value="CREA" onchange="mostrarCampoRegistroGer('crea')">
+                    <label for="regCreaGerenciamento">
+                      <span class="radio-dot"></span>
+                      CREA
+                    </label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="regOutrosGerenciamento" name="tipoRegistroGerenciamento" value="Outros" onchange="mostrarCampoRegistroGer('outros')">
+                    <label for="regOutrosGerenciamento">
+                      <span class="radio-dot"></span>
+                      Outros
+                    </label>
+                  </div>
+                </div>
+
+                <div class="campo-condicional" id="campoCreaGerenciamento">
+                  <input type="text" id="numeroCreaGerenciamento" placeholder="Número do CREA">
+                </div>
+
+                <div class="campo-condicional" id="campoOutrosGerenciamento">
+                  <div class="form-row">
+                    <div class="form-group" style="margin-bottom: 0;">
+                      <input type="text" id="siglaConselhoGerenciamento" placeholder="Nome/Sigla">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                      <input type="text" id="numeroConselhoGerenciamento" placeholder="Número">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ART/Outros -->
+              <div class="form-group">
+                <label>ART / Outros</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="tipoArtGerenciamento" name="tipoArtGerenciamento" value="ART" onchange="mostrarCampoArtGer('art')">
+                    <label for="tipoArtGerenciamento">
+                      <span class="radio-dot"></span>
+                      ART
+                    </label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="tipoOutrosArtGerenciamento" name="tipoArtGerenciamento" value="Outros" onchange="mostrarCampoArtGer('outros')">
+                    <label for="tipoOutrosArtGerenciamento">
+                      <span class="radio-dot"></span>
+                      Outros
+                    </label>
+                  </div>
+                </div>
+
+                <div class="campo-condicional" id="campoArtGerenciamento">
+                  <input type="text" id="artNumeroGerenciamento" placeholder="Número da ART" inputmode="numeric">
+                </div>
+
+                <div class="campo-condicional" id="campoOutrosArtGerenciamento">
+                  <div class="form-row">
+                    <div class="form-group" style="margin-bottom: 0;">
+                      <input type="text" id="nomeOutrosArtGerenciamento" placeholder="Nome (ex: RRT)">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                      <input type="text" id="numeroOutrosArtGerenciamento" placeholder="Número">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empresa -->
+              <div class="form-group">
+                <label for="empresaGerenciamento">Empresa</label>
+                <input
+                  type="text"
+                  id="empresaGerenciamento"
+                  name="empresaGerenciamento"
+                  placeholder="Nome da empresa"
+                >
+              </div>
+
+              <!-- CNPJ -->
+              <div class="form-group">
+                <label for="cnpjGerenciamento">CNPJ</label>
+                <input
+                  type="text"
+                  id="cnpjGerenciamento"
+                  name="cnpjGerenciamento"
+                  placeholder="00.000.000/0000-00"
+                  maxlength="18"
+                >
+                <p class="hint">Formato: 00.000.000/0000-00</p>
+                <p class="error-message" id="errorCnpjGerenciamento">CNPJ inválido</p>
+              </div>
+
+              <!-- Registro CREA/Outros da Empresa -->
+              <div class="form-group">
+                <label>Registro CREA / Outros da Empresa</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="regCreaEmpresaGer" name="tipoRegistroEmpresaGer" value="CREA" onchange="mostrarCampoRegistroEmpresaGer('crea')">
+                    <label for="regCreaEmpresaGer">
+                      <span class="radio-dot"></span>
+                      CREA
+                    </label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="regOutrosEmpresaGer" name="tipoRegistroEmpresaGer" value="Outros" onchange="mostrarCampoRegistroEmpresaGer('outros')">
+                    <label for="regOutrosEmpresaGer">
+                      <span class="radio-dot"></span>
+                      Outros
+                    </label>
+                  </div>
+                </div>
+
+                <div class="campo-condicional" id="campoCreaEmpresaGer">
+                  <input type="text" id="numeroCreaEmpresaGer" placeholder="Número do CREA">
+                </div>
+
+                <div class="campo-condicional" id="campoOutrosEmpresaGer">
+                  <div class="form-row">
+                    <div class="form-group" style="margin-bottom: 0;">
+                      <input type="text" id="siglaConselhoEmpresaGer" placeholder="Nome/Sigla">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                      <input type="text" id="numeroConselhoEmpresaGer" placeholder="Número">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Placa -->
+              <div class="form-group">
+                <label>Placa</label>
+                <div class="radio-group">
+                  <div class="radio-option">
+                    <input type="radio" id="placaGerenciamentoSim" name="placaGerenciamento" value="Sim">
+                    <label for="placaGerenciamentoSim">
+                      <span class="radio-dot"></span>
+                      SIM
+                    </label>
+                  </div>
+                  <div class="radio-option">
+                    <input type="radio" id="placaGerenciamentoNao" name="placaGerenciamento" value="Não">
+                    <label for="placaGerenciamentoNao">
+                      <span class="radio-dot"></span>
+                      NÃO
+                    </label>
+                  </div>
+                </div>
+                <p class="error-message" id="errorPlacaGerenciamento">Selecione uma opção</p>
+              </div>
+
+            </div>
+
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" onclick="retornar(8)">
+                ← Retornar
+              </button>
+              <button type="button" class="btn btn-save" onclick="salvarPagina(8)">
+                💾 Salvar
+              </button>
+              <button type="button" class="btn btn-primary" onclick="finalizarFormulario()">
+                ✅ Finalizar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Modal de confirmação -->
@@ -2119,11 +2356,32 @@
         livroOrdem: '',
         observacoes: '',
         saved: false
+      },
+      page8: {
+        houveGerenciamento: '',
+        profissionalGerenciamento: '',
+        cpfGerenciamento: '',
+        tipoRegistroGerenciamento: '',
+        numeroCreaGerenciamento: '',
+        siglaConselhoGerenciamento: '',
+        numeroConselhoGerenciamento: '',
+        tipoArtGerenciamento: '',
+        artNumeroGerenciamento: '',
+        nomeOutrosArtGerenciamento: '',
+        numeroOutrosArtGerenciamento: '',
+        empresaGerenciamento: '',
+        cnpjGerenciamento: '',
+        tipoRegistroEmpresaGer: '',
+        numeroCreaEmpresaGer: '',
+        siglaConselhoEmpresaGer: '',
+        numeroConselhoEmpresaGer: '',
+        placaGerenciamento: '',
+        saved: false
       }
     };
 
     // Total de páginas
-    const totalPages = 7;
+    const totalPages = 8;
     let currentPage = 1;
     
     // Controle do tipo de documento (CPF ou CNPJ)
@@ -3189,11 +3447,59 @@
     function mostrarCampoArtED(tipo) {
       document.getElementById('campoArtExecDemol').classList.remove('show');
       document.getElementById('campoOutrosArtExecDemol').classList.remove('show');
-      
+
       if (tipo === 'art') {
         document.getElementById('campoArtExecDemol').classList.add('show');
       } else if (tipo === 'outros') {
         document.getElementById('campoOutrosArtExecDemol').classList.add('show');
+      }
+    }
+
+    // =============================================
+    // FUNÇÕES DA PÁGINA 8 - GERENCIAMENTO
+    // =============================================
+
+    function toggleGerenciamento() {
+      const houve = document.querySelector('input[name="houveGerenciamento"]:checked');
+      const campos = document.getElementById('camposGerenciamento');
+
+      if (houve && houve.value === 'Sim') {
+        campos.style.display = 'block';
+      } else {
+        campos.style.display = 'none';
+      }
+    }
+
+    function mostrarCampoRegistroGer(tipo) {
+      document.getElementById('campoCreaGerenciamento').classList.remove('show');
+      document.getElementById('campoOutrosGerenciamento').classList.remove('show');
+
+      if (tipo === 'crea') {
+        document.getElementById('campoCreaGerenciamento').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosGerenciamento').classList.add('show');
+      }
+    }
+
+    function mostrarCampoArtGer(tipo) {
+      document.getElementById('campoArtGerenciamento').classList.remove('show');
+      document.getElementById('campoOutrosArtGerenciamento').classList.remove('show');
+
+      if (tipo === 'art') {
+        document.getElementById('campoArtGerenciamento').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosArtGerenciamento').classList.add('show');
+      }
+    }
+
+    function mostrarCampoRegistroEmpresaGer(tipo) {
+      document.getElementById('campoCreaEmpresaGer').classList.remove('show');
+      document.getElementById('campoOutrosEmpresaGer').classList.remove('show');
+
+      if (tipo === 'crea') {
+        document.getElementById('campoCreaEmpresaGer').classList.add('show');
+      } else if (tipo === 'outros') {
+        document.getElementById('campoOutrosEmpresaGer').classList.add('show');
       }
     }
 
@@ -3958,6 +4264,24 @@
 
         case 7:
           // Página 7 não tem campos com formato especial
+          break;
+
+        case 8:
+          // CPF do profissional de gerenciamento (se preenchido)
+          const cpfGer = document.getElementById('cpfGerenciamento').value.trim();
+          if (cpfGer && !validarCPF(cpfGer)) {
+            erros.push('CPF do profissional inválido');
+            document.getElementById('cpfGerenciamento').classList.add('error');
+            document.getElementById('errorCpfGerenciamento').classList.add('show');
+          }
+
+          // CNPJ da empresa (se preenchido)
+          const cnpjGer = document.getElementById('cnpjGerenciamento').value.trim();
+          if (cnpjGer && !validarCNPJ(cnpjGer)) {
+            erros.push('CNPJ da empresa inválido');
+            document.getElementById('cnpjGerenciamento').classList.add('error');
+            document.getElementById('errorCnpjGerenciamento').classList.add('show');
+          }
           break;
       }
 
