@@ -4350,13 +4350,15 @@
     }
 
     function confirmarSalvamento() {
+      console.log('Confirmando salvamento, página:', paginaParaSalvar);
+      const paginaAtual = paginaParaSalvar; // Salvar valor antes de fechar modal
       fecharModal();
-      // Pequeno delay para garantir que o modal fechou antes de mostrar o toast
-      setTimeout(() => {
-        if (paginaParaSalvar !== null) {
-          salvarPaginaForcado(paginaParaSalvar);
-        }
-      }, 300);
+      if (paginaAtual !== null) {
+        console.log('Chamando salvarPaginaForcado para página', paginaAtual);
+        salvarPaginaForcado(paginaAtual);
+      } else {
+        console.log('paginaParaSalvar é null!');
+      }
     }
 
     // Verificar campos vazios de cada página (retorna lista de campos não preenchidos)
