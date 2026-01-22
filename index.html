@@ -3704,6 +3704,17 @@
       } else {
         fieldset.disabled = true;
         fieldset.style.display = 'none';
+        
+        // LIMPAR todos os campos quando NÃO
+        fieldset.querySelectorAll('input[type="text"]').forEach(input => {
+          input.value = '';
+        });
+        fieldset.querySelectorAll('input[type="radio"]').forEach(radio => {
+          radio.checked = false;
+        });
+        fieldset.querySelectorAll('.campo-condicional').forEach(div => {
+          div.classList.remove('show');
+        });
       }
     }
 
@@ -3718,6 +3729,17 @@
       } else {
         fieldset.disabled = true;
         fieldset.style.display = 'none';
+        
+        // LIMPAR todos os campos quando NÃO
+        fieldset.querySelectorAll('input[type="text"]').forEach(input => {
+          input.value = '';
+        });
+        fieldset.querySelectorAll('input[type="radio"]').forEach(radio => {
+          radio.checked = false;
+        });
+        fieldset.querySelectorAll('.campo-condicional').forEach(div => {
+          div.classList.remove('show');
+        });
       }
     }
 
@@ -3793,6 +3815,21 @@
         campos.style.display = 'block';
       } else {
         campos.style.display = 'none';
+        
+        // LIMPAR todos os campos quando NÃO
+        campos.querySelectorAll('input[type="text"]').forEach(input => {
+          input.value = '';
+          input.classList.remove('error');
+        });
+        campos.querySelectorAll('input[type="radio"]').forEach(radio => {
+          radio.checked = false;
+        });
+        campos.querySelectorAll('.campo-condicional').forEach(div => {
+          div.classList.remove('show');
+        });
+        campos.querySelectorAll('.error-message').forEach(msg => {
+          msg.classList.remove('show');
+        });
       }
     }
 
@@ -4613,23 +4650,26 @@
           break;
 
         case 5:
-          // CPF do projeto de demolição - só valida se preencheu
+          // CPF do projeto de demolição - só valida se campo está VISÍVEL e preencheu
+          const fieldsetProjDemol = document.getElementById('fieldsetProjetoDemolicao');
           const cpfProjDemol = document.getElementById('cpfProjetoDemol').value.trim();
-          if (cpfProjDemol && !validarCPF(cpfProjDemol)) {
+          if (fieldsetProjDemol && fieldsetProjDemol.style.display !== 'none' && cpfProjDemol && !validarCPF(cpfProjDemol)) {
             erros.push('CPF do profissional (projeto demolição) inválido');
             document.getElementById('cpfProjetoDemol').classList.add('error');
           }
 
-          // CPF da execução de demolição - só valida se preencheu
+          // CPF da execução de demolição - só valida se campo está VISÍVEL e preencheu
+          const fieldsetExecDemol = document.getElementById('fieldsetExecucaoDemolicao');
           const cpfExecDemol = document.getElementById('cpfExecDemol').value.trim();
-          if (cpfExecDemol && !validarCPF(cpfExecDemol)) {
+          if (fieldsetExecDemol && fieldsetExecDemol.style.display !== 'none' && cpfExecDemol && !validarCPF(cpfExecDemol)) {
             erros.push('CPF do profissional (execução demolição) inválido');
             document.getElementById('cpfExecDemol').classList.add('error');
           }
 
-          // CNPJ da empresa de demolição - só valida se preencheu
+          // CNPJ da empresa de demolição - só valida se campo está VISÍVEL e preencheu
+          const camposDemolicao = document.getElementById('camposDemolicao');
           const cnpjDemol = document.getElementById('cnpjDemol').value.trim();
-          if (cnpjDemol && !validarCNPJ(cnpjDemol)) {
+          if (camposDemolicao && camposDemolicao.style.display !== 'none' && cnpjDemol && !validarCNPJ(cnpjDemol)) {
             erros.push('CNPJ da empresa de demolição inválido');
             document.getElementById('cnpjDemol').classList.add('error');
           }
@@ -4666,20 +4706,25 @@
           break;
 
         case 8:
-          // CPF do profissional de gerenciamento (se preenchido)
-          const cpfGer = document.getElementById('cpfGerenciamento').value.trim();
-          if (cpfGer && !validarCPF(cpfGer)) {
-            erros.push('CPF do profissional inválido');
-            document.getElementById('cpfGerenciamento').classList.add('error');
-            document.getElementById('errorCpfGerenciamento').classList.add('show');
-          }
+          // Só validar CPF/CNPJ se os campos de gerenciamento estão VISÍVEIS
+          const camposGerenciamento = document.getElementById('camposGerenciamento');
+          
+          if (camposGerenciamento && camposGerenciamento.style.display !== 'none') {
+            // CPF do profissional de gerenciamento (se preenchido)
+            const cpfGer = document.getElementById('cpfGerenciamento').value.trim();
+            if (cpfGer && !validarCPF(cpfGer)) {
+              erros.push('CPF do profissional inválido');
+              document.getElementById('cpfGerenciamento').classList.add('error');
+              document.getElementById('errorCpfGerenciamento').classList.add('show');
+            }
 
-          // CNPJ da empresa (se preenchido)
-          const cnpjGer = document.getElementById('cnpjGerenciamento').value.trim();
-          if (cnpjGer && !validarCNPJ(cnpjGer)) {
-            erros.push('CNPJ da empresa inválido');
-            document.getElementById('cnpjGerenciamento').classList.add('error');
-            document.getElementById('errorCnpjGerenciamento').classList.add('show');
+            // CNPJ da empresa (se preenchido)
+            const cnpjGer = document.getElementById('cnpjGerenciamento').value.trim();
+            if (cnpjGer && !validarCNPJ(cnpjGer)) {
+              erros.push('CNPJ da empresa inválido');
+              document.getElementById('cnpjGerenciamento').classList.add('error');
+              document.getElementById('errorCnpjGerenciamento').classList.add('show');
+            }
           }
           break;
       }
@@ -5731,6 +5776,22 @@
       // Mostrar/esconder campos
       if (campos) {
         campos.style.display = mostrar ? 'block' : 'none';
+        
+        // Se NÃO, LIMPAR todos os valores dos campos
+        if (!mostrar) {
+          // Limpar inputs de texto
+          campos.querySelectorAll('input[type="text"]').forEach(input => {
+            input.value = '';
+          });
+          // Limpar radios
+          campos.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.checked = false;
+          });
+          // Esconder campos condicionais
+          campos.querySelectorAll('.campo-condicional').forEach(div => {
+            div.classList.remove('show');
+          });
+        }
       }
 
       // Verificar se tem item de execução dependente
@@ -5746,6 +5807,27 @@
                 const separadorExec = document.querySelector('.separador_' + item.id);
                 if (secaoExec) {
                   secaoExec.style.display = mostrar ? 'block' : 'none';
+                  
+                  // Se NÃO, LIMPAR também os campos da execução
+                  if (!mostrar) {
+                    // Limpar radios de status
+                    secaoExec.querySelectorAll('input[type="radio"]').forEach(radio => {
+                      radio.checked = false;
+                    });
+                    // Limpar campos de texto
+                    const camposExec = secaoExec.querySelector(`#campos_${item.id}`);
+                    if (camposExec) {
+                      camposExec.querySelectorAll('input[type="text"]').forEach(input => {
+                        input.value = '';
+                      });
+                      camposExec.querySelectorAll('input[type="radio"]').forEach(radio => {
+                        radio.checked = false;
+                      });
+                      camposExec.querySelectorAll('.campo-condicional').forEach(div => {
+                        div.classList.remove('show');
+                      });
+                    }
+                  }
                 }
                 if (separadorExec) {
                   separadorExec.style.display = mostrar ? 'block' : 'none';
