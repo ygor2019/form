@@ -5374,6 +5374,26 @@
           if (houveDemolicao && houveDemolicao.value === 'Sim') {
             if (!document.querySelector('input[name="projetoDemolicao"]:checked')) camposVazios.push('Projeto de Demolição');
             if (!document.querySelector('input[name="execucaoDemolicao"]:checked')) camposVazios.push('Execução de Demolição');
+            
+            // Se selecionou SIM em Projeto de Demolição
+            const projetoDemolicao = document.querySelector('input[name="projetoDemolicao"]:checked');
+            if (projetoDemolicao && projetoDemolicao.value === 'Sim') {
+              if (!document.getElementById('profissionalProjetoDemol').value.trim()) camposVazios.push('Profissional do Projeto de Demolição');
+              if (!document.getElementById('cpfProjetoDemol').value.trim()) camposVazios.push('CPF do Projeto de Demolição');
+              if (!document.querySelector('input[name="tipoRegistroProjetoDemol"]:checked')) camposVazios.push('CREA/Outros do Projeto de Demolição');
+              if (!document.querySelector('input[name="tipoArtProjetoDemol"]:checked')) camposVazios.push('ART/Outros do Projeto de Demolição');
+            }
+            
+            // Se selecionou SIM em Execução de Demolição
+            const execucaoDemolicao = document.querySelector('input[name="execucaoDemolicao"]:checked');
+            if (execucaoDemolicao && execucaoDemolicao.value === 'Sim') {
+              if (!document.getElementById('profissionalExecDemol').value.trim()) camposVazios.push('Profissional da Execução de Demolição');
+              if (!document.getElementById('cpfExecDemol').value.trim()) camposVazios.push('CPF da Execução de Demolição');
+              if (!document.querySelector('input[name="tipoRegistroExecDemol"]:checked')) camposVazios.push('CREA/Outros da Execução de Demolição');
+              if (!document.querySelector('input[name="tipoArtExecDemol"]:checked')) camposVazios.push('ART/Outros da Execução de Demolição');
+              if (!document.getElementById('empresaDemol').value.trim()) camposVazios.push('Empresa de Demolição');
+              if (!document.getElementById('cnpjDemol').value.trim()) camposVazios.push('CNPJ da Empresa de Demolição');
+            }
           }
           break;
 
@@ -5382,7 +5402,31 @@
           if (!document.querySelector('input[name="houveCoordenacao"]:checked')) camposVazios.push('Houve Coordenação?');
           if (!document.querySelector('input[name="houveOrcamento"]:checked')) camposVazios.push('Houve Orçamento?');
           if (!document.querySelector('input[name="houveResidente"]:checked')) camposVazios.push('Houve Residente?');
-          // Profissional, CPF, CREA, ART NÃO são obrigatórios
+          
+          // Se selecionou SIM, verificar campos relacionados
+          const houveCoordenacao = document.querySelector('input[name="houveCoordenacao"]:checked');
+          if (houveCoordenacao && houveCoordenacao.value === 'Sim') {
+            if (!document.getElementById('profCoordenacao').value.trim()) camposVazios.push('Profissional da Coordenação');
+            if (!document.getElementById('cpfCoordenacao').value.trim()) camposVazios.push('CPF da Coordenação');
+            if (!document.querySelector('input[name="regCoord"]:checked')) camposVazios.push('CREA/Outros da Coordenação');
+            if (!document.querySelector('input[name="tipoArtCoord"]:checked')) camposVazios.push('ART/Outros da Coordenação');
+          }
+          
+          const houveOrcamento = document.querySelector('input[name="houveOrcamento"]:checked');
+          if (houveOrcamento && houveOrcamento.value === 'Sim') {
+            if (!document.getElementById('profOrcamento').value.trim()) camposVazios.push('Profissional do Orçamento');
+            if (!document.getElementById('cpfOrcamento').value.trim()) camposVazios.push('CPF do Orçamento');
+            if (!document.querySelector('input[name="regOrc"]:checked')) camposVazios.push('CREA/Outros do Orçamento');
+            if (!document.querySelector('input[name="tipoArtOrc"]:checked')) camposVazios.push('ART/Outros do Orçamento');
+          }
+          
+          const houveResidente = document.querySelector('input[name="houveResidente"]:checked');
+          if (houveResidente && houveResidente.value === 'Sim') {
+            if (!document.getElementById('profResidente').value.trim()) camposVazios.push('Profissional Residente');
+            if (!document.getElementById('cpfResidente').value.trim()) camposVazios.push('CPF do Residente');
+            if (!document.querySelector('input[name="regRes"]:checked')) camposVazios.push('CREA/Outros do Residente');
+            if (!document.querySelector('input[name="tipoArtRes"]:checked')) camposVazios.push('ART/Outros do Residente');
+          }
           break;
 
         case 7:
@@ -5391,6 +5435,19 @@
 
         case 8:
           if (!document.querySelector('input[name="houveGerenciamento"]:checked')) camposVazios.push('Houve Gerenciamento?');
+          
+          // Se selecionou SIM, verificar campos relacionados
+          const houveGerenciamento = document.querySelector('input[name="houveGerenciamento"]:checked');
+          if (houveGerenciamento && houveGerenciamento.value === 'Sim') {
+            if (!document.getElementById('profissionalGerenciamento').value.trim()) camposVazios.push('Profissional de Gerenciamento');
+            if (!document.getElementById('cpfGerenciamento').value.trim()) camposVazios.push('CPF do Gerenciamento');
+            if (!document.querySelector('input[name="tipoRegistroGerenciamento"]:checked')) camposVazios.push('CREA/Outros do Gerenciamento');
+            if (!document.querySelector('input[name="tipoArtGerenciamento"]:checked')) camposVazios.push('ART/Outros do Gerenciamento');
+            if (!document.getElementById('empresaGerenciamento').value.trim()) camposVazios.push('Empresa de Gerenciamento');
+            if (!document.getElementById('cnpjGerenciamento').value.trim()) camposVazios.push('CNPJ da Empresa de Gerenciamento');
+            if (!document.querySelector('input[name="tipoRegistroEmpresaGer"]:checked')) camposVazios.push('Tipo de Registro da Empresa de Gerenciamento');
+            if (!document.querySelector('input[name="placaGerenciamento"]:checked')) camposVazios.push('Placa de Gerenciamento');
+          }
           break;
 
         case 25:
