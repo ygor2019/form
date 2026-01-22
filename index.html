@@ -3798,16 +3798,199 @@
     // AÇÕES DOS BOTÕES
     // =============================================
 
-    // Salvar página
-    // Salvar página - verifica campos vazios e mostra modal se necessário
+    // Validar FORMATO dos campos preenchidos (não verifica se estão vazios)
+    function validarFormatoPagina(pageNum) {
+      let erros = [];
+
+      switch(pageNum) {
+        case 1:
+          // CEP - só valida se preencheu algo
+          const cep = document.getElementById('cep').value.trim();
+          if (cep) {
+            const cidade = document.getElementById('cidade').value.trim();
+            const resultadoCep = validarCepSaoPaulo(cep, cidade);
+            if (!resultadoCep.valid) {
+              erros.push('CEP: ' + resultadoCep.message);
+              document.getElementById('cep').classList.add('error');
+              document.getElementById('errorCep').classList.add('show');
+            }
+          }
+          break;
+
+        case 2:
+          // Área - só valida se preencheu algo
+          const area = document.getElementById('area').value.trim();
+          if (area && (isNaN(parseFloat(area)) || parseFloat(area) <= 0)) {
+            erros.push('Área deve ser um número válido maior que zero');
+            document.getElementById('area').classList.add('error');
+            document.getElementById('errorArea').classList.add('show');
+          }
+
+          // Pavimentos - só valida se preencheu algo
+          const pavimentos = document.getElementById('pavimentos').value.trim();
+          if (pavimentos && (isNaN(parseInt(pavimentos)) || parseInt(pavimentos) < 1)) {
+            erros.push('Pavimentos deve ser pelo menos 1');
+            document.getElementById('pavimentos').classList.add('error');
+            document.getElementById('errorPavimentos').classList.add('show');
+          }
+
+          // Ano do alvará - só valida se preencheu algo
+          const alvaraDe = document.getElementById('alvaraDe').value.trim();
+          if (alvaraDe && (alvaraDe.length !== 4 || isNaN(parseInt(alvaraDe)))) {
+            erros.push('Ano do alvará deve ter 4 dígitos');
+            document.getElementById('alvaraDe').classList.add('error');
+            document.getElementById('errorAlvaraDe').classList.add('show');
+          }
+
+          // CPF/CNPJ - só valida se preencheu algo
+          const cpfCnpj = document.getElementById('cpfCnpj').value.trim();
+          if (cpfCnpj) {
+            if (tipoDocumento === 'cpf') {
+              if (!validarCPF(cpfCnpj)) {
+                erros.push('CPF inválido');
+                document.getElementById('cpfCnpj').classList.add('error');
+                document.getElementById('errorCpfCnpj').classList.add('show');
+              }
+            } else {
+              if (!validarCNPJ(cpfCnpj)) {
+                erros.push('CNPJ inválido');
+                document.getElementById('cpfCnpj').classList.add('error');
+                document.getElementById('errorCpfCnpj').classList.add('show');
+              }
+            }
+          }
+          break;
+
+        case 3:
+          // CPF do profissional (se for tipo CPF e preenchido)
+          const tipoRegistro = document.querySelector('input[name="tipoRegistro"]:checked');
+          if (tipoRegistro && tipoRegistro.value === 'CPF') {
+            const cpfProf = document.getElementById('cpfProfissional').value.trim();
+            if (cpfProf && !validarCPF(cpfProf)) {
+              erros.push('CPF do profissional inválido');
+              document.getElementById('cpfProfissional').classList.add('error');
+            }
+          }
+
+          // CNPJ da empresa (se for tipo CNPJ e preenchido)
+          if (tipoEmpresaRegistro === 'cnpj') {
+            const cnpjEmp = document.getElementById('empresaRegistro').value.trim();
+            if (cnpjEmp && !validarCNPJ(cnpjEmp)) {
+              erros.push('CNPJ da empresa inválido');
+              document.getElementById('empresaRegistro').classList.add('error');
+              document.getElementById('errorEmpresaRegistro').classList.add('show');
+            }
+          }
+          break;
+
+        case 4:
+          // CPF do RT - só valida se preencheu
+          const cpfRT = document.getElementById('cpfRT').value.trim();
+          if (cpfRT && !validarCPF(cpfRT)) {
+            erros.push('CPF do profissional inválido');
+            document.getElementById('cpfRT').classList.add('error');
+            document.getElementById('errorCpfRT').classList.add('show');
+          }
+
+          // CNPJ da empresa RT (se for tipo CNPJ e preenchido)
+          if (tipoEmpresaRegistroRT === 'cnpj') {
+            const cnpjEmpRT = document.getElementById('empresaRegistroRT').value.trim();
+            if (cnpjEmpRT && !validarCNPJ(cnpjEmpRT)) {
+              erros.push('CNPJ da empresa inválido');
+              document.getElementById('empresaRegistroRT').classList.add('error');
+              document.getElementById('errorEmpresaRegistroRT').classList.add('show');
+            }
+          }
+          break;
+
+        case 5:
+          // CPF do projeto de demolição - só valida se preencheu
+          const cpfProjDemol = document.getElementById('cpfProjetoDemol').value.trim();
+          if (cpfProjDemol && !validarCPF(cpfProjDemol)) {
+            erros.push('CPF do profissional (projeto demolição) inválido');
+            document.getElementById('cpfProjetoDemol').classList.add('error');
+          }
+
+          // CPF da execução de demolição - só valida se preencheu
+          const cpfExecDemol = document.getElementById('cpfExecDemol').value.trim();
+          if (cpfExecDemol && !validarCPF(cpfExecDemol)) {
+            erros.push('CPF do profissional (execução demolição) inválido');
+            document.getElementById('cpfExecDemol').classList.add('error');
+          }
+
+          // CNPJ da empresa de demolição - só valida se preencheu
+          const cnpjDemol = document.getElementById('cnpjDemol').value.trim();
+          if (cnpjDemol && !validarCNPJ(cnpjDemol)) {
+            erros.push('CNPJ da empresa de demolição inválido');
+            document.getElementById('cnpjDemol').classList.add('error');
+          }
+          break;
+
+        case 6:
+          // CPF Coordenação
+          const cpfCoord = document.getElementById('cpfCoordenacao').value.trim();
+          if (cpfCoord && !validarCPF(cpfCoord)) {
+            erros.push('CPF da Coordenação inválido');
+            document.getElementById('cpfCoordenacao').classList.add('error');
+            document.getElementById('errorCpfCoordenacao').classList.add('show');
+          }
+
+          // CPF Orçamento
+          const cpfOrc = document.getElementById('cpfOrcamento').value.trim();
+          if (cpfOrc && !validarCPF(cpfOrc)) {
+            erros.push('CPF do Orçamento inválido');
+            document.getElementById('cpfOrcamento').classList.add('error');
+            document.getElementById('errorCpfOrcamento').classList.add('show');
+          }
+
+          // CPF Residente
+          const cpfRes = document.getElementById('cpfResidente').value.trim();
+          if (cpfRes && !validarCPF(cpfRes)) {
+            erros.push('CPF do Residente inválido');
+            document.getElementById('cpfResidente').classList.add('error');
+            document.getElementById('errorCpfResidente').classList.add('show');
+          }
+          break;
+
+        case 7:
+          // Página 7 não tem campos com formato especial
+          break;
+      }
+
+      return { valid: erros.length === 0, erros: erros };
+    }
+
+    // Limpar erros visuais da página
+    function limparErrosPagina(pageNum) {
+      const pagina = document.getElementById('page' + pageNum);
+      if (pagina) {
+        pagina.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+        pagina.querySelectorAll('.error-message.show').forEach(el => el.classList.remove('show'));
+      }
+    }
+
+    // Salvar página - primeiro valida formato, depois verifica campos vazios
     function salvarPagina(pageNum) {
+      // Limpar erros anteriores
+      limparErrosPagina(pageNum);
+
+      // 1. Primeiro validar o FORMATO dos campos preenchidos
+      const validacaoFormato = validarFormatoPagina(pageNum);
+      
+      if (!validacaoFormato.valid) {
+        // Formato inválido - mostrar erro e não salvar
+        showToast('❌ ' + validacaoFormato.erros[0], 'error');
+        return;
+      }
+
+      // 2. Formato OK - agora verificar campos vazios
       const camposVazios = verificarCamposVazios(pageNum);
       
       if (camposVazios.length > 0) {
         // Tem campos vazios - mostrar modal de confirmação
         abrirModal(camposVazios, pageNum);
       } else {
-        // Todos os campos preenchidos - salvar diretamente
+        // Todos os campos preenchidos e válidos - salvar diretamente
         salvarPaginaForcado(pageNum);
       }
     }
@@ -4060,7 +4243,19 @@
 
     // Finalizar formulário
     function finalizarFormulario() {
-      // Verificar campos vazios da página 7
+      // Limpar erros anteriores
+      limparErrosPagina(7);
+
+      // 1. Primeiro validar o FORMATO dos campos preenchidos
+      const validacaoFormato = validarFormatoPagina(7);
+      
+      if (!validacaoFormato.valid) {
+        // Formato inválido - mostrar erro e não finalizar
+        showToast('❌ ' + validacaoFormato.erros[0], 'error');
+        return;
+      }
+
+      // 2. Verificar campos vazios da página 7
       const camposVazios = verificarCamposVazios(7);
       
       if (camposVazios.length > 0) {
