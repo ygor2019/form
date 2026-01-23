@@ -260,7 +260,7 @@ async function gerarExcel() {
     row = addSubtitle('AUTOR DO PROJETO', row);
     row = addRow(row, 'Placa afixada?', formData?.page3?.placaAfixada || '');
     row = addRow(row, 'Profissional:', formData?.page3?.profissional || '');
-    row = addRow(row, 'Tipo de Registro:', formData?.page3?.tipoRegistro || '');
+    row = addRow(row, 'Registro:', formData?.page3?.tipoRegistro === 'CREA' ? 'CREA' : (formData?.page3?.tipoRegistro === 'CPF' ? 'CPF' : (formData?.page3?.siglaConselho || '')));
     row = addRow(row, 'Número:', formData?.page3?.numeroCrea || formData?.page3?.cpfProfissional || formData?.page3?.numeroConselho || '');
     row = addRow(row, 'Título:', formData?.page3?.titulo || '');
     row = addRow(row, 'Nº da ART:', formData?.page3?.artNumero || '');
