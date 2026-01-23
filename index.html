@@ -5415,31 +5415,31 @@
 
    // Substituir a função gerarExcel() existente por esta versão melhorada:
 
-// FUNÇÃO MELHORADA - Gerar Excel BONITO e ESTRUTURADO
 async function gerarExcel() {
   showToast('📊 Gerando Excel formatado...', 'success');
 
   try {
     // Criar novo workbook
     const wb = XLSX.utils.book_new();
-    
+
     // Criar worksheet vazio
     const ws = {};
-    
+
     // Configurar range
     let maxRow = 0;
-    
+
     // ============================================
     // FUNÇÃO AUXILIAR PARA ESTILIZAR CÉLULAS
     // ============================================
     function setCell(cell, value, style = {}) {
       if (!ws[cell]) ws[cell] = {};
-      ws[cell].v = value || '';
+      // ✅ CORREÇÃO: não "apaga" quando vier 0/false e mantém vazio quando null/undefined
+      ws[cell].v = (value ?? '');
       ws[cell].t = 's';
-      
+
       // Aplicar estilos
       if (!ws[cell].s) ws[cell].s = {};
-      
+
       // Estilos padrão
       const defaultStyle = {
         border: {
@@ -5450,15 +5450,15 @@ async function gerarExcel() {
         },
         alignment: { vertical: 'center', wrapText: true }
       };
-      
+
       // Mesclar estilos
       ws[cell].s = { ...defaultStyle, ...style };
-      
+
       // Rastrear linha máxima
       const row = parseInt(cell.match(/\d+/)[0]);
       if (row > maxRow) maxRow = row;
     }
-    
+
     // Estilos predefinidos
     const estilos = {
       titulo: {
@@ -5486,9 +5486,9 @@ async function gerarExcel() {
         alignment: { horizontal: 'center', vertical: 'center' }
       }
     };
-    
+
     let linhaAtual = 1;
-    
+
     // ============================================
     // CABEÇALHO PRINCIPAL
     // ============================================
@@ -5499,171 +5499,192 @@ async function gerarExcel() {
     ws[`!merges`] = ws[`!merges`] || [];
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual += 2;
-    
+
     // ============================================
     // SEÇÃO A - LOCAL DA OBRA
     // ============================================
     setCell(`A${linhaAtual}`, 'A) LOCAL DA OBRA', estilos.subtitulo);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
+
     setCell(`A${linhaAtual}`, 'Local da Obra:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page1?.localObra || '', estilos.valor);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
+
     setCell(`A${linhaAtual}`, 'Bairro:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page1?.bairro || '', estilos.valor);
     setCell(`E${linhaAtual}`, 'Cidade:', estilos.label);
     setCell(`F${linhaAtual}`, formData.page1?.cidade || '', estilos.valor);
     setCell(`H${linhaAtual}`, 'CEP:', estilos.label);
     setCell(`I${linhaAtual}`, formData.page1?.cep || '', estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 5 }, e: { r: linhaAtual - 1, c: 6 } });
     linhaAtual += 2;
-    
+
     // ============================================
     // SEÇÃO B - EMPREENDIMENTO
     // ============================================
     setCell(`A${linhaAtual}`, 'B) EMPREENDIMENTO', estilos.subtitulo);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
-    setCell(`A${linhaAtual}`, 'Tipo:', estilos.label);
-    const tipoTexto = `${formData.page2?.tipoNatureza || 'N/A'}`;
-    setCell(`B${linhaAtual}`, tipoTexto, estilos.destaque);
-    setCell(`E${linhaAtual}`, 'Área (m²):', estilos.label);
-    setCell(`F${linhaAtual}`, formData.page2?.area || '', estilos.valor);
-    setCell(`G${linhaAtual}`, 'Pavimentos:', estilos.label);
-    setCell(`H${linhaAtual}`, formData.page2?.pavimentos || '', estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
+
+    setCell(`A${linhaAtual}`, 'Tipo/Natureza:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page2?.tipoNatureza || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
-    setCell(`A${linhaAtual}`, 'Processo nº:', estilos.label);
+
+    setCell(`A${linhaAtual}`, 'Área:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page2?.area || '', estilos.valor);
+    setCell(`E${linhaAtual}`, 'Pavimentos:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page2?.pavimentos || '', estilos.valor);
+    linhaAtual++;
+
+    setCell(`A${linhaAtual}`, 'Nº do Processo:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page2?.processoNum || '', estilos.valor);
-    setCell(`D${linhaAtual}`, 'Alvará nº:', estilos.label);
-    setCell(`E${linhaAtual}`, formData.page2?.alvaraNum || '', estilos.valor);
-    setCell(`G${linhaAtual}`, 'Ano:', estilos.label);
-    setCell(`H${linhaAtual}`, formData.page2?.alvaraDe || '', estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 2 } });
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 4 }, e: { r: linhaAtual - 1, c: 5 } });
+    setCell(`E${linhaAtual}`, 'Nº do Alvará:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page2?.alvaraNum || '', estilos.valor);
     linhaAtual++;
-    
+
+    setCell(`A${linhaAtual}`, 'Alvará de:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page2?.alvaraDe || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+
     setCell(`A${linhaAtual}`, 'Proprietário:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page2?.proprietario || '', estilos.valor);
-    setCell(`F${linhaAtual}`, 'CPF/CNPJ:', estilos.label);
-    setCell(`G${linhaAtual}`, formData.page2?.cpfCnpj || '', estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 6 }, e: { r: linhaAtual - 1, c: 8 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
+
+    setCell(`A${linhaAtual}`, 'CPF/CNPJ:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page2?.cpfCnpj || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+
     setCell(`A${linhaAtual}`, 'Endereço:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page2?.enderecoProprietario || '', estilos.valor);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual += 2;
-    
+
     // ============================================
-    // SEÇÃO C - AUTOR DO PROJETO
+    // SEÇÃO C - RESPONSÁVEL TÉCNICO
     // ============================================
-    setCell(`A${linhaAtual}`, 'C) AUTOR DO PROJETO', estilos.subtitulo);
+    setCell(`A${linhaAtual}`, 'C) RESPONSÁVEL TÉCNICO', estilos.subtitulo);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
-    const placaProjeto = formData.page3?.placaAfixada === 'Sim' ? '☑ SIM  ☐ NÃO' : '☐ SIM  ☑ NÃO';
+
     setCell(`A${linhaAtual}`, 'Placa afixada:', estilos.label);
-    setCell(`B${linhaAtual}`, placaProjeto, estilos.destaque);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
+    setCell(`B${linhaAtual}`, formData.page3?.placaAfixada || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
+
     setCell(`A${linhaAtual}`, 'Profissional:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page3?.profissional || '', estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 5 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
-    const tipoReg3 = formData.page3?.tipoRegistro || '';
-    let registroTexto = '';
-    if (tipoReg3 === 'CREA') registroTexto = `CREA: ${formData.page3?.numeroCrea || ''}`;
-    else if (tipoReg3 === 'CPF') registroTexto = `CPF: ${formData.page3?.cpfProfissional || ''}`;
-    else if (tipoReg3 === 'Outros') registroTexto = `${formData.page3?.siglaConselho || ''}: ${formData.page3?.numeroConselho || ''}`;
-    
-    setCell(`A${linhaAtual}`, 'Registro:', estilos.label);
-    setCell(`B${linhaAtual}`, registroTexto, estilos.valor);
-    setCell(`E${linhaAtual}`, 'Título:', estilos.label);
-    setCell(`F${linhaAtual}`, formData.page3?.titulo || '', estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 5 }, e: { r: linhaAtual - 1, c: 8 } });
+
+    setCell(`A${linhaAtual}`, 'CPF:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page3?.cpfProfissional || '', estilos.valor);
+    setCell(`E${linhaAtual}`, 'Registro:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page3?.tipoRegistro || '', estilos.valor);
     linhaAtual++;
-    
-    const tipoArt3 = formData.page3?.tipoArtRrt || '';
-    let artTexto = '';
-    if (tipoArt3 === 'ART') artTexto = `ART: ${formData.page3?.artNumero || ''}`;
-    else if (tipoArt3 === 'RRT') artTexto = `RRT: ${formData.page3?.rrtNumero || ''}`;
-    
+
+    setCell(`A${linhaAtual}`, 'Nº CREA/CAU:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page3?.numeroCrea || '', estilos.valor);
+    setCell(`E${linhaAtual}`, 'Sigla:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page3?.siglaConselho || '', estilos.valor);
+    setCell(`H${linhaAtual}`, 'Nº Conselho:', estilos.label);
+    setCell(`I${linhaAtual}`, formData.page3?.numeroConselho || '', estilos.valor);
+    linhaAtual++;
+
+    setCell(`A${linhaAtual}`, 'Título:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page3?.titulo || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+
     setCell(`A${linhaAtual}`, 'ART/RRT:', estilos.label);
-    setCell(`B${linhaAtual}`, artTexto, estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
+    setCell(`B${linhaAtual}`, formData.page3?.tipoArtRrt || '', estilos.valor);
+    setCell(`E${linhaAtual}`, 'Nº ART:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page3?.artNumero || '', estilos.valor);
+    setCell(`H${linhaAtual}`, 'Nº RRT:', estilos.label);
+    setCell(`I${linhaAtual}`, formData.page3?.rrtNumero || '', estilos.valor);
     linhaAtual++;
-    
+
     setCell(`A${linhaAtual}`, 'Empresa:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page3?.empresa || '', estilos.valor);
-    setCell(`F${linhaAtual}`, 'Registro:', estilos.label);
-    setCell(`G${linhaAtual}`, formData.page3?.empresaRegistro || '', estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 6 }, e: { r: linhaAtual - 1, c: 8 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+
+    setCell(`A${linhaAtual}`, 'Registro Empresa:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page3?.empresaRegistro || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual += 2;
-    
+
     // ============================================
-    // SEÇÃO D - RESPONSÁVEL TÉCNICO
+    // SEÇÃO D - RESPONSÁVEL TÉCNICO PELA OBRA
     // ============================================
-    setCell(`A${linhaAtual}`, 'D) RESPONSÁVEL TÉCNICO - EXECUÇÃO', estilos.subtitulo);
+    setCell(`A${linhaAtual}`, 'D) RESPONSÁVEL TÉCNICO PELA OBRA', estilos.subtitulo);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
-    const placaRT = formData.page4?.placaAfixadaRT === 'Sim' ? '☑ SIM  ☐ NÃO' : '☐ SIM  ☑ NÃO';
+
     setCell(`A${linhaAtual}`, 'Placa afixada:', estilos.label);
-    setCell(`B${linhaAtual}`, placaRT, estilos.destaque);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
+    setCell(`B${linhaAtual}`, formData.page4?.placaAfixadaRT || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
+
     setCell(`A${linhaAtual}`, 'Profissional:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page4?.profissionalRT || '', estilos.valor);
-    setCell(`F${linhaAtual}`, 'CPF:', estilos.label);
-    setCell(`G${linhaAtual}`, formData.page4?.cpfRT || '', estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 6 }, e: { r: linhaAtual - 1, c: 8 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
-    const tipoReg4 = formData.page4?.tipoRegistroRT || '';
-    let registroTextoRT = '';
-    if (tipoReg4 === 'CREA') registroTextoRT = `CREA: ${formData.page4?.numeroCreaRT || ''}`;
-    else if (tipoReg4 === 'Outros') registroTextoRT = `${formData.page4?.siglaConselhoRT || ''}: ${formData.page4?.numeroConselhoRT || ''}`;
-    
-    setCell(`A${linhaAtual}`, 'Registro:', estilos.label);
-    setCell(`B${linhaAtual}`, registroTextoRT, estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 5 } });
+
+    setCell(`A${linhaAtual}`, 'CPF:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page4?.cpfRT || '', estilos.valor);
+    setCell(`E${linhaAtual}`, 'Registro:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page4?.tipoRegistroRT || '', estilos.valor);
     linhaAtual++;
-    
+
+    setCell(`A${linhaAtual}`, 'Nº CREA/CAU:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page4?.numeroCreaRT || '', estilos.valor);
+    setCell(`E${linhaAtual}`, 'Sigla:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page4?.siglaConselhoRT || '', estilos.valor);
+    setCell(`H${linhaAtual}`, 'Nº Conselho:', estilos.label);
+    setCell(`I${linhaAtual}`, formData.page4?.numeroConselhoRT || '', estilos.valor);
+    linhaAtual++;
+
+    setCell(`A${linhaAtual}`, 'ART/RRT:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page4?.tipoArtOutrosRT || '', estilos.valor);
+    setCell(`E${linhaAtual}`, 'Nº ART:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page4?.artNumeroRT || '', estilos.valor);
+    linhaAtual++;
+
+    setCell(`A${linhaAtual}`, 'Outros ART (nome):', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page4?.nomeOutrosArtRT || '', estilos.valor);
+    setCell(`E${linhaAtual}`, 'Outros ART (nº):', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page4?.numeroOutrosArtRT || '', estilos.valor);
+    linhaAtual++;
+
     setCell(`A${linhaAtual}`, 'Empresa:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page4?.empresaRT || '', estilos.valor);
-    setCell(`F${linhaAtual}`, 'Registro:', estilos.label);
-    setCell(`G${linhaAtual}`, formData.page4?.empresaRegistroRT || '', estilos.valor);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 6 }, e: { r: linhaAtual - 1, c: 8 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+
+    setCell(`A${linhaAtual}`, 'Registro Empresa:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page4?.empresaRegistroRT || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual += 2;
-    
+
     // ============================================
-    // SEÇÃO E - LIVRO DE ORDEM
+    // SEÇÃO E - OBSERVAÇÕES
     // ============================================
-    setCell(`A${linhaAtual}`, 'E) LIVRO DE ORDEM E OBSERVAÇÕES', estilos.subtitulo);
+    setCell(`A${linhaAtual}`, 'E) OBSERVAÇÕES', estilos.subtitulo);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
-    const livro = formData.page7?.livroOrdem === 'Sim' ? '☑ SIM  ☐ NÃO' : '☐ SIM  ☑ NÃO';
+
     setCell(`A${linhaAtual}`, 'Livro de Ordem:', estilos.label);
-    setCell(`B${linhaAtual}`, livro, estilos.destaque);
-    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
+    setCell(`B${linhaAtual}`, formData.page7?.livroOrdem || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
+
     setCell(`A${linhaAtual}`, 'Observações:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page7?.observacoes || '', {
       ...estilos.valor,
@@ -5673,34 +5694,34 @@ async function gerarExcel() {
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual + 2, c: 0 } });
     linhaAtual += 3;
     linhaAtual++;
-    
+
     // ============================================
     // SEÇÃO F - IDENTIFICAÇÃO DO DECLARANTE
     // ============================================
     setCell(`A${linhaAtual}`, 'F) IDENTIFICAÇÃO DO DECLARANTE', estilos.subtitulo);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
+
     setCell(`A${linhaAtual}`, 'Nome:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page25?.nomeDeclarante || '', estilos.valor);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
+
     setCell(`A${linhaAtual}`, 'Qualificação:', estilos.label);
     setCell(`B${linhaAtual}`, formData.page25?.qualificacaoDeclarante || '', estilos.valor);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual++;
-    
-    const dataDeclarante = formData.page25?.dataDeclarante ? 
+
+    const dataDeclarante = formData.page25?.dataDeclarante ?
       new Date(formData.page25.dataDeclarante + 'T00:00:00').toLocaleDateString('pt-BR') : '';
-    
+
     setCell(`A${linhaAtual}`, 'Local e Data:', estilos.label);
     setCell(`B${linhaAtual}`, `${formData.page25?.localDeclarante || ''}, ${dataDeclarante}`, estilos.valor);
     ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
     linhaAtual += 2;
-    
+
     // ============================================
-    // CONFIGURAR LARGURAS DE COLUNA
+    // CONFIGURAR LARGURAS DE COLUNA (ABA PRINCIPAL)
     // ============================================
     ws['!cols'] = [
       { wch: 18 },  // A - Labels
@@ -5713,31 +5734,179 @@ async function gerarExcel() {
       { wch: 15 },  // H
       { wch: 15 }   // I
     ];
-    
+
     // Definir range
     ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: maxRow, c: 8 } });
-    
+
     // Adicionar worksheet ao workbook
     XLSX.utils.book_append_sheet(wb, ws, 'Formulário de Obra');
-    
+
+    // ============================================
+    // ABA EXTRA - SUBCONTRATADOS (PÁGINAS 9–24)
+    // Mantém padronização: cria UMA linha por item, mesmo quando o usuário marcou "Não"
+    // (ou quando os campos não existem / ficaram vazios).
+    // ============================================
+    const wsSub = {};
+    let maxRowSub = 0;
+
+    function setCellSub(cell, value, style = {}) {
+      if (!wsSub[cell]) wsSub[cell] = {};
+      wsSub[cell].v = (value ?? '');
+      wsSub[cell].t = 's';
+
+      if (!wsSub[cell].s) wsSub[cell].s = {};
+      const defaultStyle = {
+        border: {
+          top: { style: 'thin', color: { rgb: '000000' } },
+          bottom: { style: 'thin', color: { rgb: '000000' } },
+          left: { style: 'thin', color: { rgb: '000000' } },
+          right: { style: 'thin', color: { rgb: '000000' } }
+        },
+        alignment: { vertical: 'center', wrapText: true }
+      };
+      wsSub[cell].s = { ...defaultStyle, ...style };
+
+      const row = parseInt(cell.match(/\d+/)[0]);
+      if (row > maxRowSub) maxRowSub = row;
+    }
+
+    // Cabeçalho (padronizado)
+    let linhaSub = 1;
+    const headers = [
+      'Página', 'Nº', 'Item', 'Tipo', 'Opção/Status',
+      'Profissional', 'CPF', 'Tipo Reg.', 'Nº CREA/CAU', 'Sigla', 'Nº Outros',
+      'Tipo ART/RRT', 'Nº ART/RRT', 'Nome Outros ART', 'Validade ART',
+      'Empresa', 'CNPJ', 'Registro Empresa', 'Placa',
+      'Terceirizadas (nomes)', 'Terceirizadas (ARTs)'
+    ];
+
+    // Escreve headers A..U
+    headers.forEach((h, i) => {
+      const col = XLSX.utils.encode_col(i);
+      setCellSub(`${col}${linhaSub}`, h, estilos.subtitulo);
+    });
+    linhaSub++;
+
+    const statusMap = { nao_iniciada: 'Não iniciada', em_andamento: 'Em andamento', concluida: 'Concluída' };
+
+    for (let pageNum = 9; pageNum <= 24; pageNum++) {
+      const pageKey = `page${pageNum}`;
+      const items = (typeof subcontratados !== 'undefined' && subcontratados[pageKey]) ? subcontratados[pageKey] : [];
+      const pageData = formData?.[pageKey] || {};
+
+      items.forEach(item => {
+        const itemData = pageData?.[item.id] || {};
+
+        // Opção pode vir como opcao (sim/nao) ou status
+        let opcao = (itemData.opcao ?? itemData.status ?? '');
+        if (statusMap[opcao]) opcao = statusMap[opcao];
+
+        // Campos comuns (quando não existirem, ficam vazios)
+        const profissional = itemData.profissional ?? '';
+        const cpf = itemData.cpf ?? '';
+        const tipoReg = itemData.tipoReg ?? '';
+        const numCrea = itemData.numCrea ?? '';
+        const sigla = itemData.sigla ?? '';
+        const numOutros = itemData.numOutros ?? '';
+        const tipoArt = itemData.tipoArt ?? '';
+        const numArt = itemData.numArt ?? '';
+        const nomeArt = itemData.nomeArt ?? '';
+        const valArt = itemData.valArt ?? '';
+        const empresa = itemData.empresa ?? '';
+        const cnpj = itemData.cnpj ?? '';
+        const regEmpresa = itemData.regEmpresa ?? '';
+        const placa = itemData.placa ?? '';
+
+        // Terceirizadas (quando tipo === terceirizadas e opcao === 'Sim')
+        const lista = Array.isArray(itemData.terceirizadas) ? itemData.terceirizadas : [];
+        const nomes = lista.map(x => (x?.terceirizada ?? '')).filter(Boolean).join(' | ');
+        const arts = lista.map(x => (x?.art ?? '')).filter(Boolean).join(' | ');
+
+        const rowValues = [
+          pageNum,
+          (item.num ?? ''),
+          (item.titulo ?? item.label ?? item.id ?? ''),
+          (item.tipo ?? ''),
+          opcao,
+          profissional,
+          cpf,
+          tipoReg,
+          numCrea,
+          sigla,
+          numOutros,
+          tipoArt,
+          numArt,
+          nomeArt,
+          valArt,
+          empresa,
+          cnpj,
+          regEmpresa,
+          placa,
+          nomes,
+          arts
+        ];
+
+        rowValues.forEach((v, i) => {
+          const col = XLSX.utils.encode_col(i);
+          setCellSub(`${col}${linhaSub}`, v, estilos.valor);
+        });
+
+        linhaSub++;
+      });
+    }
+
+    // Larguras (A..U)
+    wsSub['!cols'] = [
+      { wch: 8 },   // Página
+      { wch: 6 },   // Nº
+      { wch: 55 },  // Item
+      { wch: 14 },  // Tipo
+      { wch: 18 },  // Opção/Status
+      { wch: 28 },  // Profissional
+      { wch: 16 },  // CPF
+      { wch: 10 },  // Tipo Reg.
+      { wch: 14 },  // Nº CREA/CAU
+      { wch: 8 },   // Sigla
+      { wch: 14 },  // Nº Outros
+      { wch: 12 },  // Tipo ART/RRT
+      { wch: 16 },  // Nº ART/RRT
+      { wch: 20 },  // Nome Outros ART
+      { wch: 14 },  // Validade ART
+      { wch: 28 },  // Empresa
+      { wch: 16 },  // CNPJ
+      { wch: 18 },  // Registro Empresa
+      { wch: 10 },  // Placa
+      { wch: 50 },  // Terceirizadas (nomes)
+      { wch: 35 }   // Terceirizadas (ARTs)
+    ];
+
+    // Range da aba Subcontratados
+    wsSub['!ref'] = XLSX.utils.encode_range({
+      s: { r: 0, c: 0 },
+      e: { r: maxRowSub, c: headers.length - 1 }
+    });
+
+    XLSX.utils.book_append_sheet(wb, wsSub, 'Subcontratados');
+
     // Gerar nome do arquivo
     const agora = new Date();
     const dataArquivo = `${agora.getDate().toString().padStart(2, '0')}-${(agora.getMonth() + 1).toString().padStart(2, '0')}-${agora.getFullYear()}`;
     const nomeArquivo = `Formulario_Obra_${dataArquivo}.xlsx`;
-    
+
     // Download
     XLSX.writeFile(wb, nomeArquivo);
-    
+
     showToast('✅ Excel formatado gerado com sucesso!', 'success');
-    
+
     // Limpar e resetar
     setTimeout(() => limparCacheEResetar(), 1500);
-    
+
   } catch (error) {
     console.error('Erro ao gerar Excel:', error);
     showToast('❌ Erro ao gerar Excel: ' + error.message, 'error');
   }
 }
+
     // Limpar cache e resetar para página 1
     function limparCacheEResetar() {
       // Limpar localStorage
