@@ -237,23 +237,23 @@ async function gerarExcel() {
     // -------------------------
     // PÁGINAS 1–8 (FORMULÁRIO PRINCIPAL)
     // -------------------------
-    row = addSubtitle('1) LOCALIZAÇÃO DA OBRA', row);
-    row = addRow(row, 'Local da Obra', formData?.page1?.localObra || '');
+    row = addSubtitle('A) LOCAL DA OBRA', row);
+    row = addRow(row, 'Endereço da Obra', formData?.page1?.localObra || '');
     row = addRow(row, 'Bairro', formData?.page1?.bairro || '');
     row = addRow(row, 'Cidade', formData?.page1?.cidade || '');
     row = addRow(row, 'CEP', formData?.page1?.cep || '');
     row = addBlank(row, 1);
 
-    row = addSubtitle('2) IDENTIFICAÇÃO DA OBRA / NATUREZA / PROPRIETÁRIO', row);
-    row = addRow(row, 'Natureza / Tipo', formData?.page2?.tipoNatureza || '');
+    row = addSubtitle('B.1) Empreendimento', row);
+    row = addRow(row, 'Tipo', formData?.page2?.tipoNatureza || '');
     row = addRow(row, 'Área (m²)', formData?.page2?.area || '');
     row = addRow(row, 'Pavimentos', formData?.page2?.pavimentos || '');
-    row = addRow(row, 'Nº Processo', formData?.page2?.processoNum || '');
-    row = addRow(row, 'Nº Alvará', formData?.page2?.alvaraNum || '');
-    row = addRow(row, 'Alvará de', formData?.page2?.alvaraDe || '');
+    row = addRow(row, 'Nº do Processo', formData?.page2?.processoNum || '');
+    row = addRow(row, 'Nº do Alvará', formData?.page2?.alvaraNum || '');
+    row = addRow(row, 'Ano do Alvará', formData?.page2?.alvaraDe || '');
     row = addRow(row, 'Proprietário', formData?.page2?.proprietario || '');
-    row = addRow(row, 'Tipo Documento', (formData?.page2?.tipoCpfCnpj || '').toUpperCase());
-    row = addRow(row, 'CPF/CNPJ', formData?.page2?.cpfCnpj || '');
+    row = addRow(row, 'CPF ou CNPJ', (formData?.page2?.tipoCpfCnpj || '').toUpperCase());
+    row = addRow(row, 'Número:', formData?.page2?.cpfCnpj || '');
     row = addRow(row, 'Endereço do Proprietário', formData?.page2?.enderecoProprietario || '');
     row = addBlank(row, 1);
 
