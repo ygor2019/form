@@ -5415,6 +5415,7 @@
 
    // Substituir a função gerarExcel() existente por esta versão melhorada:
 
+// FUNÇÃO MELHORADA - Gerar Excel BONITO e ESTRUTURADO
 async function gerarExcel() {
   showToast('📊 Gerando Excel formatado...', 'success');
 
@@ -5422,399 +5423,315 @@ async function gerarExcel() {
     // Criar novo workbook
     const wb = XLSX.utils.book_new();
     
-    // Criar array de dados estruturado
-    const dados = [];
+    // Criar worksheet vazio
+    const ws = {};
     
-    // ========================================
-    // CABEÇALHO
-    // ========================================
-    dados.push(['FORMULÁRIO DE OBRA - MÉDIO E GRANDE PORTE']);
-    dados.push([]);
+    // Configurar range
+    let maxRow = 0;
     
-    // ========================================
-    // A - LOCAL DA OBRA
-    // ========================================
-    dados.push(['A - LOCAL DA OBRA']);
-    dados.push(['Local da Obra:', formData.page1?.localObra || '']);
-    dados.push(['Bairro:', formData.page1?.bairro || '']);
-    dados.push(['Cidade:', formData.page1?.cidade || '', 'CEP:', formData.page1?.cep || '']);
-    dados.push([]);
-    
-    // ========================================
-    // B - EMPREENDIMENTO
-    // ========================================
-    dados.push(['B - EMPREENDIMENTO']);
-    dados.push(['Tipo/Natureza:', formData.page2?.tipoNatureza || '']);
-    dados.push(['Área (m²):', formData.page2?.area || '', 'Nº Pavimentos:', formData.page2?.pavimentos || '']);
-    dados.push(['Processo nº:', formData.page2?.processoNum || '', 'Alvará nº:', formData.page2?.alvaraNum || '', 'de:', formData.page2?.alvaraDe || '']);
-    dados.push(['Proprietário:', formData.page2?.proprietario || '']);
-    dados.push(['CPF/CNPJ:', formData.page2?.cpfCnpj || '']);
-    dados.push(['Endereço:', formData.page2?.enderecoProprietario || '']);
-    dados.push([]);
-    
-    // ========================================
-    // C - AUTOR DO PROJETO
-    // ========================================
-    dados.push(['C - AUTOR DO PROJETO']);
-    dados.push(['Placa afixada:', formData.page3?.placaAfixada || '']);
-    dados.push(['Profissional:', formData.page3?.profissional || '']);
-    
-    // Registro (CREA/CPF/Outros)
-    let registro3 = '';
-    if (formData.page3?.tipoRegistro === 'CREA') {
-      registro3 = `CREA: ${formData.page3?.numeroCrea || ''}`;
-    } else if (formData.page3?.tipoRegistro === 'CPF') {
-      registro3 = `CPF: ${formData.page3?.cpfProfissional || ''}`;
-    } else if (formData.page3?.tipoRegistro === 'Outros') {
-      registro3 = `${formData.page3?.siglaConselho || ''} ${formData.page3?.numeroConselho || ''}`;
-    }
-    dados.push(['Registro:', registro3]);
-    dados.push(['Título:', formData.page3?.titulo || '']);
-    
-    // ART/RRT
-    let art3 = '';
-    if (formData.page3?.tipoArtRrt === 'ART') {
-      art3 = `ART: ${formData.page3?.artNumero || ''}`;
-    } else if (formData.page3?.tipoArtRrt === 'RRT') {
-      art3 = `RRT: ${formData.page3?.rrtNumero || ''}`;
-    }
-    dados.push(['ART/RRT:', art3]);
-    dados.push(['Empresa:', formData.page3?.empresa || '']);
-    dados.push(['Registro Empresa:', formData.page3?.empresaRegistro || '']);
-    dados.push([]);
-    
-    // ========================================
-    // D - RESPONSÁVEL TÉCNICO EXECUÇÃO
-    // ========================================
-    dados.push(['D - RESPONSÁVEL TÉCNICO - EXECUÇÃO']);
-    dados.push(['Placa afixada:', formData.page4?.placaAfixadaRT || '']);
-    dados.push(['Profissional:', formData.page4?.profissionalRT || '']);
-    dados.push(['CPF:', formData.page4?.cpfRT || '']);
-    
-    let registro4 = '';
-    if (formData.page4?.tipoRegistroRT === 'CREA') {
-      registro4 = `CREA: ${formData.page4?.numeroCreaRT || ''}`;
-    } else if (formData.page4?.tipoRegistroRT === 'Outros') {
-      registro4 = `${formData.page4?.siglaConselhoRT || ''} ${formData.page4?.numeroConselhoRT || ''}`;
-    }
-    dados.push(['Registro:', registro4]);
-    
-    let art4 = '';
-    if (formData.page4?.tipoArtOutrosRT === 'ART') {
-      art4 = `ART: ${formData.page4?.artNumeroRT || ''}`;
-    } else if (formData.page4?.tipoArtOutrosRT === 'Outros') {
-      art4 = `${formData.page4?.nomeOutrosArtRT || ''} ${formData.page4?.numeroOutrosArtRT || ''}`;
-    }
-    dados.push(['ART/Outros:', art4]);
-    dados.push(['Empresa:', formData.page4?.empresaRT || '']);
-    dados.push(['Registro Empresa:', formData.page4?.empresaRegistroRT || '']);
-    dados.push([]);
-    
-    // ========================================
-    // E - DEMOLIÇÃO
-    // ========================================
-    dados.push(['E - DEMOLIÇÃO']);
-    dados.push(['Houve Demolição:', formData.page5?.houveDemolicao || '']);
-    
-    if (formData.page5?.houveDemolicao === 'Sim') {
-      dados.push(['E.1 - PROJETO DE DEMOLIÇÃO']);
-      dados.push(['Projeto de Demolição:', formData.page5?.projetoDemolicao || '']);
+    // ============================================
+    // FUNÇÃO AUXILIAR PARA ESTILIZAR CÉLULAS
+    // ============================================
+    function setCell(cell, value, style = {}) {
+      if (!ws[cell]) ws[cell] = {};
+      ws[cell].v = value || '';
+      ws[cell].t = 's';
       
-      if (formData.page5?.projetoDemolicao === 'Sim') {
-        dados.push(['Profissional:', formData.page5?.profissionalProjetoDemol || '']);
-        dados.push(['CPF:', formData.page5?.cpfProjetoDemol || '']);
-        
-        let regPD = '';
-        if (formData.page5?.tipoRegistroProjetoDemol === 'CREA') {
-          regPD = `CREA: ${formData.page5?.numeroCreaProjetoDemol || ''}`;
-        } else if (formData.page5?.tipoRegistroProjetoDemol === 'Outros') {
-          regPD = `${formData.page5?.siglaConselhoProjetoDemol || ''} ${formData.page5?.numeroConselhoProjetoDemol || ''}`;
-        }
-        dados.push(['Registro:', regPD]);
-        
-        let artPD = '';
-        if (formData.page5?.tipoArtProjetoDemol === 'ART') {
-          artPD = `ART: ${formData.page5?.artNumeroProjetoDemol || ''}`;
-        } else if (formData.page5?.tipoArtProjetoDemol === 'Outros') {
-          artPD = `${formData.page5?.nomeOutrosArtProjetoDemol || ''} ${formData.page5?.numeroOutrosArtProjetoDemol || ''}`;
-        }
-        dados.push(['ART/Outros:', artPD]);
-      }
+      // Aplicar estilos
+      if (!ws[cell].s) ws[cell].s = {};
       
-      dados.push(['E.2 - EXECUÇÃO DE DEMOLIÇÃO']);
-      dados.push(['Execução Demolição:', formData.page5?.execucaoDemolicao || '']);
+      // Estilos padrão
+      const defaultStyle = {
+        border: {
+          top: { style: 'thin', color: { rgb: '000000' } },
+          bottom: { style: 'thin', color: { rgb: '000000' } },
+          left: { style: 'thin', color: { rgb: '000000' } },
+          right: { style: 'thin', color: { rgb: '000000' } }
+        },
+        alignment: { vertical: 'center', wrapText: true }
+      };
       
-      if (formData.page5?.execucaoDemolicao === 'Sim') {
-        dados.push(['Profissional:', formData.page5?.profissionalExecDemol || '']);
-        dados.push(['CPF:', formData.page5?.cpfExecDemol || '']);
-        
-        let regED = '';
-        if (formData.page5?.tipoRegistroExecDemol === 'CREA') {
-          regED = `CREA: ${formData.page5?.numeroCreaExecDemol || ''}`;
-        } else if (formData.page5?.tipoRegistroExecDemol === 'Outros') {
-          regED = `${formData.page5?.siglaConselhoExecDemol || ''} ${formData.page5?.numeroConselhoExecDemol || ''}`;
-        }
-        dados.push(['Registro:', regED]);
-        
-        let artED = '';
-        if (formData.page5?.tipoArtExecDemol === 'ART') {
-          artED = `ART: ${formData.page5?.artNumeroExecDemol || ''}`;
-        } else if (formData.page5?.tipoArtExecDemol === 'Outros') {
-          artED = `${formData.page5?.nomeOutrosArtExecDemol || ''} ${formData.page5?.numeroOutrosArtExecDemol || ''}`;
-        }
-        dados.push(['ART/Outros:', artED]);
-        dados.push(['Empresa:', formData.page5?.empresaDemol || '']);
-        dados.push(['CNPJ:', formData.page5?.cnpjDemol || '']);
-      }
-    }
-    dados.push([]);
-    
-    // ========================================
-    // F - EQUIPE TÉCNICA
-    // ========================================
-    dados.push(['F - OUTROS ENGENHEIROS RESPONSÁVEIS E/OU INTEGRANTES DA EQUIPE']);
-    
-    // Coordenação
-    dados.push(['F.1 - COORDENAÇÃO']);
-    dados.push(['Houve Coordenação:', formData.page6?.houveCoordenacao || '']);
-    if (formData.page6?.houveCoordenacao === 'Sim') {
-      dados.push(['Profissional:', formData.page6?.coordenacao?.nome || '']);
-      dados.push(['CPF:', formData.page6?.coordenacao?.cpf || '']);
+      // Mesclar estilos
+      ws[cell].s = { ...defaultStyle, ...style };
       
-      let regCoord = '';
-      if (formData.page6?.coordenacao?.reg === 'CREA') {
-        regCoord = `CREA: ${formData.page6?.coordenacao?.numCrea || ''}`;
-      } else if (formData.page6?.coordenacao?.reg === 'Outros') {
-        regCoord = `${formData.page6?.coordenacao?.sigla || ''} ${formData.page6?.coordenacao?.numOutros || ''}`;
-      }
-      dados.push(['Registro:', regCoord]);
-      
-      let artCoord = '';
-      if (formData.page6?.coordenacao?.tipoArt === 'ART') {
-        artCoord = `ART: ${formData.page6?.coordenacao?.numArt || ''}`;
-      } else if (formData.page6?.coordenacao?.tipoArt === 'Outros') {
-        artCoord = `${formData.page6?.coordenacao?.nomeArtOutros || ''} ${formData.page6?.coordenacao?.numArtOutros || ''}`;
-      }
-      dados.push(['ART/Outros:', artCoord]);
+      // Rastrear linha máxima
+      const row = parseInt(cell.match(/\d+/)[0]);
+      if (row > maxRow) maxRow = row;
     }
     
-    // Orçamento
-    dados.push(['F.2 - ORÇAMENTO']);
-    dados.push(['Houve Orçamento:', formData.page6?.houveOrcamento || '']);
-    if (formData.page6?.houveOrcamento === 'Sim') {
-      dados.push(['Profissional:', formData.page6?.orcamento?.nome || '']);
-      dados.push(['CPF:', formData.page6?.orcamento?.cpf || '']);
-      
-      let regOrc = '';
-      if (formData.page6?.orcamento?.reg === 'CREA') {
-        regOrc = `CREA: ${formData.page6?.orcamento?.numCrea || ''}`;
-      } else if (formData.page6?.orcamento?.reg === 'Outros') {
-        regOrc = `${formData.page6?.orcamento?.sigla || ''} ${formData.page6?.orcamento?.numOutros || ''}`;
+    // Estilos predefinidos
+    const estilos = {
+      titulo: {
+        font: { bold: true, sz: 14, color: { rgb: 'FFFFFF' } },
+        fill: { fgColor: { rgb: '1a365d' } },
+        alignment: { horizontal: 'center', vertical: 'center' }
+      },
+      subtitulo: {
+        font: { bold: true, sz: 12, color: { rgb: 'FFFFFF' } },
+        fill: { fgColor: { rgb: '2c5282' } },
+        alignment: { horizontal: 'left', vertical: 'center' }
+      },
+      label: {
+        font: { bold: true, sz: 10 },
+        fill: { fgColor: { rgb: 'E2E8F0' } },
+        alignment: { horizontal: 'right', vertical: 'center' }
+      },
+      valor: {
+        font: { sz: 10 },
+        alignment: { horizontal: 'left', vertical: 'center' }
+      },
+      destaque: {
+        font: { bold: true, sz: 10 },
+        fill: { fgColor: { rgb: 'FEF3C7' } },
+        alignment: { horizontal: 'center', vertical: 'center' }
       }
-      dados.push(['Registro:', regOrc]);
-      
-      let artOrc = '';
-      if (formData.page6?.orcamento?.tipoArt === 'ART') {
-        artOrc = `ART: ${formData.page6?.orcamento?.numArt || ''}`;
-      } else if (formData.page6?.orcamento?.tipoArt === 'Outros') {
-        artOrc = `${formData.page6?.orcamento?.nomeArtOutros || ''} ${formData.page6?.orcamento?.numArtOutros || ''}`;
-      }
-      dados.push(['ART/Outros:', artOrc]);
-    }
+    };
     
-    // Residente
-    dados.push(['F.3 - RESIDENTE']);
-    dados.push(['Houve Residente:', formData.page6?.houveResidente || '']);
-    if (formData.page6?.houveResidente === 'Sim') {
-      dados.push(['Profissional:', formData.page6?.residente?.nome || '']);
-      dados.push(['CPF:', formData.page6?.residente?.cpf || '']);
-      
-      let regRes = '';
-      if (formData.page6?.residente?.reg === 'CREA') {
-        regRes = `CREA: ${formData.page6?.residente?.numCrea || ''}`;
-      } else if (formData.page6?.residente?.reg === 'Outros') {
-        regRes = `${formData.page6?.residente?.sigla || ''} ${formData.page6?.residente?.numOutros || ''}`;
-      }
-      dados.push(['Registro:', regRes]);
-      
-      let artRes = '';
-      if (formData.page6?.residente?.tipoArt === 'ART') {
-        artRes = `ART: ${formData.page6?.residente?.numArt || ''}`;
-      } else if (formData.page6?.residente?.tipoArt === 'Outros') {
-        artRes = `${formData.page6?.residente?.nomeArtOutros || ''} ${formData.page6?.residente?.numArtOutros || ''}`;
-      }
-      dados.push(['ART/Outros:', artRes]);
-    }
-    dados.push([]);
+    let linhaAtual = 1;
     
-    // ========================================
-    // G - LIVRO DE ORDEM
-    // ========================================
-    dados.push(['G - LIVRO DE ORDEM']);
-    dados.push(['Livro de Ordem:', formData.page7?.livroOrdem || '']);
-    dados.push(['Observações:', formData.page7?.observacoes || '']);
-    dados.push([]);
+    // ============================================
+    // CABEÇALHO PRINCIPAL
+    // ============================================
+    setCell(`A${linhaAtual}`, 'FORMULÁRIO DE FISCALIZAÇÃO DE OBRAS', {
+      ...estilos.titulo,
+      font: { bold: true, sz: 16, color: { rgb: 'FFFFFF' } }
+    });
+    ws[`!merges`] = ws[`!merges`] || [];
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual += 2;
     
-    // ========================================
-    // H - GERENCIAMENTO
-    // ========================================
-    dados.push(['H - GERENCIAMENTO']);
-    dados.push(['Gerenciamento:', formData.page8?.houveGerenciamento || '']);
+    // ============================================
+    // SEÇÃO A - LOCAL DA OBRA
+    // ============================================
+    setCell(`A${linhaAtual}`, 'A) LOCAL DA OBRA', estilos.subtitulo);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
     
-    if (formData.page8?.houveGerenciamento === 'Sim') {
-      dados.push(['Profissional:', formData.page8?.profissionalGerenciamento || '']);
-      dados.push(['CPF:', formData.page8?.cpfGerenciamento || '']);
-      
-      let regGer = '';
-      if (formData.page8?.tipoRegistroGerenciamento === 'CREA') {
-        regGer = `CREA: ${formData.page8?.numeroCreaGerenciamento || ''}`;
-      } else if (formData.page8?.tipoRegistroGerenciamento === 'Outros') {
-        regGer = `${formData.page8?.siglaConselhoGerenciamento || ''} ${formData.page8?.numeroConselhoGerenciamento || ''}`;
-      }
-      dados.push(['Registro:', regGer]);
-      
-      let artGer = '';
-      if (formData.page8?.tipoArtGerenciamento === 'ART') {
-        artGer = `ART: ${formData.page8?.artNumeroGerenciamento || ''}`;
-      } else if (formData.page8?.tipoArtGerenciamento === 'Outros') {
-        artGer = `${formData.page8?.nomeOutrosArtGerenciamento || ''} ${formData.page8?.numeroOutrosArtGerenciamento || ''}`;
-      }
-      dados.push(['ART/Outros:', artGer]);
-      dados.push(['Empresa:', formData.page8?.empresaGerenciamento || '']);
-      dados.push(['CNPJ:', formData.page8?.cnpjGerenciamento || '']);
-      
-      let regEmpGer = '';
-      if (formData.page8?.tipoRegistroEmpresaGer === 'CREA') {
-        regEmpGer = `CREA: ${formData.page8?.numeroCreaEmpresaGer || ''}`;
-      } else if (formData.page8?.tipoRegistroEmpresaGer === 'Outros') {
-        regEmpGer = `${formData.page8?.siglaConselhoEmpresaGer || ''} ${formData.page8?.numeroConselhoEmpresaGer || ''}`;
-      }
-      dados.push(['Registro Empresa:', regEmpGer]);
-      dados.push(['Placa:', formData.page8?.placaGerenciamento || '']);
-    }
-    dados.push([]);
+    setCell(`A${linhaAtual}`, 'Local da Obra:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page1?.localObra || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
     
-    // ========================================
-    // I - SUBCONTRATADOS (Páginas 9-24)
-    // ========================================
-    dados.push(['I - SUBCONTRATADOS E ATIVIDADES TÉCNICAS']);
-    dados.push([]);
+    setCell(`A${linhaAtual}`, 'Bairro:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page1?.bairro || '', estilos.valor);
+    setCell(`E${linhaAtual}`, 'Cidade:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page1?.cidade || '', estilos.valor);
+    setCell(`H${linhaAtual}`, 'CEP:', estilos.label);
+    setCell(`I${linhaAtual}`, formData.page1?.cep || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 5 }, e: { r: linhaAtual - 1, c: 6 } });
+    linhaAtual += 2;
     
-    // Função auxiliar para adicionar dados de subcontratado
-    function adicionarSubcontratado(num, titulo, itemData) {
-      if (!itemData) return;
-      
-      dados.push([`${num} ${titulo}`]);
-      
-      // Status ou Opção
-      if (itemData.opcao) {
-        dados.push(['Status:', itemData.opcao]);
-      }
-      
-      // Se tem profissional
-      if (itemData.profissional) {
-        dados.push(['  Profissional:', itemData.profissional]);
-        dados.push(['  CPF:', itemData.cpf || '']);
-        
-        // Registro
-        let reg = '';
-        if (itemData.tipoReg === 'CREA') {
-          reg = `CREA: ${itemData.numCrea || ''}`;
-        } else if (itemData.tipoReg === 'Outros') {
-          reg = `${itemData.sigla || ''} ${itemData.numOutros || ''}`;
-        }
-        dados.push(['  Registro:', reg]);
-        
-        // ART
-        let art = '';
-        if (itemData.tipoArt === 'ART') {
-          art = `ART: ${itemData.numArt || ''}`;
-        } else if (itemData.tipoArt === 'Outros') {
-          art = `${itemData.nomeArt || ''} ${itemData.valArt || ''}`;
-        }
-        dados.push(['  ART/Outros:', art]);
-        
-        dados.push(['  Empresa:', itemData.empresa || '']);
-        dados.push(['  CNPJ:', itemData.cnpj || '']);
-        dados.push(['  Registro Empresa:', itemData.regEmpresa || '']);
-        dados.push(['  Placa:', itemData.placa || '']);
-      }
-      
-      // Se tem terceirizadas
-      if (itemData.terceirizadas && itemData.terceirizadas.length > 0) {
-        itemData.terceirizadas.forEach((terc, idx) => {
-          dados.push([`  ${idx + 1}. Terceirizada:`, terc.terceirizada || '', 'ART:', terc.art || '']);
-        });
-      }
-      
-      dados.push([]);
-    }
+    // ============================================
+    // SEÇÃO B - EMPREENDIMENTO
+    // ============================================
+    setCell(`A${linhaAtual}`, 'B) EMPREENDIMENTO', estilos.subtitulo);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
     
-    // Processar cada página de subcontratados
-    let contador = 1;
-    for (let pageNum = 9; pageNum <= 24; pageNum++) {
-      const pageData = formData['page' + pageNum];
-      const items = subcontratados['page' + pageNum];
-      
-      if (pageData && items) {
-        items.forEach(item => {
-          const itemData = pageData[item.id];
-          if (itemData && (itemData.opcao || itemData.profissional)) {
-            adicionarSubcontratado(contador, item.titulo, itemData);
-            contador++;
-          }
-        });
-      }
-    }
+    setCell(`A${linhaAtual}`, 'Tipo:', estilos.label);
+    const tipoTexto = `${formData.page2?.tipoNatureza || 'N/A'}`;
+    setCell(`B${linhaAtual}`, tipoTexto, estilos.destaque);
+    setCell(`E${linhaAtual}`, 'Área (m²):', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page2?.area || '', estilos.valor);
+    setCell(`G${linhaAtual}`, 'Pavimentos:', estilos.label);
+    setCell(`H${linhaAtual}`, formData.page2?.pavimentos || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
+    linhaAtual++;
     
-    // ========================================
-    // J - IDENTIFICAÇÃO FINAL
-    // ========================================
-    dados.push(['J - IDENTIFICAÇÃO DO DECLARANTE']);
-    dados.push(['Nome:', formData.page25?.nomeDeclarante || '']);
-    dados.push(['Qualificação e Cargo:', formData.page25?.qualificacaoDeclarante || '']);
-    dados.push(['Local:', formData.page25?.localDeclarante || '', 'Data:', formatarData(formData.page25?.dataDeclarante)]);
-    dados.push([]);
+    setCell(`A${linhaAtual}`, 'Processo nº:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page2?.processoNum || '', estilos.valor);
+    setCell(`D${linhaAtual}`, 'Alvará nº:', estilos.label);
+    setCell(`E${linhaAtual}`, formData.page2?.alvaraNum || '', estilos.valor);
+    setCell(`G${linhaAtual}`, 'Ano:', estilos.label);
+    setCell(`H${linhaAtual}`, formData.page2?.alvaraDe || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 2 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 4 }, e: { r: linhaAtual - 1, c: 5 } });
+    linhaAtual++;
     
-    dados.push(['K - IDENTIFICAÇÃO DO AGENTE FISCAL']);
-    dados.push(['Agente Fiscal:', formData.page25?.agenteFiscal1 || '']);
-    dados.push(['Registro:', formData.page25?.registroAgente1 || '']);
-    dados.push(['Data da Fiscalização:', formatarData(formData.page25?.dataFiscalizacao)]);
-    dados.push([]);
+    setCell(`A${linhaAtual}`, 'Proprietário:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page2?.proprietario || '', estilos.valor);
+    setCell(`F${linhaAtual}`, 'CPF/CNPJ:', estilos.label);
+    setCell(`G${linhaAtual}`, formData.page2?.cpfCnpj || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 6 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
     
-    dados.push(['L - CONTATO']);
-    dados.push(['Endereço:', formData.page25?.enderecoContato || '']);
-    dados.push(['E-mail:', formData.page25?.emailContato || '']);
-    dados.push(['Telefones:', formData.page25?.telefonesContato || '']);
+    setCell(`A${linhaAtual}`, 'Endereço:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page2?.enderecoProprietario || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual += 2;
     
-    // Criar worksheet a partir dos dados
-    const ws = XLSX.utils.aoa_to_sheet(dados);
+    // ============================================
+    // SEÇÃO C - AUTOR DO PROJETO
+    // ============================================
+    setCell(`A${linhaAtual}`, 'C) AUTOR DO PROJETO', estilos.subtitulo);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
     
-    // Definir larguras das colunas
+    const placaProjeto = formData.page3?.placaAfixada === 'Sim' ? '☑ SIM  ☐ NÃO' : '☐ SIM  ☑ NÃO';
+    setCell(`A${linhaAtual}`, 'Placa afixada:', estilos.label);
+    setCell(`B${linhaAtual}`, placaProjeto, estilos.destaque);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
+    linhaAtual++;
+    
+    setCell(`A${linhaAtual}`, 'Profissional:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page3?.profissional || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 5 } });
+    linhaAtual++;
+    
+    const tipoReg3 = formData.page3?.tipoRegistro || '';
+    let registroTexto = '';
+    if (tipoReg3 === 'CREA') registroTexto = `CREA: ${formData.page3?.numeroCrea || ''}`;
+    else if (tipoReg3 === 'CPF') registroTexto = `CPF: ${formData.page3?.cpfProfissional || ''}`;
+    else if (tipoReg3 === 'Outros') registroTexto = `${formData.page3?.siglaConselho || ''}: ${formData.page3?.numeroConselho || ''}`;
+    
+    setCell(`A${linhaAtual}`, 'Registro:', estilos.label);
+    setCell(`B${linhaAtual}`, registroTexto, estilos.valor);
+    setCell(`E${linhaAtual}`, 'Título:', estilos.label);
+    setCell(`F${linhaAtual}`, formData.page3?.titulo || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 5 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+    
+    const tipoArt3 = formData.page3?.tipoArtRrt || '';
+    let artTexto = '';
+    if (tipoArt3 === 'ART') artTexto = `ART: ${formData.page3?.artNumero || ''}`;
+    else if (tipoArt3 === 'RRT') artTexto = `RRT: ${formData.page3?.rrtNumero || ''}`;
+    
+    setCell(`A${linhaAtual}`, 'ART/RRT:', estilos.label);
+    setCell(`B${linhaAtual}`, artTexto, estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
+    linhaAtual++;
+    
+    setCell(`A${linhaAtual}`, 'Empresa:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page3?.empresa || '', estilos.valor);
+    setCell(`F${linhaAtual}`, 'Registro:', estilos.label);
+    setCell(`G${linhaAtual}`, formData.page3?.empresaRegistro || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 6 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual += 2;
+    
+    // ============================================
+    // SEÇÃO D - RESPONSÁVEL TÉCNICO
+    // ============================================
+    setCell(`A${linhaAtual}`, 'D) RESPONSÁVEL TÉCNICO - EXECUÇÃO', estilos.subtitulo);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+    
+    const placaRT = formData.page4?.placaAfixadaRT === 'Sim' ? '☑ SIM  ☐ NÃO' : '☐ SIM  ☑ NÃO';
+    setCell(`A${linhaAtual}`, 'Placa afixada:', estilos.label);
+    setCell(`B${linhaAtual}`, placaRT, estilos.destaque);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
+    linhaAtual++;
+    
+    setCell(`A${linhaAtual}`, 'Profissional:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page4?.profissionalRT || '', estilos.valor);
+    setCell(`F${linhaAtual}`, 'CPF:', estilos.label);
+    setCell(`G${linhaAtual}`, formData.page4?.cpfRT || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 6 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+    
+    const tipoReg4 = formData.page4?.tipoRegistroRT || '';
+    let registroTextoRT = '';
+    if (tipoReg4 === 'CREA') registroTextoRT = `CREA: ${formData.page4?.numeroCreaRT || ''}`;
+    else if (tipoReg4 === 'Outros') registroTextoRT = `${formData.page4?.siglaConselhoRT || ''}: ${formData.page4?.numeroConselhoRT || ''}`;
+    
+    setCell(`A${linhaAtual}`, 'Registro:', estilos.label);
+    setCell(`B${linhaAtual}`, registroTextoRT, estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 5 } });
+    linhaAtual++;
+    
+    setCell(`A${linhaAtual}`, 'Empresa:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page4?.empresaRT || '', estilos.valor);
+    setCell(`F${linhaAtual}`, 'Registro:', estilos.label);
+    setCell(`G${linhaAtual}`, formData.page4?.empresaRegistroRT || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 4 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 6 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual += 2;
+    
+    // ============================================
+    // SEÇÃO E - LIVRO DE ORDEM
+    // ============================================
+    setCell(`A${linhaAtual}`, 'E) LIVRO DE ORDEM E OBSERVAÇÕES', estilos.subtitulo);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+    
+    const livro = formData.page7?.livroOrdem === 'Sim' ? '☑ SIM  ☐ NÃO' : '☐ SIM  ☑ NÃO';
+    setCell(`A${linhaAtual}`, 'Livro de Ordem:', estilos.label);
+    setCell(`B${linhaAtual}`, livro, estilos.destaque);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 3 } });
+    linhaAtual++;
+    
+    setCell(`A${linhaAtual}`, 'Observações:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page7?.observacoes || '', {
+      ...estilos.valor,
+      alignment: { vertical: 'top', wrapText: true }
+    });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual + 2, c: 0 } });
+    linhaAtual += 3;
+    linhaAtual++;
+    
+    // ============================================
+    // SEÇÃO F - IDENTIFICAÇÃO DO DECLARANTE
+    // ============================================
+    setCell(`A${linhaAtual}`, 'F) IDENTIFICAÇÃO DO DECLARANTE', estilos.subtitulo);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 0 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+    
+    setCell(`A${linhaAtual}`, 'Nome:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page25?.nomeDeclarante || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+    
+    setCell(`A${linhaAtual}`, 'Qualificação:', estilos.label);
+    setCell(`B${linhaAtual}`, formData.page25?.qualificacaoDeclarante || '', estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual++;
+    
+    const dataDeclarante = formData.page25?.dataDeclarante ? 
+      new Date(formData.page25.dataDeclarante + 'T00:00:00').toLocaleDateString('pt-BR') : '';
+    
+    setCell(`A${linhaAtual}`, 'Local e Data:', estilos.label);
+    setCell(`B${linhaAtual}`, `${formData.page25?.localDeclarante || ''}, ${dataDeclarante}`, estilos.valor);
+    ws[`!merges`].push({ s: { r: linhaAtual - 1, c: 1 }, e: { r: linhaAtual - 1, c: 8 } });
+    linhaAtual += 2;
+    
+    // ============================================
+    // CONFIGURAR LARGURAS DE COLUNA
+    // ============================================
     ws['!cols'] = [
-      { wch: 35 },  // Coluna A - Labels
-      { wch: 40 },  // Coluna B - Valores
-      { wch: 20 },  // Coluna C - Labels secundárias
-      { wch: 30 }   // Coluna D - Valores secundários
+      { wch: 18 },  // A - Labels
+      { wch: 25 },  // B - Valores
+      { wch: 15 },  // C
+      { wch: 15 },  // D
+      { wch: 15 },  // E
+      { wch: 15 },  // F
+      { wch: 15 },  // G
+      { wch: 15 },  // H
+      { wch: 15 }   // I
     ];
     
-    // Adicionar worksheet ao workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Formulário');
+    // Definir range
+    ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: maxRow, c: 8 } });
     
-    // Gerar nome do arquivo com data
+    // Adicionar worksheet ao workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Formulário de Obra');
+    
+    // Gerar nome do arquivo
     const agora = new Date();
     const dataArquivo = `${agora.getDate().toString().padStart(2, '0')}-${(agora.getMonth() + 1).toString().padStart(2, '0')}-${agora.getFullYear()}`;
     const nomeArquivo = `Formulario_Obra_${dataArquivo}.xlsx`;
     
-    // Download do arquivo
+    // Download
     XLSX.writeFile(wb, nomeArquivo);
     
-    showToast('✅ Excel gerado com sucesso!', 'success');
+    showToast('✅ Excel formatado gerado com sucesso!', 'success');
     
-    // Limpar cache e resetar
-    setTimeout(() => {
-      limparCacheEResetar();
-    }, 1500);
+    // Limpar e resetar
+    setTimeout(() => limparCacheEResetar(), 1500);
     
   } catch (error) {
     console.error('Erro ao gerar Excel:', error);
