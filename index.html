@@ -5413,420 +5413,414 @@
       return dataISO;
     }
 
-    // Gerar Excel usando o template original com formatação
-    async function gerarExcel() {
-      showToast('📊 Carregando template...', 'success');
+   // Substituir a função gerarExcel() existente por esta versão melhorada:
 
-      try {
-        // Carregar o template Excel
-        const response = await fetch('formulario.xlsx');
-        if (!response.ok) throw new Error('Não foi possível carregar o template');
+async function gerarExcel() {
+  showToast('📊 Gerando Excel formatado...', 'success');
+
+  try {
+    // Criar novo workbook
+    const wb = XLSX.utils.book_new();
+    
+    // Criar array de dados estruturado
+    const dados = [];
+    
+    // ========================================
+    // CABEÇALHO
+    // ========================================
+    dados.push(['FORMULÁRIO DE OBRA - MÉDIO E GRANDE PORTE']);
+    dados.push([]);
+    
+    // ========================================
+    // A - LOCAL DA OBRA
+    // ========================================
+    dados.push(['A - LOCAL DA OBRA']);
+    dados.push(['Local da Obra:', formData.page1?.localObra || '']);
+    dados.push(['Bairro:', formData.page1?.bairro || '']);
+    dados.push(['Cidade:', formData.page1?.cidade || '', 'CEP:', formData.page1?.cep || '']);
+    dados.push([]);
+    
+    // ========================================
+    // B - EMPREENDIMENTO
+    // ========================================
+    dados.push(['B - EMPREENDIMENTO']);
+    dados.push(['Tipo/Natureza:', formData.page2?.tipoNatureza || '']);
+    dados.push(['Área (m²):', formData.page2?.area || '', 'Nº Pavimentos:', formData.page2?.pavimentos || '']);
+    dados.push(['Processo nº:', formData.page2?.processoNum || '', 'Alvará nº:', formData.page2?.alvaraNum || '', 'de:', formData.page2?.alvaraDe || '']);
+    dados.push(['Proprietário:', formData.page2?.proprietario || '']);
+    dados.push(['CPF/CNPJ:', formData.page2?.cpfCnpj || '']);
+    dados.push(['Endereço:', formData.page2?.enderecoProprietario || '']);
+    dados.push([]);
+    
+    // ========================================
+    // C - AUTOR DO PROJETO
+    // ========================================
+    dados.push(['C - AUTOR DO PROJETO']);
+    dados.push(['Placa afixada:', formData.page3?.placaAfixada || '']);
+    dados.push(['Profissional:', formData.page3?.profissional || '']);
+    
+    // Registro (CREA/CPF/Outros)
+    let registro3 = '';
+    if (formData.page3?.tipoRegistro === 'CREA') {
+      registro3 = `CREA: ${formData.page3?.numeroCrea || ''}`;
+    } else if (formData.page3?.tipoRegistro === 'CPF') {
+      registro3 = `CPF: ${formData.page3?.cpfProfissional || ''}`;
+    } else if (formData.page3?.tipoRegistro === 'Outros') {
+      registro3 = `${formData.page3?.siglaConselho || ''} ${formData.page3?.numeroConselho || ''}`;
+    }
+    dados.push(['Registro:', registro3]);
+    dados.push(['Título:', formData.page3?.titulo || '']);
+    
+    // ART/RRT
+    let art3 = '';
+    if (formData.page3?.tipoArtRrt === 'ART') {
+      art3 = `ART: ${formData.page3?.artNumero || ''}`;
+    } else if (formData.page3?.tipoArtRrt === 'RRT') {
+      art3 = `RRT: ${formData.page3?.rrtNumero || ''}`;
+    }
+    dados.push(['ART/RRT:', art3]);
+    dados.push(['Empresa:', formData.page3?.empresa || '']);
+    dados.push(['Registro Empresa:', formData.page3?.empresaRegistro || '']);
+    dados.push([]);
+    
+    // ========================================
+    // D - RESPONSÁVEL TÉCNICO EXECUÇÃO
+    // ========================================
+    dados.push(['D - RESPONSÁVEL TÉCNICO - EXECUÇÃO']);
+    dados.push(['Placa afixada:', formData.page4?.placaAfixadaRT || '']);
+    dados.push(['Profissional:', formData.page4?.profissionalRT || '']);
+    dados.push(['CPF:', formData.page4?.cpfRT || '']);
+    
+    let registro4 = '';
+    if (formData.page4?.tipoRegistroRT === 'CREA') {
+      registro4 = `CREA: ${formData.page4?.numeroCreaRT || ''}`;
+    } else if (formData.page4?.tipoRegistroRT === 'Outros') {
+      registro4 = `${formData.page4?.siglaConselhoRT || ''} ${formData.page4?.numeroConselhoRT || ''}`;
+    }
+    dados.push(['Registro:', registro4]);
+    
+    let art4 = '';
+    if (formData.page4?.tipoArtOutrosRT === 'ART') {
+      art4 = `ART: ${formData.page4?.artNumeroRT || ''}`;
+    } else if (formData.page4?.tipoArtOutrosRT === 'Outros') {
+      art4 = `${formData.page4?.nomeOutrosArtRT || ''} ${formData.page4?.numeroOutrosArtRT || ''}`;
+    }
+    dados.push(['ART/Outros:', art4]);
+    dados.push(['Empresa:', formData.page4?.empresaRT || '']);
+    dados.push(['Registro Empresa:', formData.page4?.empresaRegistroRT || '']);
+    dados.push([]);
+    
+    // ========================================
+    // E - DEMOLIÇÃO
+    // ========================================
+    dados.push(['E - DEMOLIÇÃO']);
+    dados.push(['Houve Demolição:', formData.page5?.houveDemolicao || '']);
+    
+    if (formData.page5?.houveDemolicao === 'Sim') {
+      dados.push(['E.1 - PROJETO DE DEMOLIÇÃO']);
+      dados.push(['Projeto de Demolição:', formData.page5?.projetoDemolicao || '']);
+      
+      if (formData.page5?.projetoDemolicao === 'Sim') {
+        dados.push(['Profissional:', formData.page5?.profissionalProjetoDemol || '']);
+        dados.push(['CPF:', formData.page5?.cpfProjetoDemol || '']);
         
-        const arrayBuffer = await response.arrayBuffer();
-        const wb = XLSX.read(arrayBuffer, { type: 'array' });
-        const ws = wb.Sheets[wb.SheetNames[0]];
-
-        // Função auxiliar para definir valor em célula
-        function setCell(cell, value) {
-          if (!ws[cell]) ws[cell] = {};
-          ws[cell].v = value || '';
-          ws[cell].t = 's'; // tipo string
+        let regPD = '';
+        if (formData.page5?.tipoRegistroProjetoDemol === 'CREA') {
+          regPD = `CREA: ${formData.page5?.numeroCreaProjetoDemol || ''}`;
+        } else if (formData.page5?.tipoRegistroProjetoDemol === 'Outros') {
+          regPD = `${formData.page5?.siglaConselhoProjetoDemol || ''} ${formData.page5?.numeroConselhoProjetoDemol || ''}`;
         }
-
-        // ===== SEÇÃO A - LOCAL DA OBRA (linha 4-5) =====
-        setCell('D4', formData.page1?.localObra || '');
-        setCell('D5', formData.page1?.bairro || '');
-        setCell('G5', formData.page1?.cidade || '');
-        setCell('I5', formData.page1?.cep || '');
-
-        // ===== SEÇÃO B - EMPREENDIMENTO (linhas 7-11) =====
-        // Tipo/Natureza - marcar X no tipo correto
-        const tipo = formData.page2?.tipoNatureza || '';
-        if (tipo === 'Residencial') setCell('D8', 'Resid (X) Coml (   ) Ind (   )  Mista (   )');
-        else if (tipo === 'Comercial') setCell('D8', 'Resid (   ) Coml (X) Ind (   )  Mista (   )');
-        else if (tipo === 'Industrial') setCell('D8', 'Resid (   ) Coml (   ) Ind (X)  Mista (   )');
-        else if (tipo === 'Mista') setCell('D8', 'Resid (   ) Coml (   ) Ind (   )  Mista (X)');
+        dados.push(['Registro:', regPD]);
         
-        setCell('H8', formData.page2?.area || '');
-        setCell('I8', formData.page2?.pavimentos || '');
-        setCell('D9', formData.page2?.processoNum || '');
-        setCell('G9', formData.page2?.alvaraNum || '');
-        setCell('I9', formData.page2?.alvaraDe || '');
-        setCell('D10', formData.page2?.proprietario || '');
-        setCell('H10', formData.page2?.cpfCnpj || '');
-        setCell('D11', formData.page2?.enderecoProprietario || '');
-
-        // ===== AUTOR DO PROJETO (linhas 12-15) =====
-        const placaProjeto = formData.page3?.placaAfixada || '';
-        setCell('G12', placaProjeto === 'Sim' ? ' SIM (   X   )        NÃO (        )' : ' SIM (       )        NÃO (   X    )');
-        setCell('D13', formData.page3?.profissional || '');
-        
-        // Registro
-        const tipoReg3 = formData.page3?.tipoRegistro || '';
-        if (tipoReg3 === 'CREA') {
-          setCell('F13', `(X)Crea  (   )CPF   (   )Outros? Qual?  ${formData.page3?.numeroCrea || ''}`);
-        } else if (tipoReg3 === 'Outros') {
-          setCell('F13', `(   )Crea  (   )CPF   (X)Outros? Qual? ${formData.page3?.siglaConselho || ''} ${formData.page3?.numeroConselho || ''}`);
+        let artPD = '';
+        if (formData.page5?.tipoArtProjetoDemol === 'ART') {
+          artPD = `ART: ${formData.page5?.artNumeroProjetoDemol || ''}`;
+        } else if (formData.page5?.tipoArtProjetoDemol === 'Outros') {
+          artPD = `${formData.page5?.nomeOutrosArtProjetoDemol || ''} ${formData.page5?.numeroOutrosArtProjetoDemol || ''}`;
         }
+        dados.push(['ART/Outros:', artPD]);
+      }
+      
+      dados.push(['E.2 - EXECUÇÃO DE DEMOLIÇÃO']);
+      dados.push(['Execução Demolição:', formData.page5?.execucaoDemolicao || '']);
+      
+      if (formData.page5?.execucaoDemolicao === 'Sim') {
+        dados.push(['Profissional:', formData.page5?.profissionalExecDemol || '']);
+        dados.push(['CPF:', formData.page5?.cpfExecDemol || '']);
         
-        setCell('D14', formData.page3?.titulo || '');
-        
-        // ART/RRT
-        const tipoArt3 = formData.page3?.tipoArtRrt || '';
-        if (tipoArt3 === 'ART') {
-          setCell('F14', `ART (  X  ) /RRT (     ): ${formData.page3?.artNumero || ''}`);
-        } else if (tipoArt3 === 'RRT') {
-          setCell('F14', `ART (     ) /RRT (  X  ): ${formData.page3?.rrtNumero || ''}`);
+        let regED = '';
+        if (formData.page5?.tipoRegistroExecDemol === 'CREA') {
+          regED = `CREA: ${formData.page5?.numeroCreaExecDemol || ''}`;
+        } else if (formData.page5?.tipoRegistroExecDemol === 'Outros') {
+          regED = `${formData.page5?.siglaConselhoExecDemol || ''} ${formData.page5?.numeroConselhoExecDemol || ''}`;
         }
+        dados.push(['Registro:', regED]);
         
-        setCell('D15', formData.page3?.empresa || '');
-        setCell('H15', formData.page3?.empresaRegistro || '');
-
-        // ===== RESPONSÁVEL TÉCNICO EXECUÇÃO (linhas 16-19) =====
-        const placaRT = formData.page4?.placaAfixadaRT || '';
-        setCell('G16', placaRT === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-        setCell('D17', formData.page4?.profissionalRT || '');
-        setCell('H17', formData.page4?.cpfRT || '');
-        
-        const tipoReg4 = formData.page4?.tipoRegistroRT || '';
-        if (tipoReg4 === 'CREA') {
-          setCell('B18', `(X)Crea  (   )Outros? Qual_______ : ${formData.page4?.numeroCreaRT || ''}`);
-        } else if (tipoReg4 === 'Outros') {
-          setCell('B18', `(   )Crea  (X)Outros? Qual ${formData.page4?.siglaConselhoRT || ''} : ${formData.page4?.numeroConselhoRT || ''}`);
+        let artED = '';
+        if (formData.page5?.tipoArtExecDemol === 'ART') {
+          artED = `ART: ${formData.page5?.artNumeroExecDemol || ''}`;
+        } else if (formData.page5?.tipoArtExecDemol === 'Outros') {
+          artED = `${formData.page5?.nomeOutrosArtExecDemol || ''} ${formData.page5?.numeroOutrosArtExecDemol || ''}`;
         }
-        
-        setCell('H18', formData.page4?.artNumeroRT || formData.page4?.numeroOutrosArtRT || '');
-        setCell('D19', formData.page4?.empresaRT || '');
-        setCell('H19', formData.page4?.empresaRegistroRT || '');
-
-        // ===== DEMOLIÇÃO (linhas 20-27) =====
-        const houveDemol = formData.page5?.houveDemolicao || '';
-        setCell('G20', houveDemol === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-        
-        const projetoDemol = formData.page5?.projetoDemolicao || '';
-        setCell('G21', projetoDemol === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-        
-        setCell('D22', formData.page5?.profissionalProjetoDemol || '');
-        setCell('H22', formData.page5?.cpfProjetoDemol || '');
-        
-        const execDemol = formData.page5?.execucaoDemolicao || '';
-        setCell('G24', execDemol === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-        
-        setCell('D25', formData.page5?.profissionalExecDemol || '');
-        setCell('H25', formData.page5?.cpfExecDemol || '');
-        setCell('D27', formData.page5?.empresaDemol || '');
-        setCell('H27', formData.page5?.cnpjDemol || '');
-
-        // ===== B1 - OUTROS ENGENHEIROS (linhas 29-37) =====
-        // Coordenação
-        setCell('D30', formData.page6?.coordenacao?.nome || '');
-        setCell('H30', formData.page6?.coordenacao?.cpf || '');
-        // Orçamento
-        setCell('D33', formData.page6?.orcamento?.nome || '');
-        setCell('H33', formData.page6?.orcamento?.cpf || '');
-        // Residente
-        setCell('D36', formData.page6?.residente?.nome || '');
-        setCell('H36', formData.page6?.residente?.cpf || '');
-
-        // ===== C - LIVRO DE ORDEM (linhas 39-40) =====
-        const livro = formData.page7?.livroOrdem || '';
-        if (livro === 'Sim') {
-          setCell('F39', 'Sim   (   X   )');
-          setCell('H39', 'Não  (       )');
-        } else if (livro === 'Não') {
-          setCell('F39', 'Sim   (       )');
-          setCell('H39', 'Não  (   X   )');
-        }
-        setCell('D40', formData.page7?.observacoes || '');
-
-        // ===== D - GERENCIAMENTO (linhas 56-60) =====
-        const gerenc = formData.page8?.houveGerenciamento || '';
-        setCell('G56', gerenc === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-        setCell('D57', formData.page8?.profissionalGerenciamento || '');
-        setCell('H57', formData.page8?.cpfGerenciamento || '');
-        setCell('D59', formData.page8?.empresaGerenciamento || '');
-        setCell('H59', formData.page8?.cnpjGerenciamento || '');
-        
-        const placaGer = formData.page8?.placaGerenciamento || '';
-        if (placaGer === 'Sim') {
-          setCell('H60', 'Sim   (  X  )');
-          setCell('I60', 'Não (    )');
-        } else if (placaGer === 'Não') {
-          setCell('H60', 'Sim   (    )');
-          setCell('I60', 'Não (  X  )');
-        }
-
-        // ===== SUBCONTRATADOS - Mapeamento de células =====
-        // Estrutura: { id: { opcaoCell, profCell, cpfCell, empresaCell, cnpjCell, placaSimCell, placaNaoCell } }
-        const subMap = {
-          // Topografia
-          'topografiaProjeto': { row: 62, tipo: 'simNao' },
-          'topografiaExec': { row: 67, tipo: 'status' },
-          // Sondagem
-          'sondagem': { row: 72, tipo: 'status' },
-          // Movimento de Terra
-          'terraplenagem': { row: 77, tipo: 'simNao' },
-          'terraExec': { row: 78, tipo: 'status' },
-          // Fundações
-          'fundacoesProjeto': { row: 84, tipo: 'simNao' },
-          'fundacoesExec': { row: 89, tipo: 'status' },
-          // Cálculo Estrutural
-          'calculoEstrutural': { row: 94, tipo: 'simNao' },
-          // Concreto Usinado
-          'concretoUsinado': { row: 99, tipo: 'simNao' },
-          // Controle Tecnológico Concreto
-          'controleTecnologico': { row: 104, tipo: 'simNao' },
-          // Premoldados
-          'premoldados': { row: 109, tipo: 'simNao' },
-          // Formas/Cimbramento
-          'formasCimbramento': { row: 114, tipo: 'simNao' },
-          // Andaimes
-          'andaimes': { row: 119, tipo: 'simNao' },
-          // Proteção quedas
-          'protecaoQuedas': { row: 124, tipo: 'simNao' },
-          // Gruas
-          'gruas': { row: 129, tipo: 'simNao' },
-          // Guindaste
-          'guindaste': { row: 134, tipo: 'simNao' },
-          // Geradores
-          'geradores': { row: 139, tipo: 'simNao' },
-          // Compressores
-          'compressores': { row: 144, tipo: 'simNao' },
-          // Resíduos
-          'residuos': { row: 149, tipo: 'simNao' },
-          // Instalações Elétricas
-          'eletricaProjeto': { row: 155, tipo: 'simNao' },
-          'eletricaExec': { row: 161, tipo: 'status' },
-          // Instalações Hidráulicas
-          'hidraulicaProjeto': { row: 167, tipo: 'simNao' },
-          'hidraulicaExec': { row: 173, tipo: 'status' },
-          // Ar Condicionado
-          'arCondProjeto': { row: 179, tipo: 'simNao' },
-          'arCondExec': { row: 185, tipo: 'status' },
-          // Elevadores
-          'elevadores': { row: 190, tipo: 'simNao' },
-          // Impermeabilização
-          'impermeabilizacao': { row: 196, tipo: 'simNao' },
-          // Gás
-          'gasProjeto': { row: 202, tipo: 'simNao' },
-          'gasExec': { row: 208, tipo: 'status' },
-          // Incêndio
-          'incendioProjeto': { row: 214, tipo: 'simNao' },
-          'incendioExec': { row: 220, tipo: 'status' },
-          // Energia Solar
-          'solarProjeto': { row: 226, tipo: 'simNao' },
-          'solarExec': { row: 232, tipo: 'status' },
-          // SPDA
-          'spdaProjeto': { row: 238, tipo: 'simNao' },
-          'spdaExec': { row: 244, tipo: 'status' },
-          // Telefonia
-          'telefoniaProjeto': { row: 250, tipo: 'simNao' },
-          'telefoniaExec': { row: 256, tipo: 'status' },
-          // Segurança Eletrônica
-          'segurancaProjeto': { row: 262, tipo: 'simNao' },
-          'segurancaExec': { row: 268, tipo: 'status' },
-          // Central Concreto
-          'centralConcretoProjeto': { row: 274, tipo: 'simNao' },
-          'centralConcretoExec': { row: 280, tipo: 'status' },
-          // Elevadores Carga
-          'elevadorCargaProjeto': { row: 286, tipo: 'simNao' },
-          'elevadorCargaExec': { row: 292, tipo: 'status' },
-          // Piscinas
-          'piscinasProjeto': { row: 298, tipo: 'simNao' },
-          'piscinasExec': { row: 304, tipo: 'status' },
-          // Captação Água
-          'captacaoAguaProjeto': { row: 310, tipo: 'simNao' },
-          'captacaoAguaExec': { row: 316, tipo: 'status' },
-          // Fachada
-          'fachada': { row: 322, tipo: 'simNao' },
-          // Esquadrias
-          'esquadriasProjeto': { row: 328, tipo: 'simNao' },
-          'esquadriasExec': { row: 334, tipo: 'status' },
-          // Poço Artesiano
-          'pocoArtesianoProjeto': { row: 340, tipo: 'simNao' },
-          'pocoArtesianoExec': { row: 346, tipo: 'status' },
-          // Alvenaria
-          'alvenaria': { row: 352, tipo: 'simNao' },
-          // Revestimentos
-          'revestimentos': { row: 358, tipo: 'status' },
-          // Jardinagem
-          'jardinagemProjeto': { row: 364, tipo: 'simNao' },
-          'jardinagemExec': { row: 370, tipo: 'status' },
-          // PGR
-          'pgrProjeto': { row: 376, tipo: 'simNao' },
-          'pgrImpl': { row: 382, tipo: 'status' },
-          // PGR Terceirizadas
-          'pgrTerceirizadas': { row: 388, tipo: 'terceirizadas' },
-          // PCMAT
-          'pcmat': { row: 399, tipo: 'simNao' },
-          // LTCAT
-          'ltcat': { row: 405, tipo: 'simNao' },
-          // Drenagem
-          'drenagemProjeto': { row: 411, tipo: 'simNao' },
-          'drenagemExec': { row: 417, tipo: 'status' },
-          // Extintores
-          'extintores': { row: 423, tipo: 'status' },
-          // Pintura
-          'pintura': { row: 429, tipo: 'status' },
-          // Instalações Gerais
-          'instalacoesGerais': { row: 435, tipo: 'simNao' },
-          // Pavimentação
-          'pavimentacaoProjeto': { row: 441, tipo: 'simNao' },
-          'pavimentacaoExec': { row: 447, tipo: 'status' },
-          // EIA
-          'eia': { row: 453, tipo: 'simNao' },
-          // RIMA
-          'rima': { row: 459, tipo: 'simNao' },
-          // EIV
-          'eiv': { row: 465, tipo: 'simNao' },
-          // Rede Elétrica
-          'redeEletricaProjeto': { row: 471, tipo: 'simNao' },
-          'redeEletricaExec': { row: 477, tipo: 'status' },
-          // Canteiro
-          'canteiroProjeto': { row: 483, tipo: 'simNao' },
-          'canteiroExec': { row: 489, tipo: 'status' },
-          // Viabilidade
-          'viabilidade': { row: 495, tipo: 'simNao' },
-          // Sinalização
-          'sinalizacaoProjeto': { row: 501, tipo: 'simNao' },
-          'sinalizacaoExec': { row: 507, tipo: 'status' },
-          // Tráfego
-          'trafegoProjeto': { row: 513, tipo: 'simNao' },
-          'trafegoExec': { row: 519, tipo: 'status' },
-          // Controle Tecnológico
-          'controleTecnologicoGeral': { row: 525, tipo: 'simNao' }
-        };
-
-        // Preencher subcontratados
-        for (let pageNum = 9; pageNum <= 24; pageNum++) {
-          const pageData = formData['page' + pageNum];
-          if (pageData && pageData.saved) {
-            const items = subcontratados['page' + pageNum];
-            if (items) {
-              items.forEach(item => {
-                const itemData = pageData[item.id];
-                const mapping = subMap[item.id];
-                
-                if (itemData && mapping) {
-                  const row = mapping.row;
-                  const opcao = itemData.opcao || '';
-                  
-                  // Definir opção SIM/NÃO ou status
-                  if (mapping.tipo === 'simNao') {
-                    if (opcao === 'Sim') {
-                      setCell(`G${row}`, ' SIM (   X   )      NÃO (        )');
-                    } else if (opcao === 'Não') {
-                      setCell(`G${row}`, ' SIM (       )      NÃO (   X    )');
-                    }
-                    
-                    // Dados do profissional (linhas subsequentes)
-                    if (itemData.profissional) setCell(`D${row + 1}`, itemData.profissional);
-                    if (itemData.cpf) setCell(`H${row + 1}`, itemData.cpf);
-                    if (itemData.empresa) setCell(`D${row + 3}`, itemData.empresa);
-                    if (itemData.cnpj) setCell(`H${row + 3}`, itemData.cnpj);
-                  } else if (mapping.tipo === 'status') {
-                    if (opcao === 'nao_iniciada') {
-                      setCell(`F${row}`, 'não iniciada ( X ) em andamento (    ) concluída (    )');
-                    } else if (opcao === 'em_andamento') {
-                      setCell(`F${row}`, 'não iniciada (    ) em andamento ( X ) concluída (    )');
-                    } else if (opcao === 'concluida') {
-                      setCell(`F${row}`, 'não iniciada (    ) em andamento (    ) concluída ( X )');
-                    }
-                    
-                    if (itemData.profissional) setCell(`D${row + 1}`, itemData.profissional);
-                    if (itemData.cpf) setCell(`H${row + 1}`, itemData.cpf);
-                    if (itemData.empresa) setCell(`D${row + 3}`, itemData.empresa);
-                    if (itemData.cnpj) setCell(`H${row + 3}`, itemData.cnpj);
-                  } else if (mapping.tipo === 'terceirizadas' && itemData.terceirizadas) {
-                    // PGR Terceirizadas
-                    if (opcao === 'Sim') {
-                      setCell(`G369`, ' SIM (   X   )      NÃO (        )');
-                    } else {
-                      setCell(`G369`, ' SIM (       )      NÃO (   X    )');
-                    }
-                    
-                    // Preencher terceirizadas (linhas 370-379)
-                    itemData.terceirizadas.forEach((terc, idx) => {
-                      if (idx < 10) {
-                        setCell(`D${370 + idx}`, terc.terceirizada || '');
-                        setCell(`H${370 + idx}`, terc.art || '');
-                      }
-                    });
-                  }
-                }
-              });
-            }
-          }
-        }
-
-        // ===== OUTRAS ATIVIDADES TÉCNICAS (linhas 499-523) =====
-        const outrasAtividades = formData['page24'];
-        if (outrasAtividades && outrasAtividades.saved) {
-          // Implantação
-          if (outrasAtividades.implantacao) {
-            const opcao = outrasAtividades.implantacao.opcao;
-            setCell('G499', opcao === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-          }
-          // Obras de Arte
-          if (outrasAtividades.obrasArte) {
-            const opcao = outrasAtividades.obrasArte.opcao;
-            setCell('G504', opcao === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-          }
-          // Taludes
-          if (outrasAtividades.taludes) {
-            const opcao = outrasAtividades.taludes.opcao;
-            setCell('G509', opcao === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-          }
-          // Drenagem Profunda
-          if (outrasAtividades.drenagemProfunda) {
-            const opcao = outrasAtividades.drenagemProfunda.opcao;
-            setCell('G514', opcao === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-          }
-          // Laudo Geológico
-          if (outrasAtividades.laudoGeologico) {
-            const opcao = outrasAtividades.laudoGeologico.opcao;
-            setCell('G519', opcao === 'Sim' ? ' SIM (   X   )      NÃO (        )' : ' SIM (       )      NÃO (   X    )');
-          }
-        }
-
-        // ===== IDENTIFICAÇÃO DO DECLARANTE (linhas 524-528) =====
-        setCell('D525', formData.page25?.nomeDeclarante || '');
-        setCell('D526', formData.page25?.qualificacaoDeclarante || '');
-        const localData = (formData.page25?.localDeclarante || '') + ', ' + formatarData(formData.page25?.dataDeclarante);
-        setCell('D527', localData);
-
-        // ===== IDENTIFICAÇÃO AGENTE FISCAL (linhas 530-534) =====
-        setCell('D533', formData.page25?.agenteFiscal1 || '');
-        setCell('D534', 'Data: ' + formatarData(formData.page25?.dataFiscalizacao));
-        setCell('G534', 'Agente de Fiscalização - Reg. ' + (formData.page25?.registroAgente1 || ''));
-
-        // ===== CONTATO (linhas 536-538) =====
-        setCell('D536', formData.page25?.enderecoContato || '');
-        setCell('D537', formData.page25?.emailContato || '');
-        setCell('D538', formData.page25?.telefonesContato || '');
-
-        // Gerar nome do arquivo com data
-        const agora = new Date();
-        const dataArquivo = `${agora.getDate().toString().padStart(2, '0')}-${(agora.getMonth() + 1).toString().padStart(2, '0')}-${agora.getFullYear()}`;
-        const nomeArquivo = `Formulario_Obra_${dataArquivo}.xlsx`;
-
-        // Download do arquivo
-        XLSX.writeFile(wb, nomeArquivo);
-
-        // Mostrar mensagem de sucesso
-        showToast('✅ Excel gerado com sucesso!', 'success');
-
-        // Limpar cache e resetar formulário
-        setTimeout(() => {
-          limparCacheEResetar();
-        }, 1500);
-
-      } catch (error) {
-        console.error('Erro ao gerar Excel:', error);
-        showToast('❌ Erro ao gerar Excel: ' + error.message, 'error');
+        dados.push(['ART/Outros:', artED]);
+        dados.push(['Empresa:', formData.page5?.empresaDemol || '']);
+        dados.push(['CNPJ:', formData.page5?.cnpjDemol || '']);
       }
     }
-
+    dados.push([]);
+    
+    // ========================================
+    // F - EQUIPE TÉCNICA
+    // ========================================
+    dados.push(['F - OUTROS ENGENHEIROS RESPONSÁVEIS E/OU INTEGRANTES DA EQUIPE']);
+    
+    // Coordenação
+    dados.push(['F.1 - COORDENAÇÃO']);
+    dados.push(['Houve Coordenação:', formData.page6?.houveCoordenacao || '']);
+    if (formData.page6?.houveCoordenacao === 'Sim') {
+      dados.push(['Profissional:', formData.page6?.coordenacao?.nome || '']);
+      dados.push(['CPF:', formData.page6?.coordenacao?.cpf || '']);
+      
+      let regCoord = '';
+      if (formData.page6?.coordenacao?.reg === 'CREA') {
+        regCoord = `CREA: ${formData.page6?.coordenacao?.numCrea || ''}`;
+      } else if (formData.page6?.coordenacao?.reg === 'Outros') {
+        regCoord = `${formData.page6?.coordenacao?.sigla || ''} ${formData.page6?.coordenacao?.numOutros || ''}`;
+      }
+      dados.push(['Registro:', regCoord]);
+      
+      let artCoord = '';
+      if (formData.page6?.coordenacao?.tipoArt === 'ART') {
+        artCoord = `ART: ${formData.page6?.coordenacao?.numArt || ''}`;
+      } else if (formData.page6?.coordenacao?.tipoArt === 'Outros') {
+        artCoord = `${formData.page6?.coordenacao?.nomeArtOutros || ''} ${formData.page6?.coordenacao?.numArtOutros || ''}`;
+      }
+      dados.push(['ART/Outros:', artCoord]);
+    }
+    
+    // Orçamento
+    dados.push(['F.2 - ORÇAMENTO']);
+    dados.push(['Houve Orçamento:', formData.page6?.houveOrcamento || '']);
+    if (formData.page6?.houveOrcamento === 'Sim') {
+      dados.push(['Profissional:', formData.page6?.orcamento?.nome || '']);
+      dados.push(['CPF:', formData.page6?.orcamento?.cpf || '']);
+      
+      let regOrc = '';
+      if (formData.page6?.orcamento?.reg === 'CREA') {
+        regOrc = `CREA: ${formData.page6?.orcamento?.numCrea || ''}`;
+      } else if (formData.page6?.orcamento?.reg === 'Outros') {
+        regOrc = `${formData.page6?.orcamento?.sigla || ''} ${formData.page6?.orcamento?.numOutros || ''}`;
+      }
+      dados.push(['Registro:', regOrc]);
+      
+      let artOrc = '';
+      if (formData.page6?.orcamento?.tipoArt === 'ART') {
+        artOrc = `ART: ${formData.page6?.orcamento?.numArt || ''}`;
+      } else if (formData.page6?.orcamento?.tipoArt === 'Outros') {
+        artOrc = `${formData.page6?.orcamento?.nomeArtOutros || ''} ${formData.page6?.orcamento?.numArtOutros || ''}`;
+      }
+      dados.push(['ART/Outros:', artOrc]);
+    }
+    
+    // Residente
+    dados.push(['F.3 - RESIDENTE']);
+    dados.push(['Houve Residente:', formData.page6?.houveResidente || '']);
+    if (formData.page6?.houveResidente === 'Sim') {
+      dados.push(['Profissional:', formData.page6?.residente?.nome || '']);
+      dados.push(['CPF:', formData.page6?.residente?.cpf || '']);
+      
+      let regRes = '';
+      if (formData.page6?.residente?.reg === 'CREA') {
+        regRes = `CREA: ${formData.page6?.residente?.numCrea || ''}`;
+      } else if (formData.page6?.residente?.reg === 'Outros') {
+        regRes = `${formData.page6?.residente?.sigla || ''} ${formData.page6?.residente?.numOutros || ''}`;
+      }
+      dados.push(['Registro:', regRes]);
+      
+      let artRes = '';
+      if (formData.page6?.residente?.tipoArt === 'ART') {
+        artRes = `ART: ${formData.page6?.residente?.numArt || ''}`;
+      } else if (formData.page6?.residente?.tipoArt === 'Outros') {
+        artRes = `${formData.page6?.residente?.nomeArtOutros || ''} ${formData.page6?.residente?.numArtOutros || ''}`;
+      }
+      dados.push(['ART/Outros:', artRes]);
+    }
+    dados.push([]);
+    
+    // ========================================
+    // G - LIVRO DE ORDEM
+    // ========================================
+    dados.push(['G - LIVRO DE ORDEM']);
+    dados.push(['Livro de Ordem:', formData.page7?.livroOrdem || '']);
+    dados.push(['Observações:', formData.page7?.observacoes || '']);
+    dados.push([]);
+    
+    // ========================================
+    // H - GERENCIAMENTO
+    // ========================================
+    dados.push(['H - GERENCIAMENTO']);
+    dados.push(['Gerenciamento:', formData.page8?.houveGerenciamento || '']);
+    
+    if (formData.page8?.houveGerenciamento === 'Sim') {
+      dados.push(['Profissional:', formData.page8?.profissionalGerenciamento || '']);
+      dados.push(['CPF:', formData.page8?.cpfGerenciamento || '']);
+      
+      let regGer = '';
+      if (formData.page8?.tipoRegistroGerenciamento === 'CREA') {
+        regGer = `CREA: ${formData.page8?.numeroCreaGerenciamento || ''}`;
+      } else if (formData.page8?.tipoRegistroGerenciamento === 'Outros') {
+        regGer = `${formData.page8?.siglaConselhoGerenciamento || ''} ${formData.page8?.numeroConselhoGerenciamento || ''}`;
+      }
+      dados.push(['Registro:', regGer]);
+      
+      let artGer = '';
+      if (formData.page8?.tipoArtGerenciamento === 'ART') {
+        artGer = `ART: ${formData.page8?.artNumeroGerenciamento || ''}`;
+      } else if (formData.page8?.tipoArtGerenciamento === 'Outros') {
+        artGer = `${formData.page8?.nomeOutrosArtGerenciamento || ''} ${formData.page8?.numeroOutrosArtGerenciamento || ''}`;
+      }
+      dados.push(['ART/Outros:', artGer]);
+      dados.push(['Empresa:', formData.page8?.empresaGerenciamento || '']);
+      dados.push(['CNPJ:', formData.page8?.cnpjGerenciamento || '']);
+      
+      let regEmpGer = '';
+      if (formData.page8?.tipoRegistroEmpresaGer === 'CREA') {
+        regEmpGer = `CREA: ${formData.page8?.numeroCreaEmpresaGer || ''}`;
+      } else if (formData.page8?.tipoRegistroEmpresaGer === 'Outros') {
+        regEmpGer = `${formData.page8?.siglaConselhoEmpresaGer || ''} ${formData.page8?.numeroConselhoEmpresaGer || ''}`;
+      }
+      dados.push(['Registro Empresa:', regEmpGer]);
+      dados.push(['Placa:', formData.page8?.placaGerenciamento || '']);
+    }
+    dados.push([]);
+    
+    // ========================================
+    // I - SUBCONTRATADOS (Páginas 9-24)
+    // ========================================
+    dados.push(['I - SUBCONTRATADOS E ATIVIDADES TÉCNICAS']);
+    dados.push([]);
+    
+    // Função auxiliar para adicionar dados de subcontratado
+    function adicionarSubcontratado(num, titulo, itemData) {
+      if (!itemData) return;
+      
+      dados.push([`${num} ${titulo}`]);
+      
+      // Status ou Opção
+      if (itemData.opcao) {
+        dados.push(['Status:', itemData.opcao]);
+      }
+      
+      // Se tem profissional
+      if (itemData.profissional) {
+        dados.push(['  Profissional:', itemData.profissional]);
+        dados.push(['  CPF:', itemData.cpf || '']);
+        
+        // Registro
+        let reg = '';
+        if (itemData.tipoReg === 'CREA') {
+          reg = `CREA: ${itemData.numCrea || ''}`;
+        } else if (itemData.tipoReg === 'Outros') {
+          reg = `${itemData.sigla || ''} ${itemData.numOutros || ''}`;
+        }
+        dados.push(['  Registro:', reg]);
+        
+        // ART
+        let art = '';
+        if (itemData.tipoArt === 'ART') {
+          art = `ART: ${itemData.numArt || ''}`;
+        } else if (itemData.tipoArt === 'Outros') {
+          art = `${itemData.nomeArt || ''} ${itemData.valArt || ''}`;
+        }
+        dados.push(['  ART/Outros:', art]);
+        
+        dados.push(['  Empresa:', itemData.empresa || '']);
+        dados.push(['  CNPJ:', itemData.cnpj || '']);
+        dados.push(['  Registro Empresa:', itemData.regEmpresa || '']);
+        dados.push(['  Placa:', itemData.placa || '']);
+      }
+      
+      // Se tem terceirizadas
+      if (itemData.terceirizadas && itemData.terceirizadas.length > 0) {
+        itemData.terceirizadas.forEach((terc, idx) => {
+          dados.push([`  ${idx + 1}. Terceirizada:`, terc.terceirizada || '', 'ART:', terc.art || '']);
+        });
+      }
+      
+      dados.push([]);
+    }
+    
+    // Processar cada página de subcontratados
+    let contador = 1;
+    for (let pageNum = 9; pageNum <= 24; pageNum++) {
+      const pageData = formData['page' + pageNum];
+      const items = subcontratados['page' + pageNum];
+      
+      if (pageData && items) {
+        items.forEach(item => {
+          const itemData = pageData[item.id];
+          if (itemData && (itemData.opcao || itemData.profissional)) {
+            adicionarSubcontratado(contador, item.titulo, itemData);
+            contador++;
+          }
+        });
+      }
+    }
+    
+    // ========================================
+    // J - IDENTIFICAÇÃO FINAL
+    // ========================================
+    dados.push(['J - IDENTIFICAÇÃO DO DECLARANTE']);
+    dados.push(['Nome:', formData.page25?.nomeDeclarante || '']);
+    dados.push(['Qualificação e Cargo:', formData.page25?.qualificacaoDeclarante || '']);
+    dados.push(['Local:', formData.page25?.localDeclarante || '', 'Data:', formatarData(formData.page25?.dataDeclarante)]);
+    dados.push([]);
+    
+    dados.push(['K - IDENTIFICAÇÃO DO AGENTE FISCAL']);
+    dados.push(['Agente Fiscal:', formData.page25?.agenteFiscal1 || '']);
+    dados.push(['Registro:', formData.page25?.registroAgente1 || '']);
+    dados.push(['Data da Fiscalização:', formatarData(formData.page25?.dataFiscalizacao)]);
+    dados.push([]);
+    
+    dados.push(['L - CONTATO']);
+    dados.push(['Endereço:', formData.page25?.enderecoContato || '']);
+    dados.push(['E-mail:', formData.page25?.emailContato || '']);
+    dados.push(['Telefones:', formData.page25?.telefonesContato || '']);
+    
+    // Criar worksheet a partir dos dados
+    const ws = XLSX.utils.aoa_to_sheet(dados);
+    
+    // Definir larguras das colunas
+    ws['!cols'] = [
+      { wch: 35 },  // Coluna A - Labels
+      { wch: 40 },  // Coluna B - Valores
+      { wch: 20 },  // Coluna C - Labels secundárias
+      { wch: 30 }   // Coluna D - Valores secundários
+    ];
+    
+    // Adicionar worksheet ao workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Formulário');
+    
+    // Gerar nome do arquivo com data
+    const agora = new Date();
+    const dataArquivo = `${agora.getDate().toString().padStart(2, '0')}-${(agora.getMonth() + 1).toString().padStart(2, '0')}-${agora.getFullYear()}`;
+    const nomeArquivo = `Formulario_Obra_${dataArquivo}.xlsx`;
+    
+    // Download do arquivo
+    XLSX.writeFile(wb, nomeArquivo);
+    
+    showToast('✅ Excel gerado com sucesso!', 'success');
+    
+    // Limpar cache e resetar
+    setTimeout(() => {
+      limparCacheEResetar();
+    }, 1500);
+    
+  } catch (error) {
+    console.error('Erro ao gerar Excel:', error);
+    showToast('❌ Erro ao gerar Excel: ' + error.message, 'error');
+  }
+}
     // Limpar cache e resetar para página 1
     function limparCacheEResetar() {
       // Limpar localStorage
