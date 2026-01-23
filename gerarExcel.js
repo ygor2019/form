@@ -232,44 +232,43 @@ async function gerarExcel() {
     // =========================
     let row = 1;
 
-    row = addTitle('FORMULÁRIO - OBRAS DE MÉDIO E GRANDE PORTE', row);
+    row = addTitle('FORMULÁRIO DE FISCALIZAÇÃO EM OBRAS DE MÉDIO E GRANDE PORTE', row);
 
     // -------------------------
     // PÁGINAS 1–8 (FORMULÁRIO PRINCIPAL)
     // -------------------------
-    row = addSubtitle('A) LOCAL DA OBRA', row);
-    row = addRow(row, 'Endereço da Obra', formData?.page1?.localObra || '');
-    row = addRow(row, 'Bairro', formData?.page1?.bairro || '');
-    row = addRow(row, 'Cidade', formData?.page1?.cidade || '');
-    row = addRow(row, 'CEP', formData?.page1?.cep || '');
+    row = addSubtitle('LOCAL DA OBRA', row);
+    row = addRow(row, 'Endereço da Obra:', formData?.page1?.localObra || '');
+    row = addRow(row, 'Bairro:', formData?.page1?.bairro || '');
+    row = addRow(row, 'Cidade:', formData?.page1?.cidade || '');
+    row = addRow(row, 'CEP:', formData?.page1?.cep || '');
     row = addBlank(row, 1);
 
-    row = addSubtitle('B.1) Empreendimento', row);
-    row = addRow(row, 'Tipo', formData?.page2?.tipoNatureza || '');
-    row = addRow(row, 'Área (m²)', formData?.page2?.area || '');
-    row = addRow(row, 'Pavimentos', formData?.page2?.pavimentos || '');
-    row = addRow(row, 'Nº do Processo', formData?.page2?.processoNum || '');
-    row = addRow(row, 'Nº do Alvará', formData?.page2?.alvaraNum || '');
-    row = addRow(row, 'Ano do Alvará', formData?.page2?.alvaraDe || '');
-    row = addRow(row, 'Proprietário', formData?.page2?.proprietario || '');
-    row = addRow(row, 'CPF ou CNPJ', (formData?.page2?.tipoCpfCnpj || '').toUpperCase());
+    row = addSubtitle('EMPREENDIMENTO', row);
+    row = addRow(row, 'Tipo:', formData?.page2?.tipoNatureza || '');
+    row = addRow(row, 'Área (m²):', formData?.page2?.area || '');
+    row = addRow(row, 'N° de Pavimentos:', formData?.page2?.pavimentos || '');
+    row = addRow(row, 'Nº do Processo:', formData?.page2?.processoNum || '');
+    row = addRow(row, 'Nº do Alvará:', formData?.page2?.alvaraNum || '');
+    row = addRow(row, 'Ano:', formData?.page2?.alvaraDe || '');
+    row = addRow(row, 'Proprietário:', formData?.page2?.proprietario || '');
+    row = addRow(row, 'CPF ou CNPJ:', (formData?.page2?.tipoCpfCnpj || '').toUpperCase());
     row = addRow(row, 'Número:', formData?.page2?.cpfCnpj || '');
-    row = addRow(row, 'Endereço do Proprietário', formData?.page2?.enderecoProprietario || '');
+    row = addRow(row, 'Endereço do Proprietário:', formData?.page2?.enderecoProprietario || '');
     row = addBlank(row, 1);
 
-    row = addSubtitle('3) RESPONSÁVEL TÉCNICO (RT)', row);
-    row = addRow(row, 'Placa afixada', formData?.page3?.placaAfixada || '');
-    row = addRow(row, 'Profissional', formData?.page3?.profissional || '');
-    row = addRow(row, 'Tipo de Registro', formData?.page3?.tipoRegistro || '');
-    row = addRow(row, 'Nº CREA', formData?.page3?.numeroCrea || '');
-    row = addRow(row, 'CPF Profissional', formData?.page3?.cpfProfissional || '');
-    row = addRow(row, 'Sigla Conselho (Outros)', formData?.page3?.siglaConselho || '');
-    row = addRow(row, 'Nº Conselho (Outros)', formData?.page3?.numeroConselho || '');
-    row = addRow(row, 'Título', formData?.page3?.titulo || '');
-    row = addRow(row, 'Tipo ART/RRT', formData?.page3?.tipoArtRrt || '');
-    row = addRow(row, 'Nº ART', formData?.page3?.artNumero || '');
-    row = addRow(row, 'Nº RRT', formData?.page3?.rrtNumero || '');
-    row = addRow(row, 'Empresa', formData?.page3?.empresa || '');
+    row = addSubtitle('AUTOR DO PROJETO', row);
+    row = addRow(row, 'Placa afixada?', formData?.page3?.placaAfixada || '');
+    row = addRow(row, 'Profissional:', formData?.page3?.profissional || '');
+    row = addRow(row, 'Tipo de Registro:', formData?.page3?.tipoRegistro || '');
+    row = addRow(row, 'Número:', formData?.page3?.numeroCrea || '');
+    row = addRow(row, 'CPF do Profissional:', formData?.page3?.cpfProfissional || '');
+    row = addRow(row, 'Sigla do Conselho:', formData?.page3?.siglaConselho || '');
+    row = addRow(row, 'Nº do Registro no Conselho:', formData?.page3?.numeroConselho || '');
+    row = addRow(row, 'Título:', formData?.page3?.titulo || '');
+    row = addRow(row, 'Nº da ART:', formData?.page3?.artNumero || '');
+    row = addRow(row, 'Nº do RRT:', formData?.page3?.rrtNumero || '');
+    row = addRow(row, 'Empresa:', formData?.page3?.empresa || '');
     row = addRow(row, 'Tipo Registro Empresa', formData?.page3?.tipoEmpresaRegistro || '');
     row = addRow(row, 'Registro Empresa', formData?.page3?.empresaRegistro || '');
     row = addBlank(row, 1);
