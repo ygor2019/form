@@ -274,17 +274,13 @@ async function gerarExcel() {
     row = addRow(row, 'Placa afixada?', formData?.page4?.placaAfixadaRT || '');
     row = addRow(row, 'Profissional:', formData?.page4?.profissionalRT || '');
     row = addRow(row, 'CPF:', formData?.page4?.cpfRT || '');
-    row = addRow(row, 'Conselho:', formData?.page4?.tipoRegistroRT || '');
-    row = addRow(row, 'Nº CREA', formData?.page4?.numeroCreaRT || '');
-    row = addRow(row, 'Sigla Conselho (Outros)', formData?.page4?.siglaConselhoRT || '');
-    row = addRow(row, 'Nº Conselho (Outros)', formData?.page4?.numeroConselhoRT || '');
-    row = addRow(row, 'Tipo ART/Outros', formData?.page4?.tipoArtOutrosRT || '');
-    row = addRow(row, 'Nº ART', formData?.page4?.artNumeroRT || '');
-    row = addRow(row, 'Nome (Outros - ART)', formData?.page4?.nomeOutrosArtRT || '');
-    row = addRow(row, 'Número (Outros - ART)', formData?.page4?.numeroOutrosArtRT || '');
-    row = addRow(row, 'Empresa', formData?.page4?.empresaRT || '');
-    row = addRow(row, 'Tipo Registro Empresa', formData?.page4?.tipoEmpresaRegistroRT || '');
-    row = addRow(row, 'Registro Empresa', formData?.page4?.empresaRegistroRT || '');
+    row = addRow(row,'Conselho:', formData?.page4?.tipoRegistroRT === 'CREA'? 'CREA': (formData?.page4?.siglaConselhoRT || ''));
+    row = addRow(row, 'Número de Registro:', formData?.page4?.numeroCreaRT || formData?.page4?.numeroConselhoRT || '');
+    row = addRow(row, 'ART ou Outro Tipo?', (formData?.page4?.tipoArtOutrosRT === 'ART') ? 'ART' : (formData?.page4?.nomeOutrosArtRT || ''));
+    row = addRow(row, 'Número:', formData?.page4?.artNumeroRT || formData?.page4?.numeroOutrosArtRT || '');
+    row = addRow(row, 'Empresa:', formData?.page4?.empresaRT || '');
+    row = addRow(row, 'Tipo de Registro da Empresa:', formData?.page4?.tipoEmpresaRegistroRT || '');
+    row = addRow(row, 'Número:', formData?.page4?.empresaRegistroRT || '');
     row = addBlank(row, 1);
 
     row = addSubtitle('5) DEMOLIÇÃO', row);
