@@ -306,15 +306,15 @@ async function gerarExcel() {
     row = addRow(row, 'CNPJ:', formData?.page5?.cnpjDemol || '');
     row = addBlank(row, 1);
 
-    row = addSubtitle('6) COORDENAÇÃO / ORÇAMENTO / RESIDENTE', row);
-    row = addRow(row, 'Houve Coordenação?', formData?.page6?.houveCoordenacao || '');
-    row = addRow(row, 'Houve Orçamento?', formData?.page6?.houveOrcamento || '');
-    row = addRow(row, 'Houve Residente?', formData?.page6?.houveResidente || '');
+    row = addSubtitle('COORDENAÇÃO / ORÇAMENTO / RESIDENTE', row);
+    row = addRow(row, 'Engenheiro Responsável pela Coordenação?', formData?.page6?.houveCoordenacao || '');
+    row = addRow(row, 'Engenheiro Responsável pelo Orçamento?', formData?.page6?.houveOrcamento || '');
+    row = addRow(row, 'Houve Engenheiro Residente?', formData?.page6?.houveResidente || '');
 
     function escreverEquipe(row, titulo, obj) {
       row = addSection(titulo, row);
-      row = addRow(row, 'Nome', obj?.nome || '');
-      row = addRow(row, 'CPF', obj?.cpf || '');
+      row = addRow(row, 'Nome:', obj?.nome || '');
+      row = addRow(row, 'CPF:', obj?.cpf || '');
       row = addRow(row, 'Registro', obj?.reg || '');
       row = addRow(row, 'Nº CREA', obj?.numCrea || '');
       row = addRow(row, 'Sigla Conselho', obj?.sigla || '');
