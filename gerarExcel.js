@@ -330,33 +330,46 @@ async function gerarExcel() {
     row = addSubtitle('LIVRO DE ORDEM', row);
     row = addRow(row, 'Livro de Ordem no Local?', formData?.page7?.livroOrdem || '');
     row = addRow(row, 'Observações:', formData?.page7?.observacoes || '');
-    row = addBlank(row, 1);
-
-    row = addSubtitle('8) GERENCIAMENTO', row);
-    row = addRow(row, 'Houve Gerenciamento?', formData?.page8?.houveGerenciamento || '');
-    row = addRow(row, 'Profissional', formData?.page8?.profissionalGerenciamento || '');
-    row = addRow(row, 'CPF', formData?.page8?.cpfGerenciamento || '');
-    row = addRow(row, 'Tipo Registro', formData?.page8?.tipoRegistroGerenciamento || '');
-    row = addRow(row, 'Nº CREA', formData?.page8?.numeroCreaGerenciamento || '');
-    row = addRow(row, 'Sigla Conselho', formData?.page8?.siglaConselhoGerenciamento || '');
-    row = addRow(row, 'Nº Conselho', formData?.page8?.numeroConselhoGerenciamento || '');
-    row = addRow(row, 'Tipo ART/Outros', formData?.page8?.tipoArtGerenciamento || '');
-    row = addRow(row, 'Nº ART', formData?.page8?.artNumeroGerenciamento || '');
-    row = addRow(row, 'Nome (Outros)', formData?.page8?.nomeOutrosArtGerenciamento || '');
-    row = addRow(row, 'Número (Outros)', formData?.page8?.numeroOutrosArtGerenciamento || '');
-    row = addRow(row, 'Empresa', formData?.page8?.empresaGerenciamento || '');
-    row = addRow(row, 'CNPJ', formData?.page8?.cnpjGerenciamento || '');
-    row = addRow(row, 'Registro Empresa (Tipo)', formData?.page8?.tipoRegistroEmpresaGer || '');
-    row = addRow(row, 'Registro Empresa (Nº CREA)', formData?.page8?.numeroCreaEmpresaGer || '');
-    row = addRow(row, 'Registro Empresa (Sigla)', formData?.page8?.siglaConselhoEmpresaGer || '');
-    row = addRow(row, 'Registro Empresa (Nº Conselho)', formData?.page8?.numeroConselhoEmpresaGer || '');
-    row = addRow(row, 'Placa / Equipamento', formData?.page8?.placaGerenciamento || '');
     row = addBlank(row, 2);
 
     // -------------------------
-    // PÁGINAS 9–24 (SUBCONTRATADOS)
+    // PÁGINAS 8–24 (SUBCONTRATADOS)
     // -------------------------
-    row = addTitle('SUBCONTRATADOS (PADRÃO VERTICAL / PADRONIZADO)', row);
+    row = addTitle('SUBCONTRATADOS (profissionais e empresas)', row);
+
+    // --- GERENCIAMENTO como Subcontratado (item fixo, fora do loop 9–24) ---
+const g = formData?.page8 || {};
+
+// monta um objeto NO MESMO FORMATO que getSubData() retorna
+const dataGer = {
+  // opcao é o que formatOpcao() usa (statusLabel ou Sim/Não)【turn3file3†gerarExcel.js†L12-L17】
+  opcao: (g?.houveGerenciamento || ''),
+
+  profissional: g?.profissionalGerenciamento || '',
+  cpf: g?.cpfGerenciamento || '',
+  tipoReg: g?.tipoRegistroGerenciamento || '',
+  numCrea: g?.numeroCreaGerenciamento || '',
+  sigla: g?.siglaConselhoGerenciamento || '',
+  numOutros: g?.numeroConselhoGerenciamento || '',
+  tipoArt: g?.tipoArtGerenciamento || '',
+  numArt: g?.artNumeroGerenciamento || '',
+  nomeArt: g?.nomeOutrosArtGerenciamento || '',
+  valArt: g?.numeroOutrosArtGerenciamento || '',
+  empresa: g?.empresaGerenciamento || '',
+  cnpj: g?.cnpjGerenciamento || '',
+  regEmpresa:
+    (g?.tipoRegistroEmpresaGer === 'CREA')
+      ? (g?.numeroCreaEmpresaGer || '')
+      : [g?.siglaConselhoEmpresaGer, g?.numeroConselhoEmpresaGer].filter(Boolean).join(' '),
+  placa: g?.placaGerenciamento || ''
+};
+
+// se você quiser que apareça SEMPRE (mesmo se vazio), deixa assim.
+// se quiser só quando marcou Sim, bota um if (g.houveGerenciamento === 'Sim') {...}
+row = addItem(row, 'Gerenciamento', formatOpcao(dataGer), 0);
+row = escreverDetalhesProf(row, dataGer, 1);
+row = addBlank(row, 1);
+
 
     for (let pageNum = 9; pageNum <= 24; pageNum++) {
       const pageKey = 'page' + pageNum;
