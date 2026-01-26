@@ -315,14 +315,10 @@ async function gerarExcel() {
       row = addSection(titulo, row);
       row = addRow(row, 'Nome:', obj?.nome || '');
       row = addRow(row, 'CPF:', obj?.cpf || '');
-      row = addRow(row, 'Registro', obj?.reg || '');
-      row = addRow(row, 'Nº CREA', obj?.numCrea || '');
-      row = addRow(row, 'Sigla Conselho', obj?.sigla || '');
-      row = addRow(row, 'Nº Conselho', obj?.numOutros || '');
-      row = addRow(row, 'Tipo ART/Outros', obj?.tipoArt || '');
-      row = addRow(row, 'Nº ART', obj?.numArt || '');
-      row = addRow(row, 'Nome (Outros)', obj?.nomeArtOutros || '');
-      row = addRow(row, 'Número (Outros)', obj?.numArtOutros || '');
+      row = addRow(row, 'Conselho:', obj?.reg === 'CREA' ? 'CREA' : (obj?.sigla || ''));
+      row = addRow(row, 'Número do Registro:', obj?.numCrea || obj?.numOutros || '');
+      row = addRow(row, 'ART ou Outro Tipo?', obj?.tipoArt === 'ART' ? 'ART' : (obj?.nomeArtOutros || ''));
+      row = addRow(row, 'Número:', obj?.numArt || obj?.numArtOutros || '');
       return row;
     }
 
@@ -331,9 +327,9 @@ async function gerarExcel() {
     row = escreverEquipe(row, 'RESIDENTE', formData?.page6?.residente);
     row = addBlank(row, 1);
 
-    row = addSubtitle('7) LIVRO DE ORDEM', row);
-    row = addRow(row, 'Livro de Ordem', formData?.page7?.livroOrdem || '');
-    row = addRow(row, 'Observações', formData?.page7?.observacoes || '');
+    row = addSubtitle('LIVRO DE ORDEM', row);
+    row = addRow(row, 'Livro de Ordem no Local?', formData?.page7?.livroOrdem || '');
+    row = addRow(row, 'Observações:', formData?.page7?.observacoes || '');
     row = addBlank(row, 1);
 
     row = addSubtitle('8) GERENCIAMENTO', row);
