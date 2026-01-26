@@ -165,10 +165,45 @@ async function gerarExcel() {
 
     // Pega dados de subcontratados de forma segura
     function getSubData(pageNum, id) {
-      const pageKey = 'page' + pageNum;
-      const pageObj = formData?.[pageKey] || {};
-      return pageObj?.[id] || null; // cada id vira um objeto {opcao, profissional, ...}
-    }
+  // page8 (Gerenciamento) é especial: vem de formData.page8
+  if (pageNum === 8 && id === 'gerenciamento') {
+    const g = formData?.page8 || {};
+
+    return {
+      opcao: (g?.houveGerenciamento || ''),
+
+      profissional: g?.profissionalGerenciamento || '',
+      cpf: g?.cpfGerenciamento || '',
+
+      // REGISTRO (padrão)
+      tipoReg: g?.tipoRegistroGerenciamento || '',
+      numCrea: g?.numeroCreaGerenciamento || '',
+      sigla: g?.siglaConselhoGerenciamento || '',
+      numOutros: g?.numeroConselhoGerenciamento || '',
+
+      // ART (padrão)
+      tipoArt: g?.tipoArtGerenciamento || '',
+      numArt: g?.artNumeroGerenciamento || '',
+      nomeArt: g?.nomeOutrosArtGerenciamento || '',
+      valArt: g?.numeroOutrosArtGerenciamento || '',
+
+      // EMPRESA
+      empresa: g?.empresaGerenciamento || '',
+      cnpj: g?.cnpjGerenciamento || '',
+      regEmpresa:
+        (g?.tipoRegistroEmpresaGer === 'CREA')
+          ? (g?.numeroCreaEmpresaGer || '')
+          : [g?.siglaConselhoEmpresaGer, g?.numeroConselhoEmpresaGer].filter(Boolean).join(' '),
+      placa: g?.placaGerenciamento || ''
+    };
+  }
+
+  // Demais páginas (9–24): vem de formData.pageN[id]
+  const pageKey = 'page' + pageNum;
+  const pageObj = formData?.[pageKey] || {};
+  return pageObj?.[id] || null;
+}
+
 
     function formatOpcao(itemData) {
       const op = itemData?.opcao || '';
@@ -178,35 +213,55 @@ async function gerarExcel() {
     }
 
     // Escreve bloco padrão do profissional/ART/empresa (sempre embaixo, mesmo vazio)
-    function escreverDetalhesProf(row, itemData, indentBase = 1) {
-      // IMPORTANTE: mesmo vazio, escreve as linhas pra padronizar
-      row = addItem(row, 'Profissional', itemData?.profissional || '', indentBase);
-      row = addItem(row, 'CPF', itemData?.cpf || '', indentBase);
-      row = addItem(row, 'Tipo de Registro', itemData?.tipoReg || '', indentBase);
+    // Escreve bloco padrão do profissional/ART/empresa (sempre embaixo, mesmo vazio)
+// PADRÃO: Conselho = CREA OU sigla | Número = número correspondente
+function escreverDetalhesProf(row, itemData, indentBase = 1) {
+  row = addItem(row, 'Profissional', itemData?.profissional || '', indentBase);
+  row = addItem(row, 'CPF', itemData?.cpf || '', indentBase);
 
-      // CREA ou Outros (mantém ambos como linhas; se não usar, fica vazio)
-      row = addItem(row, 'Nº CREA', itemData?.numCrea || '', indentBase);
-      row = addItem(row, 'Sigla Conselho (Outros)', itemData?.sigla || '', indentBase);
-      row = addItem(row, 'Nº Conselho (Outros)', itemData?.numOutros || '', indentBase);
+  // ---- Registro (CREA ou Outro conselho) ----
+  const tipoReg = itemData?.tipoReg || '';
+  const conselho =
+    tipoReg === 'CREA'
+      ? 'CREA'
+      : (itemData?.sigla || ''); // sigla do conselho quando não é CREA
 
-      // ART ou Outros (mantém ambos como linhas)
-      row = addItem(row, 'Tipo ART/Outros', itemData?.tipoArt || '', indentBase);
-      row = addItem(row, 'Nº ART', itemData?.numArt || '', indentBase);
-      row = addItem(row, 'Nome (Outros - ART)', itemData?.nomeArt || '', indentBase);
-      row = addItem(row, 'Número (Outros - ART)', itemData?.valArt || '', indentBase);
+  const numeroRegistro =
+    tipoReg === 'CREA'
+      ? (itemData?.numCrea || '')
+      : (itemData?.numOutros || '');
 
-      // Empresa
-      row = addItem(row, 'Empresa', itemData?.empresa || '', indentBase);
-      row = addItem(row, 'CNPJ', itemData?.cnpj || '', indentBase);
+  row = addItem(row, 'Conselho', conselho, indentBase);
+  row = addItem(row, 'Número do Registro', numeroRegistro, indentBase);
 
-      // Registro empresa + placa (se existir)
-      if ('regEmpresa' in (itemData || {}) || 'placa' in (itemData || {})) {
-        row = addItem(row, 'Registro Empresa', itemData?.regEmpresa || '', indentBase);
-        row = addItem(row, 'Placa/Equipamento', itemData?.placa || '', indentBase);
-      }
+  // ---- ART (ou outro tipo) ----
+  const tipoArt = itemData?.tipoArt || '';
+  const artOuOutro =
+    tipoArt === 'ART'
+      ? 'ART'
+      : (itemData?.nomeArt || ''); // nome do "outro" tipo
 
-      return row;
-    }
+  const numeroArtOuOutro =
+    tipoArt === 'ART'
+      ? (itemData?.numArt || '')
+      : (itemData?.valArt || '');
+
+  row = addItem(row, 'ART ou Outro Tipo?', artOuOutro, indentBase);
+  row = addItem(row, 'Número', numeroArtOuOutro, indentBase);
+
+  // ---- Empresa ----
+  row = addItem(row, 'Empresa', itemData?.empresa || '', indentBase);
+  row = addItem(row, 'CNPJ', itemData?.cnpj || '', indentBase);
+
+  // Registro empresa + placa (se existir no objeto)
+  if ('regEmpresa' in (itemData || {}) || 'placa' in (itemData || {})) {
+    row = addItem(row, 'Registro Empresa', itemData?.regEmpresa || '', indentBase);
+    row = addItem(row, 'Placa/Equipamento', itemData?.placa || '', indentBase);
+  }
+
+  return row;
+}
+
 
     function escreverTerceirizadas(row, itemData, indentBase = 1) {
       // Sempre padronizado: escreve pelo menos 1 linha (mesmo sem nada)
@@ -337,81 +392,56 @@ async function gerarExcel() {
     // -------------------------
     row = addTitle('SUBCONTRATADOS (profissionais e empresas)', row);
 
-    // --- GERENCIAMENTO como Subcontratado (item fixo, fora do loop 9–24) ---
-const g = formData?.page8 || {};
+    
+    for (let pageNum = 8; pageNum <= 24; pageNum++) {
+  const pageKey = 'page' + pageNum;
 
-// monta um objeto NO MESMO FORMATO que getSubData() retorna
-const dataGer = {
-  // opcao é o que formatOpcao() usa (statusLabel ou Sim/Não)【turn3file3†gerarExcel.js†L12-L17】
-  opcao: (g?.houveGerenciamento || ''),
+  // page8 não vem de "subcontratados", então criamos um item virtual
+  const items =
+    pageNum === 8
+      ? [{
+          id: 'gerenciamento',
+          titulo: 'Gerenciamento',
+          tipo: 'padrao' // qualquer coisa que NÃO seja 'terceirizadas'
+        }]
+      : subcontratados?.[pageKey];
 
-  profissional: g?.profissionalGerenciamento || '',
-  cpf: g?.cpfGerenciamento || '',
-  tipoReg: g?.tipoRegistroGerenciamento || '',
-  numCrea: g?.numeroCreaGerenciamento || '',
-  sigla: g?.siglaConselhoGerenciamento || '',
-  numOutros: g?.numeroConselhoGerenciamento || '',
-  tipoArt: g?.tipoArtGerenciamento || '',
-  numArt: g?.artNumeroGerenciamento || '',
-  nomeArt: g?.nomeOutrosArtGerenciamento || '',
-  valArt: g?.numeroOutrosArtGerenciamento || '',
-  empresa: g?.empresaGerenciamento || '',
-  cnpj: g?.cnpjGerenciamento || '',
-  regEmpresa:
-    (g?.tipoRegistroEmpresaGer === 'CREA')
-      ? (g?.numeroCreaEmpresaGer || '')
-      : [g?.siglaConselhoEmpresaGer, g?.numeroConselhoEmpresaGer].filter(Boolean).join(' '),
-  placa: g?.placaGerenciamento || ''
-};
+  if (!items || items.length === 0) continue;
 
-// se você quiser que apareça SEMPRE (mesmo se vazio), deixa assim.
-// se quiser só quando marcou Sim, bota um if (g.houveGerenciamento === 'Sim') {...}
-row = addItem(row, 'Gerenciamento', formatOpcao(dataGer), 0);
-row = escreverDetalhesProf(row, dataGer, 1);
-row = addBlank(row, 1);
+  // título bonito: page8 você pode dar um subtítulo específico
+  if (pageNum === 8) {
+    row = addSubtitle('🧭 Subcontratados - Gerenciamento', row);
+  } else {
+    row = addSubtitle(titulosSub[pageNum] || `Subcontratados - Página ${pageNum}`, row);
+  }
 
+  items.forEach(item => {
+    const renderItem = (it, pageNumLocal, indent = 0) => {
+      const data = getSubData(pageNumLocal, it.id);
 
-    for (let pageNum = 9; pageNum <= 24; pageNum++) {
-      const pageKey = 'page' + pageNum;
-      const items = subcontratados?.[pageKey];
-      if (!items || items.length === 0) continue;
+      const label = `${it.num ? it.num + ' - ' : ''}${it.titulo || it.id}`;
+      row = addItem(row, label, formatOpcao(data), indent);
 
-      row = addSubtitle(titulosSub[pageNum] || `Subcontratados - Página ${pageNum}`, row);
+      if (it.tipo === 'terceirizadas') {
+        row = escreverTerceirizadas(row, data, indent + 1);
+        row = addBlank(row, 1);
+        return;
+      }
 
-      items.forEach(item => {
-        // Item pode ter subitens (statusComSubitens)
-        const renderItem = (it, pageNumLocal, indent = 0) => {
-          // pega dados salvos
-          const data = getSubData(pageNumLocal, it.id);
+      row = escreverDetalhesProf(row, data, indent + 1);
 
-          // Linha principal do item
-          const label = `${it.num ? it.num + ' - ' : ''}${it.titulo || it.id}`;
-          row = addItem(row, label, formatOpcao(data), indent);
-
-          // TERCEIRIZADAS: lista dinâmica
-          if (it.tipo === 'terceirizadas') {
-            // Sempre imprime o bloco (mesmo se NÃO ou vazio)
-            row = escreverTerceirizadas(row, data, indent + 1);
-            row = addBlank(row, 1);
-            return;
-          }
-
-          // Para os demais tipos: sempre imprime detalhes (mesmo se NÃO ou vazio)
-          row = escreverDetalhesProf(row, data, indent + 1);
-
-          // Se tiver subitens, renderiza abaixo (com indent)
-          if (Array.isArray(it.subitens) && it.subitens.length > 0) {
-            it.subitens.forEach(sub => renderItem(sub, pageNumLocal, indent + 1));
-          }
-
-          row = addBlank(row, 1);
-        };
-
-        renderItem(item, pageNum, 0);
-      });
+      if (Array.isArray(it.subitens) && it.subitens.length > 0) {
+        it.subitens.forEach(sub => renderItem(sub, pageNumLocal, indent + 1));
+      }
 
       row = addBlank(row, 1);
-    }
+    };
+
+    renderItem(item, pageNum, 0);
+  });
+
+  row = addBlank(row, 1);
+}
 
     // -------------------------
     // PÁGINA 25 (FINAL)
